@@ -1,0 +1,4 @@
+dinerapp\Application.class
+dinerapp\model\CategoryViewModel.class
+dinerapp\entity\Category.class
+dinerapp\repository\CategoryRepository.class
