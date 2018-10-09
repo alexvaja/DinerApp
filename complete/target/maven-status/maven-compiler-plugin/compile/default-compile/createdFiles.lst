@@ -1,0 +1,7 @@
+hello\model\UserViewModel.class
+hello\WebSecurityConfig.class
+hello\MvcConfig.class
+hello\entity\User.class
+hello\Application.class
+hello\service\LogInService.class
+hello\repository\LogInRepository.class
