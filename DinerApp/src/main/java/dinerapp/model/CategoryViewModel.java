@@ -1,6 +1,9 @@
 package dinerapp.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import dinerapp.entity.Category;
 
 public class CategoryViewModel {
 
