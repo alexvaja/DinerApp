@@ -1,28 +1,21 @@
 package dinerapp.model;
 
+import java.util.*;
+
 public class CategoryViewModel {
 
-	private String category;
-	private Double price;
-	
-	public String getCategory() {
-		return category;
+	private List<Category> categoryItems = new ArrayList<Category>();
+
+	public List<Category> getCategoryItems() {
+		return categoryItems;
 	}
-	
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
-	public Double getPrice() {
-		return price;
-	}
-	
-	public void setPrice(Double price) {
-		this.price = price;
+
+	public void setCategoryItems(List<Category> categoryItems) {
+		this.categoryItems = categoryItems;
 	}
 
 	@Override
 	public String toString() {
-		return "CategoryViewModel [category=" + category + ", price=" + price + "]";
+		return "CategoryViewModel [categoryItems=" + categoryItems + "]";
 	}
 }

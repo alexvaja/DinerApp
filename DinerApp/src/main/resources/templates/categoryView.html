@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Category View</title>
+	</head>
+	
+	<body>
+		<h1>Category Table</h1>
+		
+		<form action="#" th:object="${categoryViewModel}" th:action="@{/categoryView}" method="post">
+			<div>
+				<table>
+					<tr>
+						<th>CATEGORY NAME</th>
+						<th>CATEGORY PRICE</th>
+					</tr>
+					<tr th:each="categoryItem : ${categoryItems}">
+						<td th:text="${categoryItem.}"></td>
+						<td th:text="${categoryItem.}"></td>
+						<td th:text="${categoryItem.}"></td> ///aici fa!!!
+					</tr>
+				</table>
+			</div>
+		</form>
+	</body>
+
+</html>
