@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="category")
-public class Category {
-	
+public class Category 
+{
 	@Id
 	@Column(name="id_category")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

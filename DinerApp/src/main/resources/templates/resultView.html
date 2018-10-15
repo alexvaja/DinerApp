@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Result</h1>
+    <p th:text="mancaree: ' + ${foodViewModel.foodName}" />
+    <p th:text="'ingrediente: ' + ${foodViewModel.ingredients}" />
+    <p th:text="'gramaj: ' + ${foodViewModel.weight}"/>
+    <p th:text="'pret: ' + ${foodViewModel.pret}"/>
+    <a href="/foodView/insert">Submit another food</a>
+</body>
+</html>
