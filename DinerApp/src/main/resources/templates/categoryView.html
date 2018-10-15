@@ -8,19 +8,20 @@
 		<h1>Category Table</h1>
 		
 		<form action="#" th:object="${categoryViewModel}" th:action="@{/categoryView}" method="post">
-			<div>
-				<table>
+			<div th:if="${categoryViewModel.isListEmpty()}==False">
+				<table border="3">
 					<tr>
+						<th>CATEGORY ID</th>
 						<th>CATEGORY NAME</th>
 						<th>CATEGORY PRICE</th>
 					</tr>
-					<tr th:each="categoryItem : ${categoryItems}">
-						<td th:text="${categoryItem.}"></td>
-						<td th:text="${categoryItem.}"></td>
-						<td th:text="${categoryItem.}"></td>
+					<tr data-th-each="categoryItem : ${categoryItems}">
+						<td contenteditable='true' data-th-text="${categoryItem.id}">...</td>
+						<td contenteditable='true' data-th-text="${categoryItem.name}">...</td>
+						<td contenteditable='true' data-th-text="${categoryItem.price}">...</td>
 				</table>
 			</div>
-		</form>
+		</form> 
 	</body>
 
 </html>
