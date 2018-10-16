@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>Category View</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Category View</title>		
 	</head>
 	
 	<body>
 		<h1>Category Table</h1>
 		
-		<form action="#" th:object="${categoryViewModel}" th:action="@{/categoryView}" method="post">
-			<div th:if="${categoryViewModel.isListEmpty()}==False">
+		<form action="categoryView.html" th:object="${categoryViewModel}" 
+		    th:action="@{/categoryView}" method="post">
+			<div >
 				<table border="3">
 					<tr>
 						<th>CATEGORY ID</th>
 						<th>CATEGORY NAME</th>
 						<th>CATEGORY PRICE</th>
 					</tr>
-					<tr data-th-each="categoryItem : ${categoryItems}">
+					<tr data-th-each="categoryItem : *{categoryItems}">
 						<td contenteditable='true' data-th-text="${categoryItem.id}">...</td>
 						<td contenteditable='true' data-th-text="${categoryItem.name}">...</td>
 						<td contenteditable='true' data-th-text="${categoryItem.price}">...</td>
+					</tr>
 				</table>
+			</div>
+			
+			<div>
+				<input name="submit" type="submit" value="Add" />
 			</div>
 		</form> 
 	</body>
