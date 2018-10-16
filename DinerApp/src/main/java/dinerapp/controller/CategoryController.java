@@ -15,7 +15,6 @@ import dinerapp.model.CategoryViewModel;
 import dinerapp.repository.CategoryRepository;
 
 @Controller
-//@RequestMapping("/categoryView")
 public class CategoryController {
 
 	@Autowired
