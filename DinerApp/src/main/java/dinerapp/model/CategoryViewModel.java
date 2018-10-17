@@ -1,20 +1,17 @@
 package dinerapp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dinerapp.entity.Category;
 
 public class CategoryViewModel {
 
-	private List<Category> categoryItems;
+	private List<Category> categoryItems = new ArrayList<Category>();
 	
 	public CategoryViewModel() {
 		super();
-	}
-
-	public CategoryViewModel(List<Category> categoryItems) {
-		super();
-		this.categoryItems = categoryItems;
+		categoryItems = new ArrayList<>();
 	}
 
 	public List<Category> getCategoryItems() {

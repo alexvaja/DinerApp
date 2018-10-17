@@ -1,13 +1,14 @@
 package dinerapp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import dinerapp.entity.Category;
 import dinerapp.model.CategoryViewModel;
@@ -20,17 +21,36 @@ public class CategoryController {
 	private CategoryRepository categoryRepository;
 	
 	@GetMapping("/categoryView")
-	public String getForm(Model model) 
-	{
-		System.out.println("am intrat in categorie");
-		model.addAttribute("categoryViewModel", new CategoryViewModel());
+	public String getForm(Model model) {
+		System.out.println("Ajung in get");
+		CategoryViewModel categoryViewModel = new CategoryViewModel();
+		Iterable<Category> list = categoryRepository.findAll();
+		List<Category> searchedList= new ArrayList<>();
+		for (Category category : list) {
+			searchedList.add(category);
+			System.out.println(category);
+		}
+		
+		categoryViewModel.setCategoryItems(searchedList);
+		model.addAttribute("categoryViewModel", categoryViewModel);
 		return "categoryView";
 	}
+	
 	@PostMapping("/categoryView")
-	public String getCategoryList(Model model) 
-	{	
-		List<Category> categoryList = (List<Category>) categoryRepository.findAll();
-		model.addAttribute("categoryViewModel", new CategoryViewModel((List<Category>) categoryRepository.findAll()));
+	public String getCategoryList(@ModelAttribute CategoryViewModel categoryViewModel) {
+		Iterable<Category> list = categoryRepository.findAll();
+		List<Category> searchedList= new ArrayList<>();
+		for (Category category : list) {
+			searchedList.add(category);
+			System.out.println(category);
+		}
+		searchedList.add(new Category());
+		System.out.println();
+		
+		
+		
+		categoryViewModel.setCategoryItems(searchedList);
 		return "categoryView";
 	}
+	
 }
