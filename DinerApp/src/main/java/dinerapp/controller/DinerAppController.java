@@ -18,4 +18,5 @@ public class DinerAppController {
 	public String getDinerAppForm2(Model model) {
 		return "dinerapp";
 	}
+	
 }
