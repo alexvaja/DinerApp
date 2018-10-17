@@ -16,21 +16,23 @@ public class FoodControler
 {
 	@Autowired
 	private FoodRepository foodRepo;
+
 	@GetMapping("/foodView")
-	public String addFoodToDataBase(Model model)
-	{
+	public String openFoodView(Model model) {
+		System.out.println("am intrat in mancare");
 		model.addAttribute("foodViewModel", new FoodViewModel());
-		return "dinnerapp";
+		return "foodView";
 	}
+
 	@PostMapping("/foodView")
-	public String addFoodToDatabase(@ModelAttribute FoodViewModel foodViewModel)
-	{
-		/*Food food = new Food();
+	public String openFoodView(@ModelAttribute FoodViewModel foodViewModel) {
+		System.out.println("am intrat in mancare2");
+		Food food = new Food();
 		food.setFoodName(foodViewModel.getFoodName());
 		food.setIngredients(foodViewModel.getIngredients());
 		food.setWeight(foodViewModel.getWeight());
 		food.setPrice(foodViewModel.getPrice());
-		foodRepo.save(food);*/
+		foodRepo.save(food);
 		return "foodView";
 	}
 }

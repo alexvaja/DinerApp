@@ -11,7 +11,7 @@
 	<h1>Mancare</h1>
 
 	<form th:object="${foodViewModel}" action="foodView.html"
-		th:action="@{/food}" method="post">
+		th:action="@{/foodView}" method="post">
 		<div>
 			<p>
 				Adauga mancare: <input type="text" th:field="*{foodName}" />
