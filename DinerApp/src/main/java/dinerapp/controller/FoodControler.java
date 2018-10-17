@@ -12,7 +12,6 @@ import dinerapp.model.FoodViewModel;
 import dinerapp.repository.FoodRepository;
 
 @Controller
-@RequestMapping("/foodView")
 public class FoodControler 
 {
 	@Autowired
@@ -21,17 +20,17 @@ public class FoodControler
 	public String addFoodToDataBase(Model model)
 	{
 		model.addAttribute("foodViewModel", new FoodViewModel());
-		return "foodView";
+		return "dinnerapp";
 	}
 	@PostMapping("/foodView")
 	public String addFoodToDatabase(@ModelAttribute FoodViewModel foodViewModel)
 	{
-		Food food = new Food();
+		/*Food food = new Food();
 		food.setFoodName(foodViewModel.getFoodName());
 		food.setIngredients(foodViewModel.getIngredients());
 		food.setWeight(foodViewModel.getWeight());
 		food.setPrice(foodViewModel.getPrice());
-		foodRepo.save(food);
-		return "resultView";
+		foodRepo.save(food);*/
+		return "foodView";
 	}
 }

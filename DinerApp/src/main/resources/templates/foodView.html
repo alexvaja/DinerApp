@@ -13,10 +13,6 @@
 	<form th:object="${foodViewModel}" action="foodView.html"
 		th:action="@{/food}" method="post">
 		<div>
-			<input name="submit" type="submit" value="Download" />
-		</div>
-
-		<div>
 			<p>
 				Adauga mancare: <input type="text" th:field="*{foodName}" />
 			</p>

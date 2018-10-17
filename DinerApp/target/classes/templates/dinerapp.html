@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -68,14 +68,16 @@ body {
 <body>
 
 	<div class="header">
-		<h2>PULA</h2>
-		<p>Da in jos sa nu mai vezi PULA</p>
+		<h2>CANTINA ATOS</h2>
+		<p>TOATE DREPTURILE REZERVATE. BAIETII FAINI VAJA SI SILVIU AU FACUT ACEASTA APLICATIE. NU UITA SA TE ABONEZ LA CANALUL NOSTR DE YOUTUBE. MS PWP JOS :*</p>
 	</div>
 
 	<div id="navbar">
-		<a class="active" href="category.html">Home</a> 
-		<a href="javascript:void(0)">News</a> 
-		<a href="javascript:void(0)">Contact</a>
+		
+		<form th:action ="@{/foodView}" method="post" action="foodView.html">
+			<input type="submit" value="food">
+		</form>
+		
 	</div>
 
 	<div class="content">
