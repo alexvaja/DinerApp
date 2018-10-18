@@ -22,7 +22,8 @@ public class CategoryController {
 	
 	@GetMapping("/categoryView")
 	public String getForm(Model model) {
-		System.out.println("Ajung in get");
+		
+		System.out.println("Ajung in get category");//
 		CategoryViewModel categoryViewModel = new CategoryViewModel();
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList= new ArrayList<>();
@@ -38,14 +39,15 @@ public class CategoryController {
 	
 	@PostMapping("/categoryView")
 	public String getCategoryList(@ModelAttribute CategoryViewModel categoryViewModel) {
+		
+		System.out.println("Ajung in post category");//
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList= new ArrayList<>();
 		for (Category category : list) {
 			searchedList.add(category);
 			System.out.println(category);
 		}
-		searchedList.add(new Category());
-		System.out.println();
+		searchedList.add(new Category(1, "eeeeee", 12.0));
 		
 		
 		
