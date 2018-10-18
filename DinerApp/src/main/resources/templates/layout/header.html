@@ -10,32 +10,17 @@
 <body>
 
 <div class="container">
-    <div th:fragment="header">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#" th:href="@{/}">Home</a>
-                    <ul class="nav navbar-nav">
-                        <li><a th:href="@{/products}">Products List</a></li>
-                        <li><a th:href="@{/products/add}">Create Product</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        
-        <div class="jumbotron">
-            <div class="row text-center">
-                <div class="row">
-                    <h2>Spring MVC Crud Application</h2>
-                </div>
-            </div>
-            <div class="row text-center">
-                <img src="../../static/images/Pivotal_Java_Spring_Logo.png" width="30%"
-                     th:src="@{/images/Pivotal_Java_Spring_Logo.png}" />
-            </div>
-        </div>
-        
-    </div>
+	<div class="header">
+		<h2>CANTINA ATOS</h2>
+		<p>TOATE DREPTURILE REZERVATE. BAIETII FAINI VAJA SI SILVIU AU FACUT ACEASTA APLICATIE. NU UITA SA TE ABONEZ LA CANALUL NOSTR DE YOUTUBE. MS PWP JOS :*</p>
+	</div>
+
+	<div id="navbar">
+		<a href="#" th:href="@{/}" class="active">Home</a>
+		<a href="/foodView" th:href="@{/foodView}">Mancare</a> 
+		<a href="/categoryView" th:href="@{/categoryView}">Categorie</a> 
+		<a href="/contactView" th:href="@{/contactView}">Contact</a>	
+	</div>
 </div>
 
 </body>
