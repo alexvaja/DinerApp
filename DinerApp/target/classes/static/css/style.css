@@ -1,30 +1,32 @@
 .navbar-default {
-    background: #04659E;
+	background: #04659E;
 }
 
 .navbar-default .navbar-brand {
-    color: white;
+	color: white;
 }
 
-.navbar-default .navbar-nav > li > a {
-    color: white;
+.navbar-default .navbar-nav>li>a {
+	color: white;
 }
-
-
 
 footer {
-    height: 100px;
-    padding-top: 15px;
-    padding-left: 15px;
-    color: white; 
-    background-color: #04659E;
+	height: 100px;
+	padding-top: 15px;
+	padding-left: 15px;
+	color: white;
+	background-color: #04659E;
+	
+	position:absolute;
+    width:100%;
 }
 
 body {
 	margin: 0;
 	font-size: 28px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Verdana, Verdana, Verdana;
 }
+
 
 .header {
 	background-color: #f1f1f1;
