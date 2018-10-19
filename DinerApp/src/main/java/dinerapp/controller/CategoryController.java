@@ -22,37 +22,33 @@ public class CategoryController {
 	
 	@GetMapping("/categoryView")
 	public String getForm(Model model) {
-		
 		System.out.println("Ajung in get category");//
-		CategoryViewModel categoryViewModel = new CategoryViewModel();
-		Iterable<Category> list = categoryRepository.findAll();
-		List<Category> searchedList= new ArrayList<>();
-		for (Category category : list) {
-			searchedList.add(category);
-			System.out.println(category);
-		}
 		
-		categoryViewModel.setCategoryItems(searchedList);
+		CategoryViewModel categoryViewModel = new CategoryViewModel();		
+		categoryViewModel.setCategoryItems(getListOfCategory());
 		model.addAttribute("categoryViewModel", categoryViewModel);
 		return "categoryView";
 	}
 	
 	@PostMapping("/categoryView")
 	public String getCategoryList(@ModelAttribute CategoryViewModel categoryViewModel) {
-		
 		System.out.println("Ajung in post category");//
+		
+		List<Category> searchedList= new ArrayList<>(getListOfCategory());
+		searchedList.add(new Category(6, "eeeeee", 12.0));
+		
+		categoryViewModel.setCategoryItems(searchedList);
+		return "categoryView";
+	}
+	
+	private List<Category> getListOfCategory() {
+		
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList= new ArrayList<>();
 		for (Category category : list) {
 			searchedList.add(category);
-			System.out.println(category);
 		}
-		searchedList.add(new Category(1, "eeeeee", 12.0));
-		
-		
-		
-		categoryViewModel.setCategoryItems(searchedList);
-		return "categoryView";
+		return searchedList;
 	}
 	
 }
