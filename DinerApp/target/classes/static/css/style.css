@@ -1,5 +1,5 @@
 .navbar-default {
-    background: #6db33f;
+    background: #04659E;
 }
 
 .navbar-default .navbar-brand {
@@ -16,8 +16,8 @@ footer {
     height: 100px;
     padding-top: 15px;
     padding-left: 15px;
-    color: #FFD740; 
-    background-color: #424242;
+    color: white; 
+    background-color: #04659E;
 }
 
 body {
@@ -34,7 +34,7 @@ body {
 
 #navbar {
 	overflow: hidden;
-	background-color: #333;
+	background-color: #04659E;
 }
 
 #navbar a {
@@ -53,7 +53,7 @@ body {
 }
 
 #navbar a.active {
-	background-color: #4CAF50;
+	background-color: #04659E;
 	color: white;
 }
 

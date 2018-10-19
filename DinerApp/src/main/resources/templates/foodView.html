@@ -18,18 +18,21 @@
 				Adauga mancare: <input type="text" th:field="*{foodName}" />
 			</p>
 			<p>
-				 Adauga ingrediente: <input type="text" th:field="*{ingredients}" />
+				Adauga ingrediente: <input type="text" th:field="*{ingredients}" />
 			</p>
 			<p>
-				 Adauga gramaj: <input type="text" th:field="*{weight}" />
+				Adauga gramaj: <input type="text" th:field="*{weight}" />
 			</p>
 			<p>
-				 Adauga pret: <input type="text" th:field="*{price}" />
+				Adauga pret: <input type="text" th:field="*{price}" />
 			</p>
 			<p>
-				<input name="submit" type="submit" value="Submit" /> 
+				<input name="submit" type="submit" value="Submit" />
 			</p>
 		</div>
 	</form>
+	<footer>
+		<th:block th:include="layout/footer.html"></th:block>
+	</footer>
 </body>
 </html>
