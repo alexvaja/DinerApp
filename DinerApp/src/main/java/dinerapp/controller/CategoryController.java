@@ -35,9 +35,10 @@ public class CategoryController {
 		System.out.println("Ajung in post category");//
 		
 		List<Category> searchedList= new ArrayList<>(getListOfCategory());
-		searchedList.add(new Category(6, "eeeeee", 12.0));
+		searchedList.add(new Category());
 		
 		categoryViewModel.setCategoryItems(searchedList);
+		System.out.println(categoryViewModel);
 		return "categoryView";
 	}
 	

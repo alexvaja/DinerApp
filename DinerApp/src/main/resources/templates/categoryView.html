@@ -9,28 +9,42 @@
 <body>
 	<h1>Category Table</h1>
 
-	<form action="categoryView.html" th:object="${categoryViewModel}"
+	<form action="#" th:object="${categoryViewModel}"
 		th:action="@{/categoryView}" method="post">
+		
+		<div>
+			<input name="submit" type="submit" th:value="Add" />
+			<input name="submit" type="submit" th:value="Save" />
+			<input name="submit" type="submit" th:value="Delete" />
+		</div>
+		
+		<br>
+		<br>
+		
 		<div>
 			<table border="3" style="width: 90%; margin: 0 5%;">
 				<tr>
-					<th>CATEGORY ID</th>
+<!-- 					<th>CATEGORY ID</th> -->
 					<th>CATEGORY NAME</th>
 					<th>CATEGORY PRICE</th>
 				</tr>
-				<tr data-th-each="categoryItem : *{categoryItems}">
-					<td contenteditable='true' data-th-text="${categoryItem.id}">...</td>
+				
+				<tr th:each="book, itemStat : *{categoryItems}">
+				
+					<td><input th:field="*{categoryItems[__${itemStat.index}__].name}" /></td>
+                    <td><input th:field="*{categoryItems[__${itemStat.index}__].price}" /></td>
+				
+				
+<!-- 					<td contenteditable='true' data-th-text="${categoryItem.id}">...</td>
 					<td contenteditable='true' data-th-text="${categoryItem.name}">...</td>
-					<td contenteditable='true' data-th-text="${categoryItem.price}">...</td>
+					<td contenteditable='true' data-th-text="${categoryItem.price}">...</td> -->
 				</tr>
 			</table>
 		</div>
 
-		<div>
-			<input name="submit" type="submit" value="Add" />
-			<input name="submit" type="submit" value="Save" />
-			<input name="submit" type="submit" value="Delete" />
-		</div>
+		<br>
+		<br>
+		
 	</form>
 	<footer>
 		<th:block th:include="layout/footer.html"></th:block>
