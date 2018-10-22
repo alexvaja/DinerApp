@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:include="layout/header.html"></th:block>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Category View</title>
+<head lang="en">
+	<th:block th:include="layout/header.html"></th:block>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Category View</title>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
 	<form action="categoryView.html" th:object="${categoryViewModel}"
 		th:action="@{/categoryView}" method="post">
 		<div>
-			<table border="3">
+			<table border="3" style="width: 90%; margin: 0 5%;">
 				<tr>
 					<th>CATEGORY ID</th>
 					<th>CATEGORY NAME</th>
