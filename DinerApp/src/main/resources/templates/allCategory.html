@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:include="layout/header.html"></th:block>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Category View</title>
+	</head>
+
+	<body>
+		<form action="allCategory.html" th:object="${categoryViewModel}" th:action="@{/allCategory}" method="get">
+			<div>
+				<table border="3" style="width: 90%; margin: 0 5%;">
+					
+						<tr>
+							<th> CATEGORY NAME </th>
+							<th> CATEGORY PRICE </th>
+						</tr>
+				
+						<tr th:if="${#lists.isEmpty(categoryViewModel.categoryItems)}">
+							<td> No Categories Available</td>
+						</tr>
+						
+						<tr th:each="categoryItem : ${categoryViewModel.categoryItems}">
+							<td th:text="${categoryItem.name}">...</td>
+							<td th:text="${categoryItem.price}"> ...</td>
+						</tr>
+					
+				</table>
+			</div>
+		</form>
+	</body>
+	
+	<footer>
+		<th:block th:include="layout/footer.html"></th:block>
+	</footer>
+
+</html>

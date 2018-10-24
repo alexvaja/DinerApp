@@ -20,14 +20,24 @@ public class CategoryController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	@GetMapping("/categoryView")
+//	@GetMapping("/all")
+//	public String showAll(Model model) {
+//	    model.addAttribute("books", bookService.findAll());
+//	    return "books/allBooks";
+//	}
+	
+	
+	@GetMapping("/allCategory")
 	public String getForm(Model model) {
 		System.out.println("Ajung in get category");//
 		
-		CategoryViewModel categoryViewModel = new CategoryViewModel();		
+		CategoryViewModel categoryViewModel = new CategoryViewModel();
+		//System.out.println(categoryViewModel);//
+		//System.out.println(getListOfCategory());//
 		categoryViewModel.setCategoryItems(getListOfCategory());
+		//System.out.println(categoryViewModel);//
 		model.addAttribute("categoryViewModel", categoryViewModel);
-		return "categoryView";
+		return "allCategory";
 	}
 	
 	@PostMapping("/categoryView")
