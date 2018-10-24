@@ -27,7 +27,7 @@ public class CategoryController {
 //	}
 	
 	
-	@GetMapping("/allCategory")
+	@GetMapping("/allCategories")
 	public String getForm(Model model) {
 		System.out.println("Ajung in get category");//
 		
@@ -37,7 +37,7 @@ public class CategoryController {
 		categoryViewModel.setCategoryItems(getListOfCategory());
 		//System.out.println(categoryViewModel);//
 		model.addAttribute("categoryViewModel", categoryViewModel);
-		return "allCategory";
+		return "allCategories";
 	}
 	
 	@PostMapping("/categoryView")
