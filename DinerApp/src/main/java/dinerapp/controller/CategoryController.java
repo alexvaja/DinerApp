@@ -20,36 +20,32 @@ public class CategoryController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-//	@GetMapping("/all")
-//	public String showAll(Model model) {
-//	    model.addAttribute("books", bookService.findAll());
-//	    return "books/allBooks";
-//	}
-	
-	
 	@GetMapping("/allCategories")
-	public String getForm(Model model) {
-		System.out.println("Ajung in get category");//
+	public String getAllCategories(Model model) {
+		System.out.println("getAllCategories");
 		
 		CategoryViewModel categoryViewModel = new CategoryViewModel();
-		//System.out.println(categoryViewModel);//
-		//System.out.println(getListOfCategory());//
 		categoryViewModel.setCategoryItems(getListOfCategory());
-		//System.out.println(categoryViewModel);//
 		model.addAttribute("categoryViewModel", categoryViewModel);
 		return "allCategories";
 	}
 	
-	@PostMapping("/categoryView")
-	public String getCategoryList(@ModelAttribute CategoryViewModel categoryViewModel) {
-		System.out.println("Ajung in post category");//
-		
-		List<Category> searchedList= new ArrayList<>(getListOfCategory());
-		searchedList.add(new Category());
-		
-		categoryViewModel.setCategoryItems(searchedList);
-		System.out.println(categoryViewModel);
-		return "categoryView";
+	@GetMapping("/allCategories/addCategory")
+	public String createCategory(Model model) {
+    	System.out.println("createCategory");.
+    	
+		model.addAttribute("categoryViewModel", new Category());
+		return "editCategory";
+	}
+	
+	@PostMapping("allCategories")
+	public String saveCategory(Model model, @ModelAttribute Category category) {
+    	System.out.println("saveCategory");
+    	System.out.println(category);
+    	
+    
+		categoryRepository.save(category);
+		return "redirect:/";
 	}
 	
 	private List<Category> getListOfCategory() {

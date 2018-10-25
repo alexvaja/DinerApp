@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Edit Category Details</title>
+		<th:block th:include="layout/header"></th:block>
+	</head>
+	<body>
+		<div class="container">
+			<h2>Edit Category Details</h2>
+			<div>
+				<form th:object="${categoryViewModel}" th:action="@{/allCategories}" method="post" >
+					<div class="form-group">
+						<input type="hidden" class="form-control" th:field="*{id}"/>
+					</div>
+					<div class="form-group">
+						<label >Name:</label>
+						<input type="text" class="form-control" th:field="*{name}"/>
+					</div>
+					<div class="form-group">
+						<label>Price</label>
+						<input type="text" class="form-control" th:field="*{price}"/>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-primary">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

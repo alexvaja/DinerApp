@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
+		<title>Categories</title>
 		<th:block th:include="layout/header.html"></th:block>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Category View</title>
 	</head>
 
 	<body>
-		<form action="#" th:object="${categoryViewModel}" th:action="@{/allCategories}" method="get">
+		<a th:href="@{/allCategories/addCategory}">Create Category</a>
+		<!-- <form action="#" th:object="${categoryViewModel}" th:action="@{/allCategories}" method="get">
+			<div>
+				<input name="submit" type="submit" th:value="Add" />
+				<input name="submit" type="submit" th:value="Save" />
+				<input name="submit" type="submit" th:value="Delete" />
+			</div>
+		
+			<br>
+			<br>
 			<div>
 				<table border="3" style="width: 90%; margin: 0 5%;">
 					
@@ -27,7 +36,30 @@
 					
 				</table>
 			</div>
-		</form>
+		</form> -->
+		<div class="container">
+		
+			<div th:if="${not #lists.isEmpty(categoryViewModel.categoryItems)}">
+				<table class="table table-striped" border="3" style="width: 90%; margin: 0 5%;">
+					<thead>
+						<tr>
+							<th>CATEGORY NAME</th>
+							<th>CATEGORY PRICE</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="category :${categoryViewModel.categoryItems}">
+							<td th:text="${category.name}">...</td>
+							<td th:text="${category.price}">...</td>
+							<td><a th:href="${'/allCategories/editCategory' + category.id}" class="btn btn-default">Edit</a></td>
+							<td><a th:href="${'/allCategories/deleteCategory' + category.id}" class="btn btn-danger">Delete</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		
 	</body>
 	
 	<footer>
