@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Categories</title>
+		<th:block th:include="layout/header.html"></th:block>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+
+	<body>
+		<br/>
+		<br/>
+	
+		<div class="container">
+			<a th:href="@{/allCategories/addCategory}">Create Category</a>
+			<br/>
+			<br/>
+			<div>
+				<div th:if="${not #lists.isEmpty(categoryViewModel.categoryItems)}">
+					<table class="table table-striped" border="3" style="width: 90%; margin: 0 5%;">
+						<thead>
+							<tr>
+								<th>CATEGORY NAME</th>
+								<th>CATEGORY PRICE</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="category :${categoryViewModel.categoryItems}">
+								<td th:text="${category.name}">...</td>
+								<td th:text="${category.price}">...</td>
+								<td><a th:href="${'/allCategories/editCategory/' + category.id}" class="btn btn-default">Edit</a></td>
+								<td><a th:href="${'/allCategories/deleteCategory/' + category.id}" class="btn btn-danger">Delete</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<br/>
+		<br/>
+	
+	</body>
+	
+	<footer>
+		<th:block th:include="layout/footer.html"></th:block>
+	</footer>
+
+</html>

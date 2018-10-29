@@ -7,11 +7,20 @@ import dinerapp.entity.Category;
 
 public class CategoryViewModel {
 
-	private List<Category> categoryItems = new ArrayList<Category>();
+	private List<Category> categoryItems;
 	
 	public CategoryViewModel() {
 		super();
-		categoryItems = new ArrayList<>();
+		this.categoryItems = new ArrayList<>();
+	}
+
+	public CategoryViewModel(List<Category> categoryItems) {
+		super();
+		this.categoryItems = new ArrayList<>(categoryItems);
+	}
+	
+	public void addCategory(Category anotherCategory) {
+		categoryItems.add(anotherCategory);
 	}
 
 	public List<Category> getCategoryItems() {
