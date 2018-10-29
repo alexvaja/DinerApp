@@ -33,7 +33,7 @@ public class CategoryController {
 	
 	@GetMapping("/allCategories/addCategory")
 	public String createCategory(Model model) {
-    	System.out.println("createCategory");
+    	System.out.println("createCategory");.
     	
 		model.addAttribute("categoryViewModel", new Category());
 		return "editCategory";
@@ -45,8 +45,6 @@ public class CategoryController {
 		return "editCategory";
 	}
 	
-
-	
 	@GetMapping("/allCategories/deleteCategory/{id}")
 	public String deleteCategory(Model model, @PathVariable(value = "id") Integer id) {
 		categoryRepository.deleteById(id);
@@ -55,17 +53,13 @@ public class CategoryController {
 	
 	@PostMapping("allCategories")
 	public String saveCategory(Model model, @ModelAttribute Category category) {
-    	System.out.println ("saveCategory");
+    	System.out.println("saveCategory");
     	System.out.println(category);
     	
     
 		categoryRepository.save(category);
 		return "redirect:/";
 	}
-	
-	
-	
-	
 	
 	private List<Category> getListOfCategory() {
 		
