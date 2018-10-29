@@ -33,7 +33,7 @@ public class CategoryController {
 	
 	@GetMapping("/allCategories/addCategory")
 	public String createCategory(Model model) {
-    	System.out.println("createCategory");.
+    	System.out.println("createCategory");
     	
 		model.addAttribute("categoryViewModel", new Category());
 		return "editCategory";
