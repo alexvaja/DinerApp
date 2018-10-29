@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import dinerapp.entity.Category;
@@ -38,20 +39,11 @@ public class CategoryController {
 		return "editCategory";
 	}
 	
-<<<<<<< HEAD
 	@GetMapping("/allCategories/editCategory/{id}")
 	public String editCategory(Model model, @PathVariable(value = "id") Integer id) {
 		model.addAttribute("categoryViewModel", categoryRepository.findById(id));
 		return "editCategory";
 	}
-	
-
-	
-	
-	
-	
-	
-	
 	
 	@GetMapping("/allCategories/deleteCategory/{id}")
 	public String deleteCategory(Model model, @PathVariable(value = "id") Integer id) {
@@ -59,8 +51,6 @@ public class CategoryController {
 		return "redirect:/allCategories";
 	}
 	
-=======
->>>>>>> parent of 8c29455... Finish CRUD for Category
 	@PostMapping("allCategories")
 	public String saveCategory(Model model, @ModelAttribute Category category) {
     	System.out.println("saveCategory");
