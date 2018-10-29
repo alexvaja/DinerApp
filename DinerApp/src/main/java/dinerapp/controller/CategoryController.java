@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import dinerapp.entity.Category;
@@ -20,39 +21,59 @@ public class CategoryController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	@GetMapping("/categoryView")
-	public String getForm(Model model) {
+	@GetMapping("/allCategories")
+	public String getAllCategories(Model model) {
+		System.out.println("getAllCategories");
 		
-		System.out.println("Ajung in get category");//
 		CategoryViewModel categoryViewModel = new CategoryViewModel();
-		Iterable<Category> list = categoryRepository.findAll();
-		List<Category> searchedList= new ArrayList<>();
-		for (Category category : list) {
-			searchedList.add(category);
-			System.out.println(category);
-		}
-		
-		categoryViewModel.setCategoryItems(searchedList);
+		categoryViewModel.setCategoryItems(getListOfCategory());
 		model.addAttribute("categoryViewModel", categoryViewModel);
-		return "categoryView";
+		return "allCategories";
 	}
 	
-	@PostMapping("/categoryView")
-	public String getCategoryList(@ModelAttribute CategoryViewModel categoryViewModel) {
+	@GetMapping("/allCategories/addCategory")
+	public String createCategory(Model model) {
+    	System.out.println("createCategory");
+    	
+		model.addAttribute("categoryViewModel", new Category());
+		return "editCategory";
+	}
+	
+	@GetMapping("/allCategories/editCategory/{id}")
+	public String editCategory(Model model, @PathVariable(value = "id") Integer id) {
+		model.addAttribute("categoryViewModel", categoryRepository.findById(id));
+		return "editCategory";
+	}
+	
+
+	
+	@GetMapping("/allCategories/deleteCategory/{id}")
+	public String deleteCategory(Model model, @PathVariable(value = "id") Integer id) {
+		categoryRepository.deleteById(id);
+		return "redirect:/allCategories";
+	}
+	
+	@PostMapping("allCategories")
+	public String saveCategory(Model model, @ModelAttribute Category category) {
+    	System.out.println ("saveCategory");
+    	System.out.println(category);
+    	
+    
+		categoryRepository.save(category);
+		return "redirect:/";
+	}
+	
+	
+	
+	
+	
+	private List<Category> getListOfCategory() {
 		
-		System.out.println("Ajung in post category");//
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList= new ArrayList<>();
 		for (Category category : list) {
 			searchedList.add(category);
-			System.out.println(category);
 		}
-		searchedList.add(new Category(1, "eeeeee", 12.0));
-		
-		
-		
-		categoryViewModel.setCategoryItems(searchedList);
-		return "categoryView";
+		return searchedList;
 	}
-	
 }

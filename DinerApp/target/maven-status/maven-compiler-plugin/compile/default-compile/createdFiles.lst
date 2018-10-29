@@ -1,5 +1,11 @@
 dinerapp\model\CategoryViewModel.class
-dinerapp\controller\CategoryController.class
+dinerapp\controller\FoodControler.class
 dinerapp\Application.class
 dinerapp\entity\Category.class
+dinerapp\repository\FoodRepository.class
+dinerapp\model\FoodViewModel.class
+dinerapp\controller\DinerAppController.class
+dinerapp\controller\ContactController.class
+dinerapp\controller\CategoryController.class
+dinerapp\entity\Food.class
 dinerapp\repository\CategoryRepository.class
