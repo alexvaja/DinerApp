@@ -5,12 +5,12 @@
 <head>
 <th:block th:include="layout/header.html"></th:block>
 <title>Mancare</title>
-
+<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/stylesheet.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 	<h1>Mancare</h1>
-
+<div >
 	<form th:object="${foodViewModel}" action="foodView.html"
 		th:action="@{/foodView}" method="post">
 		<div>
@@ -34,5 +34,6 @@
 	<footer>
 		<th:block th:include="layout/footer.html"></th:block>
 	</footer>
+</div>
 </body>
 </html>

@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<th:block th:block="layout/header.html"></th:block>
+		<title>Mancare</title>
 	</head>
 
 	<body>
+		<div class="container">
+			<form action="#" th:action="@{/allFoods}" th:object="${foodViewModel}" method="post">
+				
+			</form>
+		</div>
 	
 	</body>
+	
+	<footer>
+		<th:block th:block="layout/footer.html"></th:block>
+	</footer>
 </html>
