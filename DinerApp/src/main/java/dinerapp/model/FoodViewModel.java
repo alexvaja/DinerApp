@@ -1,46 +1,33 @@
 package dinerapp.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import dinerapp.entity.Food;
+
 public class FoodViewModel 
 {
-	private String foodName;
-	private String ingredients;
-	private int weight;
-	private int price;
+	private List<Food> foodItems;
+
+	public FoodViewModel() {
+		super();
+		this.foodItems = new ArrayList<>();
+	}
 	
-	public FoodViewModel()
-	{
+	public FoodViewModel(List<Food> foodItems) {
 		super();
+		this.foodItems = new ArrayList<>(foodItems);
 	}
-	public FoodViewModel(String foodName, String ingredients, int weight, int price) {
-		super();
-		this.foodName = foodName;
-		this.ingredients = ingredients;
-		this.weight = weight;
-		this.price = price;
+	
+	public List<Food> getFoodItems() {
+		return foodItems;
 	}
-	public String getFoodName() {
-		return foodName;
+
+	public void setFoodItems(List<Food> foodItems) {
+		this.foodItems = foodItems;
 	}
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
-	}
-	public String getIngredients() {
-		return ingredients;
-	}
-	public void setIngredients(String ingredients) {
-		this.ingredients = ingredients;
-	}
-	public int getWeight() {
-		return weight;
-	}
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
+
+	@Override
+	public String toString() {
+		return "FoodViewModel [foodItems=" + foodItems + "]";
 	}
 }
-
