@@ -1,4 +1,5 @@
 package dinerapp.entity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ public class Food
 	@Column(name="id_food_type")
 	private Integer id;
 	@Column(name="food_name")
-	public String foodName;
+	public String name;
 	@Column(name="food_ingredients")
 	public String ingredients;
 	@Column(name="food_weight")
@@ -23,47 +24,56 @@ public class Food
 	@Column(name="food_price")
 	public int price;
 	
-	public Food()
-	{
+	public Food() {
 		super();
 	}
-	public Food(Integer id, String foodName, String ingredients, int weight, int price) {
+	
+	public Food(Integer id, String name, String ingredients, int weight, int price) {
 		super();
 		this.id = id;
-		this.foodName = foodName;
+		this.name = name;
 		this.ingredients = ingredients;
 		this.weight = weight;
 		this.price = price;
 	}
+	
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 	public String getFoodName() {
-		return foodName;
+		return name;
 	}
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
+	
+	public void setFoodName(String name) {
+		this.name = name;
 	}
+	
 	public String getIngredients() {
 		return ingredients;
 	}
+	
 	public void setIngredients(String ingredients) {
 		this.ingredients = ingredients;
 	}
+	
 	public int getWeight() {
 		return weight;
 	}
+	
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+	
 	public int getPrice() {
 		return price;
 	}
+	
 	public void setPrice(int price) {
 		this.price = price;
 	}
-
 }
