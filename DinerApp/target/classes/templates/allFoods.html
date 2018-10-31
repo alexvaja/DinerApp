@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<th:block th:block="layout/header.html"></th:block>
+		<title>Mancare</title>
 		
+		   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 
 	<body>
+		<div class="container">
+		
+			<h1>Mancare</h1>
+			<div th:if="${not #lists.isEmpty(foodViewModel.foodItems)}">
+				<table class="table table-striped" border="3" style="width: 90%; margin: 0 5%;">
+					<thead>
+						<tr>
+							<th>FOOD NAME</th>
+							<th>FOOD INGREDIENTS</th>
+							<th>FOOD WEIGHT</th>
+							<th>FOOD PRICE
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="food : ${foodViewModel.foodItems}">
+							<td th:text="${food.name}">...</td>
+							<td th:text="${food.ingredients}">...</td>
+							<td th:text="${food.weight}">...</td>
+							<td th:text="${food.price}">...</td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	
 	</body>
+	
+	<footer>
+		<th:block th:block="layout/footer.html"></th:block>
+	</footer>
 </html>
