@@ -22,22 +22,24 @@ public class FoodControler
 	private FoodRepository foodRepo;
 
 	@GetMapping("/allFoods")
-	public String getAllFoods(Model model) {
+	public String getAllFoods(Model model) 
+	{
 		System.out.println("getAllFoods");
 		FoodViewModel foodViewModel = new FoodViewModel();
-		foodViewModel.setFoodItems(getListOfCategory());
-		
+		foodViewModel.setFoodItems(getListOfCategory());	
 		model.addAttribute("foodViewModel", foodViewModel);
 		return "allFoods";
 	}
-
+	
+	
+	
 //	@PostMapping("/foodView")
 //	public String openFoodView(@ModelAttribute FoodViewModel foodViewModel) {
 //		System.out.println("am intrat in mancare2");
 //		Food food = new Food();
 //		food.setFoodName(foodViewModel.getFoodName());
 //		food.setIngredients(foodViewModel.getIngredients());
-//		food.setWeight(foodViewModel.getWeight());
+//		food.setWeight(foodViewModelP.getWeight());
 //		food.setPrice(foodViewModel.getPrice());
 //		foodRepo.save(food);
 //		return "foodView";

@@ -15,6 +15,9 @@
 		th:action="@{/foodView}" method="post">
 		<div>
 			<p>
+				<input type = "hidden" th:field="*{id}"/>
+			</p>
+			<p>
 				Adauga mancare: <input type="text" th:field="*{foodName}" />
 			</p>
 			<p>

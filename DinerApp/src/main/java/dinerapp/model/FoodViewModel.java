@@ -25,6 +25,11 @@ public class FoodViewModel
 	public void setFoodItems(List<Food> foodItems) {
 		this.foodItems = foodItems;
 	}
+	
+	public void addFood(Food food)
+	{
+		this.foodItems.add(food);
+	}
 
 	@Override
 	public String toString() {
