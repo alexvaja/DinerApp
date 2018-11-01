@@ -13,7 +13,8 @@
 		<div>
 			<div th:if="${addCategoryIsAvailable == True}">
 				<div>
-					Nume: <input type="text" th:field="*{name}" maxlength="7" size="40" autofocus/>					
+					Nume: <input type="text" th:field="*{name}" maxlength="7"
+							size="40" autofocus/>					
 				</div>
 				<div>
 					Pret: <input type="text" th:field="*{price}" />
@@ -40,10 +41,7 @@
 				</tr>
 			</table>
 		</div>
-
 	</form>
-	
-	
 	
 	<footer>
 		<th:block th:include="layout/footer.html"></th:block>

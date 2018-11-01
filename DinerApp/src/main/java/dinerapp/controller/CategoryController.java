@@ -38,6 +38,7 @@ public class CategoryController {
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 		model.addAttribute("category", new Category());
 		System.out.println(category);
+		System.out.println(reqParam);
 		switch(reqParam)
 		{
 			case "Add":
@@ -51,7 +52,6 @@ public class CategoryController {
 				model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 				break;
 			case "Cancel":
-				
 				break;
 		}
 		return "categoryView";
