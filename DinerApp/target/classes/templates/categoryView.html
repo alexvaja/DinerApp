@@ -13,13 +13,13 @@
 		<div>
 			<div th:if="${addCategoryIsAvailable == True}">
 				<div>
-					Nume: <input type="text" th:field="*{name}" maxlength="7"
-							size="40" autofocus/>					
+					Nume: <input type="text" th:field="*{name}" maxlength="70" size="40" autofocus/>					
 				</div>
 				<div>
-					Pret: <input type="text" th:field="*{price}" />
+					Pret: <input type="text" th:field="*{price}" maxlength="70" size="40"/>
 				</div>
 			</div>
+			
 			<div th:if="${addCategoryIsAvailable == False}">
 				<h1>MUIE PSD</h1>
 			</div>
