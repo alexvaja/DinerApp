@@ -11,7 +11,7 @@
 				<h1>Adaugare meniu</h1>
 				
 				<div th:if="${addMenuIsAvailable == False}">
-					<input name="submit" type="submit" th:value="AddMenu" value="Pula mea"/>
+					<input name="submit" type="submit" th:value="AddMenu"/>
 				</div>
 				
 				<div th:if="${addMenuIsAvailable == True}">
@@ -19,6 +19,13 @@
 						Alege data: <input type="date" name="menuData" />
 						<input name="submit" type="submit" th:value="Cancel" />
 						<input name="submit" type="submit" th:value="AddCategory"/>
+						
+						<div th:if="${addCategoryIsAvailable == True}">
+							<select id="test" name="test">
+								<option value="">Select Test Order</option>
+								<option th:each="category : ${categoryList}" th:value="${category.name}" th:text="${category.name}"></option>
+							</select>
+						</div>
 					</div>
 				</div>
 				
