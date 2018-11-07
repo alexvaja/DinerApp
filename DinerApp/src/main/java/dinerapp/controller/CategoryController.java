@@ -41,8 +41,7 @@ public class CategoryController {
 		model.addAttribute("category", new Category());
 		System.out.println(category);
 		System.out.println(reqParam);
-		switch(reqParam)
-		{
+		switch(reqParam) {
 			case "Add":
 				addCategoryIsAvailable = true;
 				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
@@ -54,6 +53,8 @@ public class CategoryController {
 				model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 				break;
 			case "Cancel":
+				addCategoryIsAvailable = false;
+				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 				break;
 		}
 		return "categoryView";

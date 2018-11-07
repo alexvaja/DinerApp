@@ -18,16 +18,16 @@
 				<div>
 					Pret: <input type="text" th:field="*{price}" maxlength="70" size="40"/>
 				</div>
+				<input name="submit" type="submit" th:value="Cancel" />
+				<input name="submit" type="submit" th:value="Save" /> 
 			</div>
 			
 			<div th:if="${addCategoryIsAvailable == False}">
-				<h1>MUIE PSD</h1>
+				<h1>S-a salvat</h1>
 			</div>
+			<input name="submit" type="submit" th:value="Add" />
 		</div>
 		
-		<input name="submit" type="submit" th:value="Add" />
-		<input name="submit" type="submit" th:value="Cancel" />
-		<input name="submit" type="submit" th:value="Save" /> 
 		
 		<div>
 			<table border="3" style="width: 90%; margin: 0 5%;">
