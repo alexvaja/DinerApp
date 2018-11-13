@@ -126,3 +126,6 @@ public class Category
 		return "Category [id=" + id + ", name=" + name + ", price=" + price + ", foods=" + foods + "]";
 	}
 }
+
+
+//	@Column(name = "STUDENT_NAME", nullable = false, length = 100)

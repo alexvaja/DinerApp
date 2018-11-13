@@ -16,17 +16,68 @@
 				
 				<div th:if="${addMenuIsAvailable == True}">
 					<div>
-						Alege data: <input type="date" name="menuData" />
-						<input name="submit" type="submit" th:value="Cancel" />
-						<input name="submit" type="submit" th:value="AddCategory"/>
+						<p>
+							Alege data: <input type="date" name="menuData" />
+						</p>
+						
+						<p>
+							<!-- <input name="submit" type="submit" th:value="Cancel" /> -->
+							<input name="submit" type="submit" th:value="AddCategory"/>
+						</p>
 						
 						<div th:if="${addCategoryIsAvailable == True}">
+							Selecteaza Categoria: 
 							<select id="test" name="test">
-								<option value="">Select Test Order</option>
-								<option th:each="category : ${categoryList}" th:value="${category.name}" th:text="${category.name}"></option>
+								<option value="CategorySelect">Selecteaza Categoria</option>
+								<option th:each="category : ${menuViewModel.categoryItems}" th:value="${category.name}" th:text="${category.name}"></option>
 							</select>
+							
+							<br/>
+							
+							<div th:if="${addFoodIsAvailable == True}">
+								<h3>Selecteaza Mancarea</h3>
+								
+								<div>
+									<table border="3" style="width: 90%; margin: 0 5%;">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Ingredients</th>
+												<th>Weight</th>
+												<th>Price</th>
+												<th>Selected</th>
+											</tr>
+										</thead>
+										
+										<tbody>
+											<tr th:each="food : ${menuViewModel.foodItems}">
+												<td th:text="${food.name}">...</td>
+												<td th:text="${food.ingredients}">...</td>
+												<td th:text="${food.weight}">...</td>
+												<td th:text="${food.price}">...</td>
+												<td><input type="checkbox" name="checkbox"/></td>
+											</tr>
+										</tbody>
+									</table>								
+								</div>
+							
+							</div>
+							
+							<p>
+								<input name="submit" type="submit" th:value="AddFood"/>							
+							</p>
+							
 						</div>
 					</div>
+					
+					
+					
+					<br/><br/>
+					
+					<p>
+						<input name="submit" type="submit" th:value="Cancel"/>
+						<input name="submit" type="submit" th:value="SaveAll"/>
+					</p>
 				</div>
 				
 				<br/><br/><br/><br/>
