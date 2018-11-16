@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<body>
+	<!--          <th:block th:include="layout/template.html"></th:block> -->
+	<h1>Mancare</h1>
+	<div>
+		<form th:object="${food}" action="#" th:action="@{/foodView}"
+			method="post">
+			<div>
+				<div th:if="${addFoodIsAvailable == true }">
+					<div>
+						Mancare: <input type="text" th:field="*{name}" maxlength="7" size="40" autofocus />
+					</div>
+					<div>
+						Ingrediente: <input type="text" th:field="*{ingredients}" />
+					</div>
+					<div>
+						Gramaj: <input type="text" th:field="*{weight}" />
+					</div>
+					<div>
+						Pret: <input type="text" th:field="*{price}" />
+					</div>
+				</div>
+			</div>
+			<div>
+				<input name="submit" type="submit" th:value="Add" /> 
+				<input name="submit" type="submit" th:value="Save" /> 
+				<input name="submit" type="submit" th:value="Cancel" />
+			</div>
+			<div>
+				<table border="3" style="width: 90%; margin: 0 5%;">
+					<tr>
+						<th>Mancare</th>
+						<th>Ingrediente</th>
+						<th>Gramaj</th>
+						<th>Pret</th>
+					</tr>
+					<tr th:each="food : ${foodViewModel.foodItems}">
+						<td th:text="${food.name}">...</td>
+						<td th:text="${food.ingredients}">...</td>
+						<td th:text="${food.weight}">...</td>
+						<td th:text="${food.price}">...</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

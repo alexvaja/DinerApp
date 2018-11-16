@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title>Categories</title>
-		<th:block th:include="layout/header.html"></th:block>
+<!-- 		<th:block th:include="layout/header.html"></th:block> -->
+		<th:block th:include="layout/template.html"></th:block>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 
@@ -14,31 +15,31 @@
 				<input name="submit" type="submit" th:value="Save" />
 				<input name="submit" type="submit" th:value="Delete" />
 			</div>
-		
+
 			<br>
 			<br>
 			<div>
 				<table border="3" style="width: 90%; margin: 0 5%;">
-					
+
 						<tr>
 							<th> CATEGORY NAME </th>
 							<th> CATEGORY PRICE </th>
 						</tr>
-				
+
 						<tr th:if="${#lists.isEmpty(categoryViewModel.categoryItems)}">
 							<td> No Categories Available</td>
 						</tr>
-						
+
 						<tr th:each="categoryItem : ${categoryViewModel.categoryItems}">
 							<td th:text="${categoryItem.name}">...</td>
 							<td th:text="${categoryItem.price}"> ...</td>
 						</tr>
-					
+
 				</table>
 			</div>
 		</form> -->
 		<div class="container">
-		
+
 			<div th:if="${not #lists.isEmpty(categoryViewModel.categoryItems)}">
 				<table class="table table-striped" border="3" style="width: 90%; margin: 0 5%;">
 					<thead>
@@ -58,10 +59,10 @@
 				</table>
 			</div>
 		</div>
-		
-		
+
+
 	</body>
-	
+
 	<footer>
 		<th:block th:include="layout/footer.html"></th:block>
 	</footer>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+<body>
+<body>
+
+<h1>Category Table</h1>
+	<form action="#" th:object="${category}"th:action="@{/categoryView}" method="post">
+
+		<div>
+			<div th:if="${addCategoryIsAvailable == True}">
+				<div>
+					Nume: <input type="text" th:field="*{name}" maxlength="7"
+							size="40" autofocus/>					
+				</div>
+				<div>
+					Pret: <input type="text" th:field="*{price}" />
+				</div>
+			</div>
+			<div th:if="${addCategoryIsAvailable == False}">
+				<h1></h1>
+			</div>
+		</div>
+		
+		<input name="submit" type="submit" th:value="Add" />
+		<input name="submit" type="submit" th:value="Cancel" />
+		<input name="submit" type="submit" th:value="Save" /> 
+		<br><br><br>
+		<div>
+			<table border="3" style="width: 90%; margin: 0 5%;">
+				<tr>
+					<th>Nume</th>
+					<th>Pret</th>
+				</tr>
+				<tr th:each="category : ${categoryViewModel.categoryItems}">
+					<td th:text="${category.name}">...</td>
+					<td th:text="${category.price}">...</td>
+				</tr>
+			</table>
+		</div>
+	</form>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/")
 public class DinerAppController {
 
-	@GetMapping("/dinerapp")
+	@GetMapping("/homeview")
 	public String getDinerAppForm(Model model) {
 		System.out.println("am intrat in cantina");
 		return "dinerapp";
