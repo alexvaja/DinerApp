@@ -1,73 +1,83 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-<th:block th:include="layout/templateHeader.html"></th:block>
-<title>Mancare</title>
-<link type="text/css" rel="stylesheet"
-	href="#{request.contextPath}/resources/css/stylesheet.css" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-	<div class="top_nav">
-		<div class="nav_menu">
-			<nav>
-				<div class="nav toggle">
-					<a id="menu_toggle"> <i class="fa fa-bars"> </i> 
-					</a>
-				</div>
-			</nav>
-		</div>
-	</div>
-	<!-- /top navigation -->
-	<!-- page content -->
-	 <div class="right_col" role="main">
-               <!-- top tiles -->
-               <div class="row">
-                  <div class="row">
-                     <div class="col" style="background-color:lavender; left: 0px; top: 0px; height: 10000px">
-                          <div id="s4-bodyContainer">
-                              <div id="s4-titlerow" class="ms-dialogHidden s4-titlerowhidetitle" style="width: 827px">
-                                 <div id="titleAreaBox" class="ms-noList ms-table ms-core-tableNoSpace" style="width: 1148px">
-                                    <div id="titleAreaRow" class="ms-tableRow">
-                                       <div class="ms-breadcrumb-box ms-tableCell ms-verticalAlignTop" style="height: 138px; width: 96%;">
-                                          <table style="width: 100%">
-                                             <tr>
-                                                <td style="width: 712px">
-                                                   <div class="style2" style="margin-left:42px; background-position : 0% 0%; color:black; width: 668px; height: 85px; background-image: none; background-repeat: repeat; background-attachment: scroll;">
-                                                   </div>
-                                                </td>
-                                                <td style="width: 470px">
-                                                   <br />
-                                                   <div></div>
-                                                   <th:block th:include="foodActions.html"> </th:block>	                           
-                                                </td>
-                                             </tr>
-                                          </table>
-                                       </div>
-                                    </div>
-                              </div>
-                              <br />
-                              <br />
-                              <br />
-                              <br />
-                              <div id="contentRow">
-                                 <div id="contentBox" aria-live="polite" aria-relevant="all" role="main" style="margin-left:5em; margin-right:10em; width: 77%;">
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <div id="notificationArea" class="ms-notif-box">
-                                    </div>
-                                    <a id="mainContent" name="mainContent" tabindex="-1">
-                                    </a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+   <head>
+      <th:block th:include="layout/templateHeader.html"></th:block>
+      <title>Mancare</title>
+      <link type="text/css" rel="stylesheet"
+         href="#{request.contextPath}/resources/css/stylesheet.css" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   </head>
+   <body>
+      <div class="top_nav">
+         <div class="nav_menu">
+            <nav>
+               <div class="nav toggle">
+                  <a id="menu_toggle"> <i class="fa fa-bars"> </i> 
+                  </a>
                </div>
+            </nav>
+         </div>
+      </div>
+      <!-- /top navigation -->
+      <!-- page content -->
+      <div class="content">
+      	<div class = "panel panel-default">
+      		<div class = "panel-body" align ="center" style = "background-color: lavender; height:10000px">
+      			<th:block th:include="foodActions.html"> </th:block> 
+      			</div>
+      		</div>
+        </div>
+      
+<!--       <div class="left-sm" role="main"> -->
+<!--          top tiles -->
+<!--          <div class="row"> -->
+<!--             <div class="row"> -->
+<!--                <div class="col-sm-12" style="background-color:lavender; left: 0px; top: 0px; height: 10000px"> -->
+<!--                   <div id="s4-bodyContainer"> -->
+<!--                      <div id="s4-bodyContainer"> -->
+<!--                         <div id="s4-titlerow" class="ms-dialogHidden s4-titlerowhidetitle" style="width: 1000px"> -->
+<!--                            <div id="titleAreaBox" class="ms-noList ms-table ms-core-tableNoSpace" style="width: 1148px; top:240px"> -->
+<!--                               <div id="titleAreaRow" class="ms-tableRow"> -->
+<!--                                   <div class="ms-breadcrumb-box ms-tableCell ms-verticalAlignTop" style="height: 138px; width: 96%;"> -->
+<!--                                     <table style="width: 100%; margin: 250px; top: 250px; bottom: 500px"> -->
+<!--                                        <tr> -->
+<!-- <!--                                           <td style="width: 100px"> --> -->
+<!-- <!--                                              <div class="style2" style="margin-left:42px; background-position : 0% 0%; color:black; width: 668px; height: 85px; background-image: none; background-repeat: repeat; background-attachment: scroll;"> --> -->
+<!-- <!--                                              </div> --> -->
+<!-- <!--                                           </td> --> -->
+<!--                                           <td style="width: 470px; margin: 250px" valign="top"> -->
+<!--                                              <br /> -->
+<!--                                              <div></div> -->
+<!--                                              <th:block th:include="foodActions.html"> </th:block> -->
+<!--                                           </td> -->
+<!--                                        </tr> -->
+<!--                                     </table> -->
+<!--                                  </div> -->
+<!--                               </div> -->
+<!--                            </div> -->
+<!--                            <br /> -->
+<!--                            <br /> -->
+<!--                            <br /> -->
+<!--                            <br /> -->
+<!--                            <div id="contentRow"> -->
+<!--                               <div id="contentBox" aria-live="polite" aria-relevant="all" role="main" style="margin-left:5em; margin-right:10em; width: 77%;"> -->
+<!--                                  <br /> -->
+<!--                                  <br /> -->
+<!--                                  <br /> -->
+<!--                                  <div id="notificationArea" class="ms-notif-box"> -->
+<!--                                  </div> -->
+<!--                                  <a id="mainContent" name="mainContent" tabindex="-1"> -->
+<!--                                  </a> -->
+<!--                               </div> -->
+<!--                            </div> -->
+<!--                         </div> -->
+<!--                      </div> -->
+<!--                   </div> -->
+<!--                </div> -->
+<!--             </div> -->
+<!--          </div> -->
+<!--          </div> -->
+       
          <!-- Bootstrap -->
          <script type="text/javascript" src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/bootstrap/dist/js/bootstrap.min.js">//<![CDATA[
             //]]>
@@ -84,5 +94,6 @@
             //]]>
          </script>
       </div>
-</body>
+      </div>
+   </body>
 </html>
