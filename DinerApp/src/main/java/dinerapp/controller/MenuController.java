@@ -45,6 +45,7 @@ public class MenuController {
 		model.addAttribute("foodList", getlistOfFood());
 		model.addAttribute("number", number);
 		System.out.println(number);
+		//BAG PULA IN EL MENIU DACA NU MA HRANESC ASTIA PE MOCA APOI
 		
 		switch(reqParam) {
 		case "AddMenu":
