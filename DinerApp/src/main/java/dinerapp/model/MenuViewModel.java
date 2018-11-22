@@ -3,57 +3,32 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.entity.Category;
-import dinerapp.entity.Food;
-import dinerapp.entity.Menu;
+import dinerapp.entity.Dish;
 
 public class MenuViewModel {
 
-	private List<Category> categoryItems;
-	private List<Food> foodItems;
-	private List<Menu> menuItems;
-	
+	List<Dish> dishItems;
+
 	public MenuViewModel() {
 		super();
-		this.categoryItems = new ArrayList<>();
-		this.foodItems = new ArrayList<>();
-		this.menuItems = new ArrayList<>();
+		this.dishItems = new ArrayList<>();
 	}
-	
-	public MenuViewModel(List<Category> categoryItems, List<Food> foodItems, List<Menu> menuItems) {
+
+	public MenuViewModel(List<Dish> dishItems) {
 		super();
-		this.categoryItems = new ArrayList<>(categoryItems);
-		this.foodItems = new ArrayList<>(foodItems);
-		this.menuItems = new ArrayList<>(menuItems);
+		this.dishItems = new ArrayList<>(dishItems);
 	}
-	
-	public List<Category> getCategoryItems() {
-		return categoryItems;
+
+	public List<Dish> getDishItems() {
+		return dishItems;
 	}
-	
-	public void setCategoryItems(List<Category> categoryItems) {
-		this.categoryItems = categoryItems;
+
+	public void setDishItems(List<Dish> dishItems) {
+		this.dishItems = dishItems;
 	}
-	
-	public List<Food> getFoodItems() {
-		return foodItems;
-	}
-	
-	public void setFoodItems(List<Food> foodItems) {
-		this.foodItems = foodItems;
-	}
-	
-	public List<Menu> getMenuItems() {
-		return menuItems;
-	}
-	
-	public void setMenuItems(List<Menu> menuItems) {
-		this.menuItems = menuItems;
-	}
-	
+
 	@Override
 	public String toString() {
-		return "MenuViewModel [categoryItems=" + categoryItems + ", foodItems=" + foodItems + ", menuItems=" + menuItems
-				+ "]";
+		return "MenuViewModel [dishItems=" + dishItems + "]";
 	}
 }

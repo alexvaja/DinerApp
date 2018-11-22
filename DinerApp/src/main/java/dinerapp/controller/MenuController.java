@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,22 +32,19 @@ public class MenuController {
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		return "menuView";
 	}
-	
+	int number = 0;
 	@PostMapping("/menuView")
-	public String setAllMenu(Model model, @RequestParam("submit") String reqParam) {
+	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
+										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel2) {
 		System.out.println(reqParam);
-		
 		MenuViewModel menuViewModel = new MenuViewModel();
-		menuViewModel.setCategoryItems(getListOfCategory());
-		menuViewModel.setFoodItems(getlistOfFood());
-		menuViewModel.setMenuItems(null);
 		Boolean addMenuIsAvailable = false;
-		Boolean addCategoryIsAvailable = false;
-		Boolean addFoodIsAvailable = false;
 		model.addAttribute("menuViewModel", menuViewModel);
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+		model.addAttribute("categoryList", getListOfCategory());
+		model.addAttribute("foodList", getlistOfFood());
+		model.addAttribute("number", number);
+		System.out.println(number);
 		
 		switch(reqParam) {
 		case "AddMenu":
@@ -54,32 +52,12 @@ public class MenuController {
 			
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			break;
-		case "AddCategory":
-			System.out.println("Am intrat in AddCategory");
-			
-			addMenuIsAvailable = true;
-			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			addCategoryIsAvailable = true;
-			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-			
-//			List<Category> categoryList = new ArrayList<>(getListOfCategory());
-//			model.addAttribute("categoryList", categoryList);
-			model.addAttribute("menuViewModel", menuViewModel);
-			
-			break;
-		case "AddFood":
-			System.out.println("Am intrat in AddFood");
-			
-			addMenuIsAvailable = true;
-			addCategoryIsAvailable = true;
-			addFoodIsAvailable = true;
-			model.addAttribute("menuViewModel", menuViewModel);
-			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+			number++;
+			System.out.println(number);
+			model.addAttribute("number", number);
 			break;
 		}
+		System.out.println("uite modelul poate:" + menuViewModel2);
 		return "menuView";
 	}
 	
