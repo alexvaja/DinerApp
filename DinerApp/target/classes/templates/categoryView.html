@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head>
-      <th:block th:include="layout/templateHeader.html"></th:block>
-      <title>Categorie</title>
-      <link type="text/css" rel="stylesheet"
-         href="#{request.contextPath}/resources/css/stylesheet.css" />
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-   </head>
-   <style>
-      div.relative {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      border: 3px solid #73AD21;
-      }
-   </style>
-   <body>
-      <div class="top_nav">
-         <div class="nav_menu">
-            <nav>
-               <div class="nav toggle">
-                  <a id="menu_toggle"> <i class="fa fa-bars"> </i> 
-                  </a>
-               </div>
-            </nav>
-         </div>
-      </div>
-      <!-- /top navigation -->
-      <!-- page content -->
+<head>
+<th:block th:include="layout/templateHeader.html"></th:block>
+<title>Categorie</title>
+<link type="text/css" rel="stylesheet"
+	href="#{request.contextPath}/resources/css/stylesheet.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<div class="content">
+	<div class="panel panel-default">
+		<div class="panel-body" align="center"
+			style="background-color: lavender; height: 10000px">
+			<th:block th:include="categoryActions.html">
+			</th:block>
+		</div>
+	</div>
+</div>
+<!-- /top navigation -->
+<!-- page content -->
 <!--       <div class ="row"> -->
 <!--             <div class="center-block" style="background-color:lavender; left: -10000000px; right: -500000000px; top: 0px; height: 10000px"> -->
 <!--                <table style="width: 100%"> -->
@@ -47,23 +38,29 @@
 <!--                </table> -->
 <!--             </div> -->
 <!--         </div> -->
-	   <div class = "row" >
-	   
-	   </div>
-      <!-- Bootstrap -->
-      <script type="text/javascript" src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/bootstrap/dist/js/bootstrap.min.js">//<![CDATA[
-         //]]>
-      </script>
-      <script type="text/javascript" src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js">//<![CDATA[
-         //]]>
-      </script>
-      <!-- Custom Theme Scripts -->
-      <script type="text/javascript" src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/build/js/custom.min.js">//<![CDATA[
-         //]]>
-      </script>
-      <!-- jQuery -->
-      <script type="text/javascript" src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/jquery/dist/jquery.min.js">//<![CDATA[
-         //]]>
-      </script>
-   </body>
+<div class="row"></div>
+<!-- Bootstrap -->
+<script type="text/javascript"
+	src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/bootstrap/dist/js/bootstrap.min.js">
+	//<![CDATA[
+	//]]>
+</script>
+<script type="text/javascript"
+	src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js">
+	//<![CDATA[
+	//]]>
+</script>
+<!-- Custom Theme Scripts -->
+<script type="text/javascript"
+	src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/build/js/custom.min.js">
+	//<![CDATA[
+	//]]>
+</script>
+<!-- jQuery -->
+<script type="text/javascript"
+	src="https://cvc007.sharepoint.com/sites/DJ00001/Style Library/vendors/gentelella-master/vendors/jquery/dist/jquery.min.js">
+	//<![CDATA[
+	//]]>
+</script>
+</body>
 </html>
