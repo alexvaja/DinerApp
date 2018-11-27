@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
-public class DinerAppController {
-
-	@GetMapping("/homeview")
+public class DinerAppController 
+{
+	@GetMapping("/index")
 	public String getDinerAppForm(Model model) {
 		System.out.println("am intrat in cantina");
-		return "dinerapp";
+		return "index";
 	}
 	
 	@GetMapping("/")
 	public String getDinerAppForm2(Model model) {
 		System.out.println("am intrat in cantina2");
-		return "dinerapp";
+		return "index";
 	}
 	
 	@PostMapping("/dinerapp")
