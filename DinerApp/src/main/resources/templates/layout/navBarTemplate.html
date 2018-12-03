@@ -1,45 +1,76 @@
 <!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/sideBarCSS.css}"
+	href="../../static/css/sideBarCSS.css" />
+<link rel="stylesheet" th:href="@{/css/cssTemplate.css}"
+	href="../../static/css/cssTemplate.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <body>
 	<nav>
-		<a> <i class="fa fa-home"> </i> Adauga <span
-			class="fa fa-chevron-down"> </span>
-		</a>
-		<ul class="nav child_menu">
-			<li><a href="/foodView" th:href="@{/foodView}">Mancare</a></li>
-			<li><a href="/categoryView" th:href="@{/categoryView}">
-					Categorie </a></li>
-			<li><a href="/menuView" th:href="@{/menuView}"> Meniu </a></li>
-		</ul>
-		<a> <i class="fa fa-edit"> </i> Meniu <span
-				class="fa fa-chevron-down"> </span>
-		</a>
-			<ul class="nav child_menu">
-				<li><a href="/viewMenuView" th:href="@{/viewMenuView}"
-					target="_blank"> Vizualizeaza meniu </a></li>
-				<li><a href="/editMenuView" th:href="@{/editMenuView}"
-					target="_blank"> Editeaza meniu </a></li>
-			</ul>
-		<a> <i class="fa fa-desktop"> </i> Contact <span
-				class="fa fa-chevron-down"> </span>
-		</a>
-			<ul class="nav child_menu">
-				<li><a
+		<div>
+			<button class="accordion btn btn-primary" type="button">Adauga</button>
+			<div class="panel">
+				<a class="subMenu subMenuHover" href="/foodView"
+					th:href="@{/foodView}">Mancare</a><br> <a
+					class="subMenu subMenuHover" href="/categoryView"
+					th:href="@{/categoryView}">Categorie</a><br> <a
+					class="subMenu subMenuHover" href="/menuView"
+					th:href="@{/menuView}">Meniu </a><br>
+			</div>
+		</div>
+		<br>
+		<div>
+			<button class="accordion btn btn-primary" type="button">Meniu</button>
+			<div class="panel">
+				<a class="subMenu subMenuHover" href="/viewMenuView"
+					th:href="@{/viewMenuView}" target="_blank"> Vizualizeaza meniu</a>
+				<a class="subMenu subMenuHover" href="/editMenuView"
+					th:href="@{/editMenuView}" target="_blank"> Editeaza meniu </a>
+			</div>
+		</div>
+		<br>
+		<div>
+			<button class="accordion btn btn-primary" type="button">Contact</button>
+			<div class="panel">
+				<a class="subMenu subMenuHover"
 					href="https://cvc007.sharepoint.com/sites/DJ00001/Documente%20si%20formulare/Forms/Documents.aspx"
-					target="_blank"> Silviu Sabau </a></li>
-				<li><a
+					target="_blank"> Silviu Sabau </a> <br> <a
+					class="subMenu subMenuHover"
 					href="https://cvc007.sharepoint.com/sites/DJ00001/SitePages/Lista%20Angajati.aspx"
-					target="_blank"> Vaja Alexandru </a></li>
-			</ul>
-		<a> <i class="fa fa-table"> </i> Rapoarte <span
-				class="fa fa-chevron-down"> </span>
-		</a>
-			<ul class="nav child_menu">
-				<li><a
+					target="_blank"> Vaja Alexandru </a> <br>
+
+			</div>
+		</div>
+		<br>
+		<div>
+			<button class="accordion btn btn-primary" type="button">Rapoarte</button>
+			<div class="panel">
+
+				<a class="subMenu subMenuHover"
 					href="https://medianr.myatos.net/flipbooks/atos-corporate-profile/mobile/index.html"
-					target="_blank"> Raport saptamanal </a></li>
-				<li><a
+					target="_blank"> Raport saptamanal </a> <br>
+				<a class="subMenu subMenuHover"
 					href="https://sp2013.myatos.net/ORG/OrgBDS/Documents/BDS_CVC_IntegrationApproach_Organization_v1.5.pdf"
-					target="_blank"> Raport lunar </a></li>
-			</ul>
+					target="_blank"> Raport lunar </a>
+			</div>
+		</div>
 	</nav>
+
+	<script>
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		for (i = 0; i < acc.length; i++) {
+			acc[i].addEventListener("click", function() {
+				this.classList.toggle("active");
+				var panel = this.nextElementSibling;
+				if (panel.style.maxHeight) {
+					panel.style.maxHeight = null;
+				} else {
+					panel.style.maxHeight = panel.scrollHeight + "px";
+				}
+			});
+		}
+	</script>
+	<th:block th:include="layout/bootstrapIncludes.html"></th:block>
 </body>
