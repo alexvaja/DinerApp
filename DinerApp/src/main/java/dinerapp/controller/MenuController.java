@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dinerapp.entity.Category;
+import dinerapp.entity.Dish;
 import dinerapp.entity.Food;
 import dinerapp.model.MenuViewModel;
 import dinerapp.repository.CategoryRepository;
@@ -25,41 +26,45 @@ public class MenuController {
 	
 	@Autowired
 	FoodRepository foodRepository;
+	
+	List<Integer> numberOfMenu = new ArrayList<>();
 
 	@GetMapping("/menuView")
 	public String getAllMenu(Model model) {
+		
 		Boolean addMenuIsAvailable = false;
+		numberOfMenu.removeAll(numberOfMenu);
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+		model.addAttribute("numberOfMenu", numberOfMenu);
+		model.addAttribute("menuViewModel", new MenuViewModel());
 		return "menuView";
 	}
-	int number = 0;
+	
 	@PostMapping("/menuView")
 	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
-										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel2) {
-		System.out.println(reqParam);
-		MenuViewModel menuViewModel = new MenuViewModel();
+										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel) {
+		System.out.println(numberOfMenu.size());
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("menuViewModel", menuViewModel);
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		model.addAttribute("categoryList", getListOfCategory());
 		model.addAttribute("foodList", getlistOfFood());
-		model.addAttribute("number", number);
-		System.out.println(number);
-		//BAG PULA IN EL MENIU DACA NU MA HRANESC ASTIA PE MOCA APOI
-		//IMI BAG PULA CA SILVIU NU NE-A LUAT LA CLUJ SA NU O FUTEM NOI PE DIANA
-		
+		model.addAttribute("numberOfMenu", numberOfMenu);
 		switch(reqParam) {
 		case "AddMenu":
 			System.out.println("Am intart in AddMenu");
 			
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			number++;
-			System.out.println(number);
-			model.addAttribute("number", number);
+			numberOfMenu.add(null);
+			model.addAttribute("numberOfMenu", numberOfMenu);
 			break;
+		case "Cancel":
+			numberOfMenu.removeAll(numberOfMenu);
+			model.addAttribute("numberOfMenu", numberOfMenu);
 		}
-		System.out.println("uite modelul poate:" + menuViewModel2);
+		System.out.println("pula mea");
+		System.out.println(menuViewModel);
 		return "menuView";
 	}
 	
@@ -74,12 +79,12 @@ public class MenuController {
 	}
 	
 	private List<Food> getlistOfFood() {
+		
 		Iterable<Food> list = foodRepository.findAll();
 		List<Food> searchedList = new ArrayList<>();
 		for (Food food : list) {
 			searchedList.add(food);
 		}
-		return searchedList;
-		
+		return searchedList;	
 	}
 }
