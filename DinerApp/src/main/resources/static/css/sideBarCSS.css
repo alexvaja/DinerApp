@@ -23,6 +23,9 @@
     overflow: hidden;
     transition: max-height 0.5s ease-out;
     font-align: center;
+    /**/
+    min-width: -webkit-fill-available; 
+    /**/ 
 }
 
 a.subMenu:link, a.subMenu:visited
@@ -36,7 +39,10 @@ a.subMenu:link, a.subMenu:visited
     padding-left: 50px;
     text-align: center;
     text-decoration: none;
-    display: inline-block; 
+    display: inline-block;
+    /**/
+    width: 100%; 
+    /**/
 }
 a.subMenuHover:hover, a.subMenuHover:active{
 background-color: lightblue;
