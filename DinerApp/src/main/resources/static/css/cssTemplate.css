@@ -10,7 +10,6 @@
   }
   .col-1 {
     background: #2A3F54;
-    flex: 1;
   }
   .col-2 {
     display: flex;
@@ -22,13 +21,14 @@
     flex-direction: row;
   }
   .content > article {
-    flex: 4;
+    flex: 1;
     min-height: 60vh;
   }
   header, footer {
     background: #0072C6;
-    height: 8vh;
+    height: 100%;
   }
   header, footer, article, nav {
     padding: 1em;
+    resize:auto;
   }
