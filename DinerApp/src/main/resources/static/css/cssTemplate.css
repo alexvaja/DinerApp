@@ -22,7 +22,7 @@
   }
   .content > article {
     flex: 1;
-    min-height: 60vh;
+    min-height: 60vh;,
   }
   header, footer {
     background: #0072C6;

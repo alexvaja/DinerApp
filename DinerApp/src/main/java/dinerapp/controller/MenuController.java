@@ -28,7 +28,7 @@ public class MenuController {
 	FoodRepository foodRepository;
 	
 	List<Integer> numberOfMenu = new ArrayList<>();
-
+//
 	@GetMapping("/menuView")
 	public String getAllMenu(Model model) {
 		
