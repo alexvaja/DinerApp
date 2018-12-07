@@ -36,23 +36,28 @@ public class MenuController {
 		numberOfMenu.removeAll(numberOfMenu);
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		model.addAttribute("numberOfMenu", numberOfMenu);
-		model.addAttribute("menuViewModel", new MenuViewModel());
+		MenuViewModel menuViewModel = new MenuViewModel();
+		model.addAttribute("menuViewModel", menuViewModel);
+		
 		return "menuView";
 	}
 	
 	@PostMapping("/menuView")
 	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
-										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel) {
+										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel,
+										  @ModelAttribute("dish") Dish dish) {
+		System.out.println(dish);
+		System.out.println(menuViewModel);
 		System.out.println(numberOfMenu.size());
+		System.out.println("");
 		Boolean addMenuIsAvailable = false;
-		model.addAttribute("menuViewModel", menuViewModel);
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		model.addAttribute("categoryList", getListOfCategory());
 		model.addAttribute("foodList", getlistOfFood());
 		model.addAttribute("numberOfMenu", numberOfMenu);
+		
 		switch(reqParam) {
 		case "AddMenu":
-			System.out.println("Am intart in AddMenu");
 			
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
@@ -62,9 +67,12 @@ public class MenuController {
 		case "Cancel":
 			numberOfMenu.removeAll(numberOfMenu);
 			model.addAttribute("numberOfMenu", numberOfMenu);
+			break;
+		case "SaveAll":
+			numberOfMenu.removeAll(numberOfMenu);
+			model.addAttribute("numberOfMenu", numberOfMenu);
+			break;
 		}
-		System.out.println("pula mea");
-		System.out.println(menuViewModel);
 		return "menuView";
 	}
 	

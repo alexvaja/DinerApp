@@ -1,66 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-<title>Meniu</title>
-</head>
-<div>
-	<form action="#" th:action="@{/menuView}" th:object="${menuViewModel}"
-		method="post">
-		<h1>Adaugare meniu</h1>
-		<div th:each="number : ${#numbers.sequence(0,3)}">
-			<div th:if="${addMenuIsAvailable == True}">
-				<div th:each="number : ${numberOfMenu}">
-					<select>
-						<option>Select Category</option>
-						<option th:each="category : ${categoryList}"
-							th:text="${category.name}"></option>
-					</select>
-					<div>
-						<table
-							class="table table-dark table-striped table-bordered table-hover">
-							<thead class="thead thead-dark">
-								<tr>
-									<th scope="col">ID</th>
-									<th scope="col">FOOD NAME</th>
-									<th scope="col">FOOD INGREDIENTS</th>
-									<th scope="col">FOOD WEIGHT</th>
-									<th scope="col">FOOD PRICE</th>
-									<th scope="col">SELECTED</th>
-								</tr>
-							</thead>
-
-							<tbody>
-								<tr th:each="food : ${foodList}">
-									<td th:text="${food.id}"></td>
-									<td th:text="${food.name}"></td>
-									<td th:text="${food.ingredients}"></td>
-									<td th:text="${food.weight}"></td>
-									<td th:text="${food.price}"></td>
-									<td><input type="checkbox"></td>
-								</tr>
-							</tbody>
-						</table>
+	<div>
+		<form action="#" th:action="@{/menuView}" th:object="${menuViewModel}" method="post">
+			<div>
+				<h1> Adaugare meniu </h1>    
+				<div th:if="${addMenuIsAvailable == True}">
+					<div th:if="" th:each="dish : ${dihsItems}">
+						<select>
+							<option>Select Category</option>
+							<option th:each="category : ${categoryList}"
+									th:text="${category.name}"
+									th:value="${category}"
+									th:field="*{dish.category}"
+									th:selected="${category} &eq; ${dish.category}">
+									<!-- <th:block th:text="${ menuViewModel.setDishCategory( category ) }"></th:block> -->
+							</option>
+							
+									
+						</select>
+						
+						<div>
+							<table>
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>FOOD NAME</th>
+										<th>FOOD INGREDIENTS</th>
+										<th>FOOD WEIGHT</th>
+										<th>FOOD PRICE</th>
+										<th>SELECTED</th>
+									</tr>
+								</thead>
+		
+								<tbody>
+									<tr th:each="food : ${foodList}">
+										<td th:text="${food.id}"></td>
+										<td th:text="${food.name}"></td>
+										<td th:text="${food.ingredients}"></td>
+										<td th:text="${food.weight}"></td>
+										<td th:text="${food.price}"></td>
+										<td><input type="checkbox"/></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<br/>
 					</div>
+	
+					<input name="submit" type="submit" th:value="AddMenu" />
+	
+					<p>
+						<input name="submit" type="submit" th:value="Cancel" /> 
+						<input name="submit" type="submit" th:value="SaveAll" />
+					</p>
 				</div>
 
-				<input class="btn btn-primary" name="submit" type="submit"
-					th:value="AddMenu" />
-
-				<p>
-					<input class="btn btn-primary" name="submit" type="submit"
-						th:value="Cancel" /> <input class="btn btn-primary" name="submit"
-						type="submit" th:value="SaveAll" />
-				</p>
+				<div th:if="${addMenuIsAvailable == False}">
+					<input name="submit" type="submit" th:value="AddMenu" />
+				</div>
 			</div>
-
-			<div th:if="${addMenuIsAvailable == False}">
-				<input class="btn btn-primary" name="submit" type="submit"
-					th:value="AddMenu" />
-			</div>
-			<br /> <br /> <br /> <br />
-		</div>
-	</form>
-</div>
-<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+		</form>
+	</div>
 </html>

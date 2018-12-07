@@ -35,6 +35,10 @@ public class Dish {
 	public void setFoodItems(List<Food> foodItems) {
 		this.foodItems = foodItems;
 	}
+	
+	public void addNewFood(Food food) {
+		this.foodItems.add(food);
+	}
 
 	@Override
 	public String toString() {
