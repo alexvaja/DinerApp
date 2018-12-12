@@ -2,8 +2,6 @@ package dinerapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import dinerapp.entity.Category;
 import dinerapp.entity.Dish;
 
 public class MenuViewModel {
