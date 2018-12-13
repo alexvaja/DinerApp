@@ -6,5 +6,5 @@ import dinerapp.entity.Category;
 
 @Repository 
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
-
+//muie psd
 }
