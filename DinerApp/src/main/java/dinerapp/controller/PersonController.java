@@ -54,15 +54,15 @@ public class PersonController {
 	@Autowired
 	private ServletContext servletContext;
 
-	@GetMapping("/person")
+	@GetMapping("/insertView")
 	public String greetingForm(Model model, HttpServletResponse response) {
 		model.addAttribute("personViewModel", new PersonViewModel());
-		return "insert";
+		return "insertView";
 	}
 
-	@PostMapping("/person")
-	public String formProcess(@ModelAttribute PersonViewModel personViewModel, @RequestParam("submit") String reqParam,
-			HttpServletResponse response) {
+	@PostMapping("/insertView")
+	public String formProcess(@ModelAttribute PersonViewModel personViewModel, 
+			@RequestParam("submit") String reqParam, HttpServletResponse response) {
 		List<Person> searchedPersons = new ArrayList<>();
 		List<Malicious> maliciousPersons = new ArrayList<>();
 
@@ -89,11 +89,11 @@ public class PersonController {
 
 				exportToPDF(searchedPersons, maliciousPersons, "output/txt.pdf", searchedName);
 			}
-			return "insert";
+			return "insertView";
 
 		case "Download":
 			loadToDatabase("https://www.bis.doc.gov/dpl/dpl.txt");
-			return "insert";
+			return "insertView";
 
 		case "Export":
 			try {
@@ -101,10 +101,10 @@ public class PersonController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return "insert";
+			return "insertView";
 
 		default:
-			return "insert";
+			return "insertView";
 		}
 	}
 
@@ -201,13 +201,11 @@ public class PersonController {
 		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 		return cell;
 	}
-
 	private PdfPCell setRotatedCell(Font cellFontBold, String text) {
 		PdfPCell cell = setCell(cellFontBold, text);
 		cell.setRotation(90);
 		return cell;
 	}
-
 	private void loadToDatabase(String linkForDenied) {
 		URL deniedPersonListURL;
 		BufferedReader in = null;
@@ -261,7 +259,6 @@ public class PersonController {
 			}
 		}
 	}
-
 	private MediaType getMediaTypeForFileName(String fileName) {
 		String mineType = servletContext.getMimeType(fileName);
 
@@ -272,7 +269,6 @@ public class PersonController {
 			return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}
-
 	private void downloadFile(HttpServletResponse response, String fileName) throws IOException {
 		MediaType mediaType = getMediaTypeForFileName(fileName);
 		File file = new File(fileName);
