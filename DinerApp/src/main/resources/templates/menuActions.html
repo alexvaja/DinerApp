@@ -3,21 +3,25 @@
 	<div>
 		<form action="#" th:action="@{/menuView}" th:object="${menuViewModel}" method="post">
 			<div>
-				<h1> Adaugare meniu </h1>    
+				<h1> Adaugare meniu </h1>
+				
 				<div th:if="${addMenuIsAvailable == True}">
-					<div th:if="" th:each="dish : ${dihsItems}">
+					
+					<label>Titlu:</label>
+					<input type="text" name="menu_title"/>
+					<label>Data:</label>
+					<input type="date" name="menu_date"/>
+					
+					<div th:each="dish : ${menuViewModel.getDishItems()}">
+						<br/>
 						<select>
 							<option>Select Category</option>
 							<option th:each="category : ${categoryList}"
 									th:text="${category.name}"
-									th:value="${category}"
-									th:field="*{dish.category}"
-									th:selected="${category} &eq; ${dish.category}">
-									<!-- <th:block th:text="${ menuViewModel.setDishCategory( category ) }"></th:block> -->
-							</option>
-							
-									
+									th:selected="${category} == ${dish.category}"/>
 						</select>
+						
+						<br/>
 						
 						<div>
 							<table>
@@ -39,7 +43,15 @@
 										<td th:text="${food.ingredients}"></td>
 										<td th:text="${food.weight}"></td>
 										<td th:text="${food.price}"></td>
-										<td><input type="checkbox"/></td>
+										<td>
+											<th:block th:each="savedFood : ${dish.foodItems}">
+												<th:block th:if="${savedFood} == ${food}">
+													<input type="checkbox" checked="checked"/>
+													<th:block th:with="variable = {True}"></th:block>
+												</th:block>
+											</th:block>	
+											<th:block th:if="variable"></th:block>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -47,10 +59,10 @@
 						<br/>
 					</div>
 	
-					<input name="submit" type="submit" th:value="AddMenu" />
+					<input name="submit" type="submit" th:value="AddMenu"/>
 	
 					<p>
-						<input name="submit" type="submit" th:value="Cancel" /> 
+						<input name="submit" type="submit" value="Cancel" /> 
 						<input name="submit" type="submit" th:value="SaveAll" />
 					</p>
 				</div>

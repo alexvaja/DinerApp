@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dinerapp.entity.Food;
 import dinerapp.model.FoodViewModel;
+import dinerapp.model.entity.Food;
 import dinerapp.repository.FoodRepository;
 
 @Controller

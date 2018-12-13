@@ -3,8 +3,8 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.entity.Category;
-import dinerapp.entity.Dish;
+import dinerapp.model.entity.Category;
+import dinerapp.model.entity.Dish;
 
 public class MenuViewModel {
 
@@ -13,11 +13,6 @@ public class MenuViewModel {
 	public MenuViewModel() {
 		super();
 		this.dishItems = new ArrayList<>();
-	}
-
-	public MenuViewModel(int i) { //
-		super();
-		this.dishItems = new ArrayList<>(i);
 	}
 
 	public MenuViewModel(List<Dish> dishItems) {
@@ -33,12 +28,12 @@ public class MenuViewModel {
 		this.dishItems = dishItems;
 	}
 	
-	public void setDishItemsCategory(int index, Dish dish) { //
-		this.dishItems.set(index, dish);
-	}
-	
 	public void addNewDish(Dish dish) { //
 		this.dishItems.add(dish);
+	}
+	
+	public void deleteAllElement() {
+		this.dishItems.clear();
 	}
 	
 	@Override
