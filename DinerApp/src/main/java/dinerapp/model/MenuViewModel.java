@@ -3,40 +3,54 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.model.entity.Dish;
+import dinerapp.dto.DishDTO;
 
 public class MenuViewModel {
 
-	List<Dish> dishItems;
+	private List<DishDTO> dishes;
 	
+	private String title;
+	
+	private String date;
+
 	public MenuViewModel() {
 		super();
-		this.dishItems = new ArrayList<>();
+		dishes = new ArrayList<>();
 	}
-
-	public MenuViewModel(List<Dish> dishItems) {
+	
+	public MenuViewModel(List<DishDTO> dishes, String title, String date) {
 		super();
-		this.dishItems = new ArrayList<>(dishItems);
+		this.dishes = dishes;
+		this.title = title;
+		this.date = date;
 	}
 
-	public List<Dish> getDishItems() {
-		return dishItems;
+	public List<DishDTO> getDishes() {
+		return dishes;
 	}
 
-	public void setDishItems(List<Dish> dishItems) {
-		this.dishItems = dishItems;
+	public void setDishes(List<DishDTO> dishes) {
+		this.dishes = dishes;
 	}
-	
-	public void addNewDish(Dish dish) { //
-		this.dishItems.add(dish);
+
+	public String getTitle() {
+		return title;
 	}
-	
-	public void deleteAllElement() {
-		this.dishItems.clear();
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
-		return "MenuViewModel [dishItems=" + dishItems + "]";
-	}
+		return "MenuViewModel [" + dishes + ", " + title + ", " + date + "]";
+	}	
 }

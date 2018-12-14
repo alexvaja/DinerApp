@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<div>
-		<form action="#" th:action="@{/menuView}" th:object="${menuViewModel}" method="post">
+		<form action="#" th:action="@{/menuView}" th:object="${session.menuViewModel}" method="post">
 			<div>
 				<h1> Adaugare meniu </h1>
 				
@@ -12,13 +12,12 @@
 					<label>Data:</label>
 					<input type="date" name="menu_date"/>
 					
-					<div th:each="dish : ${menuViewModel.getDishItems()}">
+					<div th:each="dish : *{dishes}">
 						<br/>
 						<select> 
 							<option>Select Category</option>
-							<option th:each="category : ${categoryList}"
-									th:text="${category.name}"
-									th:selected="${category} == ${dish.category}"/>
+							<option th:each="c : ${dish.categories}"
+									th:text="${c.category.name}"/>
 						</select>
 						
 						<br/>
@@ -37,12 +36,12 @@
 								</thead>
 		
 								<tbody>
-									<tr th:each="food : ${foodList}">
-										<td th:text="${food.id}"></td>
-										<td th:text="${food.name}"></td>
-										<td th:text="${food.ingredients}"></td>
-										<td th:text="${food.weight}"></td>
-										<td th:text="${food.price}"></td>
+									<tr th:each="f : ${dish.foods}">
+										<td th:text="${f.food.id}"></td>
+										<td th:text="${f.food.name}"></td>
+										<td th:text="${f.food.ingredients}"></td>
+										<td th:text="${f.food.weight}"></td>
+										<td th:text="${f.food.price}"></td>
 										<td>
 											<input type="checkbox"/>	
 <!-- 											<th:block th:each="savedFood : ${dish.foodItems}">
@@ -60,7 +59,7 @@
 						<br/>
 					</div>
 	
-					<input name="submit" type="submit" value="Adaugare meniu" th:value="AddMenu" />
+					<input name="submit" type="submit" th:value="AddMenu" />
 	
 					<p>
 						<input name="submit" type="submit" value="Cancel" /> 

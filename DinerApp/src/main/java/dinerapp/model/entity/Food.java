@@ -47,6 +47,15 @@ public class Food
 		super();
 	}
 
+	public Food(Integer id, String name, String ingredients, int weight, double price) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.ingredients = ingredients;
+		this.weight = weight;
+		this.price = price;
+	}
+
 	public Integer getId() {
 		return id;
 	}

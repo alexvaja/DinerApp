@@ -1,19 +1,25 @@
 package dinerapp.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 
+import dinerapp.dto.CategoryDTO;
+import dinerapp.dto.DishDTO;
+import dinerapp.dto.FoodDTO;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.entity.Category;
-import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Food;
 import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.FoodRepository;
@@ -27,48 +33,46 @@ public class MenuController {
 	@Autowired
 	FoodRepository foodRepository;
 	
-	int integer = 0;
-	
+	@SessionScope
 	@GetMapping("/menuView")
-	public String getAllMenu(Model model) {
-		
-		System.out.println("GET MENU");
-		System.out.println(getlistOfFood());
-		System.out.println(getListOfCategory());
-		
-		Boolean addMenuIsAvailable = false;
-		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		model.addAttribute("menuViewModel", new MenuViewModel());
-		
-		return "menuView";
-	}
+	public String sessionExample(Model model, Principal principal, HttpSession session) {
+			session.setAttribute("menuViewModel", new MenuViewModel());
+			
+			
+			Boolean addMenuIsAvailable = false;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+			
+			return "menuView";
+	} 
 	
 	@PostMapping("/menuView")
-	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
-										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel) {
+	public String setAllMenu(Model model, @SessionAttribute MenuViewModel menuViewModel,
+										  @RequestParam("submit") String reqParam) {
 		
-		System.out.println("SET MENU");
-		System.out.println(reqParam);
 		
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		model.addAttribute("categoryList", getListOfCategory());
-		model.addAttribute("foodList", getlistOfFood());
-		model.addAttribute("menuViewModel", menuViewModel);
-		
 		
 		switch(reqParam) {
 		case "AddMenu":
 			
-			integer++;
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			System.out.println(menuViewModel);
-			menuViewModel.addNewDish(new Dish());
-			model.addAttribute("menuViewModel", menuViewModel);
+			
+			List<DishDTO> dishes = menuViewModel.getDishes();
+			List<FoodDTO> f = new ArrayList<>();
+			List<CategoryDTO> c = new ArrayList<>();
+			f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
+			f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
+			
+			c.add(new CategoryDTO(new Category(2, "Meniu 2", 19.), true));
+			dishes.add(new DishDTO(c, f));
+			
+			menuViewModel.setDishes(dishes);
+
 			break;
 		case "Cancel":
-			menuViewModel.deleteAllElement();
+			//menuViewModel.deleteAllElement();
 			break;
 		case "SaveAll":
 			break;

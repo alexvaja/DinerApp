@@ -33,6 +33,13 @@ public class Category
 		super();
 	}
 
+	public Category(Integer id, String name, Double price) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+	}
+
 	public Integer getId() {
 		return id;
 	}
