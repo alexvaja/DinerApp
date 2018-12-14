@@ -27,45 +27,43 @@ public class MenuController {
 	@Autowired
 	FoodRepository foodRepository;
 	
+	int integer = 0;
+	
 	@GetMapping("/menuView")
 	public String getAllMenu(Model model) {
 		
+		System.out.println("GET MENU");
+		System.out.println(getlistOfFood());
+		System.out.println(getListOfCategory());
+		
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		MenuViewModel menuViewModel = new MenuViewModel();
-		//menuViewModel = getVM();
-		model.addAttribute("menuViewModel", menuViewModel);
-		System.out.println("GET");
-		System.out.println(menuViewModel);
+		model.addAttribute("menuViewModel", new MenuViewModel());
+		
 		return "menuView";
 	}
 	
 	@PostMapping("/menuView")
 	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
-										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel,
-										  @ModelAttribute("dish") Dish dish) {
-		//menuViewModel = getVM();
+										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel) {
+		
+		System.out.println("SET MENU");
+		System.out.println(reqParam);
+		
 		Boolean addMenuIsAvailable = false;
-		//
-		System.out.println("SET");
-		System.out.println(menuViewModel);
-		System.out.println("SIZE");
-		System.out.println(menuViewModel.getDishItems().size());
-		System.out.println("");
-		//
-		//menuViewModel = getVM();
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		System.out.println(getlistOfFood());
-		System.out.println(getListOfCategory());
 		model.addAttribute("categoryList", getListOfCategory());
 		model.addAttribute("foodList", getlistOfFood());
 		model.addAttribute("menuViewModel", menuViewModel);
 		
+		
 		switch(reqParam) {
 		case "AddMenu":
 			
+			integer++;
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+			System.out.println(menuViewModel);
 			menuViewModel.addNewDish(new Dish());
 			model.addAttribute("menuViewModel", menuViewModel);
 			break;
