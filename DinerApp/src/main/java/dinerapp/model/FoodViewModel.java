@@ -2,7 +2,8 @@ package dinerapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import dinerapp.entity.Food;
+
+import dinerapp.model.entity.Food;
 
 public class FoodViewModel 
 {

@@ -3,7 +3,7 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.entity.Category;
+import dinerapp.model.entity.Category;
 
 public class CategoryViewModel {
 
