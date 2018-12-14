@@ -3,8 +3,8 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.entity.Malicious;
-import dinerapp.entity.Person;
+import dinerapp.dto.Malicious;
+import dinerapp.dto.Person;
 
 public class PersonViewModel {
 	private String name;

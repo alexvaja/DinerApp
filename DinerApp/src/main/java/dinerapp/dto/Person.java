@@ -1,4 +1,4 @@
-package dinerapp.entity;
+package dinerapp.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

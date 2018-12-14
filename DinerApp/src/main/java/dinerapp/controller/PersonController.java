@@ -37,8 +37,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import dinerapp.entity.Malicious;
-import dinerapp.entity.Person;
+import dinerapp.dto.Malicious;
+import dinerapp.dto.Person;
 import dinerapp.model.PersonViewModel;
 import dinerapp.pdf.HeaderFooterPageEvent;
 import dinerapp.repository.MaliciousRepository;
