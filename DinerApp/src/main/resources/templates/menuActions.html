@@ -8,16 +8,17 @@
 				<div th:if="${addMenuIsAvailable == True}">
 					
 					<label>Titlu:</label>
-					<input type="text" name="menu_title"/>
+					<input type="text" name="menu_title" th:value="${title}" />
 					<label>Data:</label>
-					<input type="date" name="menu_date"/>
+					<input type="date" name="menu_date" th:value="${date}"/>
 					
 					<div th:each="dish : *{dishes}">
 						<br/>
+						<label>Selecteaza Categoria: </label>
 						<select> 
-							<option>Select Category</option>
-							<option th:each="c : ${dish.categories}"
-									th:text="${c.category.name}"/>
+							<option>...</option>
+							<option th:each="categoryItem : ${dish.categories}"
+									th:text="${categoryItem.category.name}"/>
 						</select>
 						
 						<br/>
@@ -36,14 +37,14 @@
 								</thead>
 		
 								<tbody>
-									<tr th:each="f : ${dish.foods}">
-										<td th:text="${f.food.id}"></td>
-										<td th:text="${f.food.name}"></td>
-										<td th:text="${f.food.ingredients}"></td>
-										<td th:text="${f.food.weight}"></td>
-										<td th:text="${f.food.price}"></td>
+									<tr th:each="foodItem, iter : ${dish.foods}">
+										<td th:text="${foodItem.food.id}"></td>
+										<td th:text="${foodItem.food.name}"></td>
+										<td th:text="${foodItem.food.ingredients}"></td>
+										<td th:text="${foodItem.food.weight}"></td>
+										<td th:text="${foodItem.food.price}"></td>
 										<td>
-											<input type="checkbox"/>	
+											<input name = "verif" type="checkbox" th:checked="${foodItem.selected}" th:value="${iter.index}"/>	
 <!-- 											<th:block th:each="savedFood : ${dish.foodItems}">
 												<th:block th:if="${savedFood} == ${food}">
 													<input type="checkbox" checked="checked"/>

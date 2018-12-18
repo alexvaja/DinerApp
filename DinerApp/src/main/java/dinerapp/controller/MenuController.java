@@ -49,9 +49,19 @@ public class MenuController {
 	public String setAllMenu(Model model, @SessionAttribute MenuViewModel menuViewModel,
 										  @RequestParam("submit") String reqParam) {
 		
+		System.out.println("Vine param: " + reqParam);
 		
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+
+		List<Category> categoryList = getListOfCategory();
+		List<Food> foodList = getlistOfFood();
+
+		List<DishDTO> dishes = menuViewModel.getDishes();
+		String title = menuViewModel.getTitle();
+		String date = menuViewModel.getDate();
+		
+		//String[] index = reqParam.split(",");
 		
 		switch(reqParam) {
 		case "AddMenu":
@@ -59,20 +69,28 @@ public class MenuController {
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 			
-			List<DishDTO> dishes = menuViewModel.getDishes();
-			List<FoodDTO> f = new ArrayList<>();
-			List<CategoryDTO> c = new ArrayList<>();
-			f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
-			f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
-			
-			c.add(new CategoryDTO(new Category(2, "Meniu 2", 19.), true));
-			dishes.add(new DishDTO(c, f));
-			
-			menuViewModel.setDishes(dishes);
+			List<CategoryDTO> categories = new ArrayList<>();
+			List<FoodDTO> foods = new ArrayList<>();
 
+			
+			for (Category category : categoryList) {
+				categories.add(new CategoryDTO(category, false));
+			}
+			
+			for (Food food : foodList) {
+				foods.add(new FoodDTO(food, false));
+			}
+			
+			DishDTO dish = new DishDTO();
+			dish.setCategories(categories);
+			dish.setFoods(foods);
+			
+			dishes.add(dish);
+			menuViewModel.setDishes(dishes);
+			menuViewModel.setDate(date);
+			menuViewModel.setTitle(title);
 			break;
 		case "Cancel":
-			//menuViewModel.deleteAllElement();
 			break;
 		case "SaveAll":
 			break;
@@ -145,4 +163,27 @@ public class MenuController {
 //		
 //		return menuViewModel;
 //	}
+	
+	
+//	List<DishDTO> dishes1 = menuViewModel.getDishes();
+//	
+//	List<FoodDTO> f = new ArrayList<>();
+//	List<CategoryDTO> c = new ArrayList<>();
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), false));
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), false));
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), false));
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
+//	f.add(new FoodDTO(new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6), true));
+//	
+//	c.add(new CategoryDTO(new Category(2, "Meniu 2", 19.), true));
+//	dishes1.add(new DishDTO(c, f));
+//
+//	menuViewModel.setDishes(dishes1);
+//	menuViewModel.setDate(date);
+//	menuViewModel.setTitle(title);
+	
+	
+	
+	
 }
