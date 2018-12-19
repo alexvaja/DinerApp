@@ -43,17 +43,17 @@ public class DinerAppController
     @SessionScope
     @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
     public String loginPage(Model model,Principal principal) {
-        return "loginView";
+        return "views/loginView";
     }
     
     @RequestMapping(value = { "/expired"}, method = RequestMethod.GET)
     public String sessionExpiredPage(Model model,Principal principal) {
-        return "sessionTimeoutView";      
+        return "views/sessionTimeoutView";      
     }
 
     @RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
     public String logoutSuccessfulPage(Model model) {        
-        return "loginView";
+        return "views/loginView";
     }
  
     @RequestMapping(value = { "/userAccountInfo"}, method = RequestMethod.GET)

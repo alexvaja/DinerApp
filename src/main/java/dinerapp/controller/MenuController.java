@@ -40,7 +40,7 @@ public class MenuController {
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		model.addAttribute("menuViewModel", new MenuViewModel());
 		
-		return "menuView";
+		return "views/menuView";
 	}
 	
 	@PostMapping("/menuView")
@@ -73,7 +73,7 @@ public class MenuController {
 		case "SaveAll":
 			break;
 		}
-		return "menuView";
+		return "views/menuView";
 	}
 	
 	private List<Category> getListOfCategory() {
