@@ -3,6 +3,8 @@ package dinerapp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,55 +20,56 @@ import dinerapp.repository.CategoryRepository;
 @Controller
 public class CategoryController {
 
-	@Autowired
-	private CategoryRepository categoryRepository;
-	
-	@GetMapping("/categoryView")
-	public String getAllCateogires(Model model)
-	{
-		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
-		//model.addAttribute("category", new Category());
-		System.out.println(getListOfCategory());
-		return "categoryView";
-	}
-	
-	@PostMapping("/categoryView")
-	public String setAllCategories(Model model, @ModelAttribute Category category, @RequestParam("submit") String reqParam)
-	{
-		System.out.println("setAllCategories");
-		
-		Boolean addCategoryIsAvailable = false;
-		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
-		model.addAttribute("category", new Category());
-		System.out.println(category);
-		System.out.println(reqParam);
-		switch(reqParam) {
-			case "Add":
-				addCategoryIsAvailable = true;
-				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-				break;
-			case "Save":
-				categoryRepository.save(category);
-				addCategoryIsAvailable = false;
-				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-				model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
-				break;
-			case "Cancel":
-				addCategoryIsAvailable = false;
-				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
-				break;
-		}
-		return "categoryView";
-	}
+  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	private List<Category> getListOfCategory() {
-		
-		Iterable<Category> list = categoryRepository.findAll();
-		List<Category> searchedList= new ArrayList<>();
-		for (Category category : list) {
-			searchedList.add(category);
-		}
-		return searchedList;
-	}
+  @Autowired
+  private CategoryRepository categoryRepository;
+
+  @GetMapping("/categoryView")
+  public String getAllCateogires(final Model model) {
+    model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
+    // model.addAttribute("category", new Category());
+    LOGGER.info(getListOfCategory().toString());
+    return "categoryView";
+  }
+
+  @PostMapping("/categoryView")
+  public String setAllCategories(final Model model, @ModelAttribute final Category category,
+      @RequestParam("submit") final String reqParam) {
+    LOGGER.info("setAllCategories");
+
+    Boolean addCategoryIsAvailable = false;
+    model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
+    model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
+    model.addAttribute("category", new Category());
+    LOGGER.info(category.toString());
+    LOGGER.info(reqParam);
+    switch (reqParam) {
+      case "Add" :
+        addCategoryIsAvailable = true;
+        model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
+        break;
+      case "Save" :
+        categoryRepository.save(category);
+        addCategoryIsAvailable = false;
+        model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
+        model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
+        break;
+      case "Cancel" :
+        addCategoryIsAvailable = false;
+        model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
+        break;
+    }
+    return "categoryView";
+  }
+
+  private List<Category> getListOfCategory() {
+
+    final Iterable<Category> list = categoryRepository.findAll();
+    final List<Category> searchedList = new ArrayList<>();
+    for (final Category category : list) {
+      searchedList.add(category);
+    }
+    return searchedList;
+  }
 }
