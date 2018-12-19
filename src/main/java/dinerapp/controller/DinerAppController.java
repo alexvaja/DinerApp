@@ -17,16 +17,7 @@ import dinerapp.security.config.*;
 @RequestMapping("/")
 public class DinerAppController 
 {
-//	@GetMapping("/index")
-//	public String getDinerAppForm(Model model) {
-//		System.out.println("am intrat in cantina");
-//		return "index";
-//	}
-//	@GetMapping("/")
-//	public String getDinerAppForm2(Model model) {
-//		System.out.println("am intrat in cantina2");
-//		return "index";
-//	}	
+
 	@PostMapping("/dinerapp")
 	public String ceva(@RequestParam("submit") String reqParam)
 	{
