@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+</head>
+<body>
+<body>
+
+	<h1>Category Table</h1>
+	<form action="#" th:object="${category}" th:action="@{/categoryView}" method="post">
+		<div class = "form-group">
+			<div th:if="${addCategoryIsAvailable == True}">
+				<div>
+					<label for="categoryName">Nume:</label>
+					<div> 
+						<input type="text" th:field="*{name}" maxlength="27" size="40" autofocus />
+					</div>
+				</div>
+				<div>
+					<label for="categoryPrice">Pret:</label>
+					<div>
+						<input type="text" th:field="*{price}" maxlength="27" size="40" />
+					</div>
+				</div>
+			</div>
+			<div th:if="${addCategoryIsAvailable == False}">
+			</div>
+		</div>
+
+		<input class="btn btn-primary" name="submit" type="submit" th:value="Add" /> 
+		<input class="btn btn-primary" name="submit" type="submit" th:value="Cancel" /> 
+		<input class="btn btn-primary" name="submit" type="submit" th:value="Save" /> 
+		
+		<br> <br> <br>
+		<div>
+			<table class="table tcolor table-bordered">
+				<thead class="thead">
+					<tr>
+						<th scope="col">Nume</th>
+						<th scope="col">Pret</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category : ${categoryViewModel.categoryItems}">
+						<td th:text="${category.name}">...</td>
+						<td th:text="${category.price}">...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>
