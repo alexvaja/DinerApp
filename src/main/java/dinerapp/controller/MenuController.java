@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -50,7 +50,8 @@ public class MenuController {
 
 		return "menuView";
 	}
-
+	
+	@Transactional
 	@PostMapping("/menuView")
 	public String setAllMenu(Model model, @SessionAttribute MenuViewModel menuViewModel,
 			@RequestParam(value = "submit") String reqParam,
@@ -130,6 +131,31 @@ public class MenuController {
 			menuViewModel.getDishes().clear();
 			break;
 		case "SaveAll":
+			System.out.println("MenuViewModel in Save");
+			System.out.println(menuViewModel);
+//			List<DishDTO> listDish = menuViewModel.getDishes();
+//			for (DishDTO dish : listDish) {
+//				List<CategoryDTO> savedCategory = dish.getCategories();
+//				Category selectedCategory = null;
+//				for (CategoryDTO category : savedCategory) {
+//					if (category.getSelected() == true) {
+//						selectedCategory = category.getCategory();
+//						break;
+//					}
+//				}
+//				categoryRepository.save(selectedCategory);
+//				
+//				List<FoodDTO> savedFood = dish.getFoods();
+//				List<Food> selectedFood = null;
+//				for(FoodDTO food : savedFood) {
+//					if (food.getSelected() == true) {
+//						selectedFood.add(food.getFood());
+//					}
+//				}
+//				
+//				foodRepository.saveAll(selectedFood);
+//			}
+			
 			break;
 		}
 		
