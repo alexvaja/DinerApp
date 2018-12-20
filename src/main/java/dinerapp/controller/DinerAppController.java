@@ -17,7 +17,6 @@ import dinerapp.security.config.*;
 @RequestMapping("/")
 public class DinerAppController 
 {
-
 	@PostMapping("/dinerapp")
 	public String ceva(@RequestParam("submit") String reqParam)
 	{
