@@ -28,7 +28,7 @@ public class CategoryController {
     model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
     // model.addAttribute("category", new Category());
     LOGGER.info(getListOfCategory().toString());
-    return "categoryView";
+    return "views/categoryView";
   }
 
   @PostMapping("/categoryView")

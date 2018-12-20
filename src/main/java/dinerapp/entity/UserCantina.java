@@ -17,11 +17,11 @@ import javax.persistence.Table;
 public class UserCantina {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id_user")
 	private Integer id;
-	@Column(name = "name")
+	@Column(name = "user_name")
 	private String name;
-	@Column(name = "password")
+	@Column(name = "user_password")
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")

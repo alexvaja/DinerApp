@@ -19,10 +19,10 @@ import javax.persistence.Table;
 @Table(name = "role")
 public class RoleCantina {
 	@Id
-	@Column(name = "id")
+	@Column(name = "id_role")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(name = "name")
+	@Column(name = "role_name")
 	private String name;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
@@ -82,11 +82,8 @@ public class RoleCantina {
 			return false;
 		return true;
 	}
-
 	@Override
 	public String toString() {
 		return "Role ["+id + "," + name + "]";
 	}
-
-		
 }
