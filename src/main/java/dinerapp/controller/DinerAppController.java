@@ -16,13 +16,11 @@ public class DinerAppController
 		System.out.println("am intrat in cantina");
 		return "index";
 	}
-	
 	@GetMapping("/")
 	public String getDinerAppForm2(Model model) {
 		System.out.println("am intrat in cantina2");
 		return "index";
-	}
-	
+	}	
 	@PostMapping("/dinerapp")
 	public String ceva(@RequestParam("submit") String reqParam)
 	{
@@ -35,11 +33,4 @@ public class DinerAppController
 		}
 		return "dinerapp";
 	}
-	
-//	@RequestMapping(value = "/foodView", method = RequestMethod.GET)
-//	public String openFoodView()
-//	{
-//		return "foodView";
-//	}
-	
 }
