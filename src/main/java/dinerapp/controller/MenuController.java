@@ -134,7 +134,7 @@ public class MenuController {
 			case "SaveAll":
 				break;
 		}
-		return "menuView";
+		return "views/menuView";
 	}
 	
 	private void cevaFood(String[] indexFood) {
@@ -155,13 +155,12 @@ public class MenuController {
 		for(Food food : listOfFoods) {
 			listOfFoodsDTO.add(new FoodDTO(food, false));
 		}
-		
+	
 		DishDTO dishDTO = new DishDTO();
 		dishDTO.setCategories(listOfCategoriesDTO);
 		dishDTO.setFoods(listOfFoodsDTO);
 		
 		return dishDTO;
-		
 	}
 	
 	private List<Category> getListOfCategoriesFromDB() {

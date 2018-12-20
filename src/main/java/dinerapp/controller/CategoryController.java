@@ -27,7 +27,7 @@ public class CategoryController {
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 		//model.addAttribute("category", new Category());
 		System.out.println(getListOfCategory());
-		return "categoryView";
+		return "views/categoryView";
 	}
 	
 	@PostMapping("/categoryView")
@@ -57,7 +57,7 @@ public class CategoryController {
 				model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 				break;
 		}
-		return "categoryView";
+		return "views/categoryView";
 	}
 
 	private List<Category> getListOfCategory() {

@@ -27,7 +27,7 @@ public class FoodControler
 		FoodViewModel foodViewModel = new FoodViewModel();
 		foodViewModel.setFoodItems(getListOfFood());
 		model.addAttribute("foodViewModel", foodViewModel);
-		return "foodView";
+		return "views/foodView";
 	}
 
 	@PostMapping("/foodView")
@@ -59,7 +59,7 @@ public class FoodControler
 			System.out.println(addFoodIsAvailable);
 			break;
 		}
-		return "foodView";
+		return "views/foodView";
 	}
 
 	private List<Food> getListOfFood() 
