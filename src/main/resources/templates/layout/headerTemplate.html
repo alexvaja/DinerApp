@@ -1,4 +1,14 @@
 <!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header> <font color="white">CANTINA ATOS CVC</font> </header>
+	<header>
+		<font color="white">CANTINA ATOS CVC</font>
+		<!-- 	 <a th:if="${#request.userPrincipal!=null}" th:href="@{logout}">LogOut</a> -->
+		<div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+		<p align="right">
+			<font color="black"> <a class="btn btn-primary"
+				th:if="${#request.userPrincipal!=null}" th:href="@{logout}">LogOut</a>
+			</font>
+		</p>
+	</header>
 </body>
