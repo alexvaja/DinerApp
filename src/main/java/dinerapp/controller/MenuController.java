@@ -31,7 +31,6 @@ import dinerapp.repository.FoodRepository;
 public class MenuController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	CategoryRepository categoryRepository;
 
@@ -48,7 +47,7 @@ public class MenuController {
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
-		return "menuView";
+		return "views/menuView";
 	}
 	
 	@Transactional
@@ -75,7 +74,7 @@ public class MenuController {
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
 			List<DishDTO> dishes = menuViewModel.getDishes();
-
+			
 			String[] indexFood = null;
 
 			if (selectedMenuFood != null) {
@@ -158,8 +157,7 @@ public class MenuController {
 			
 			break;
 		}
-		
-		return "menuView";
+		return "views/menuView";
 	}
 
 	private void cevaFood(String[] indexFood) {

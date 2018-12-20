@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<div>
+	<form action="#" th:action="@{/menuView}"
+		th:object="${session.menuViewModel}" method="post">
+		<div>
+			<h1>Adaugare meniu</h1>
+			<div th:if="${addMenuIsAvailable == True}" class = form-group >
+				<label for = "Titlu">Titlu:</label> 
+				<div>
+					<input type="text" name="menu_title" th:value="*{title}" class="form-control"/>
+				</div> 
+				
+				<label for = "Data">Data:</label> 
+				<div class = "input-group date" data-provide="datepicker">
+					<input type="date" name="menu_date" th:value="*{date}" class="form-control"/>
+				</div>
+				<table>
+					<tr th:each="dish, dishIndex : *{dishes}">
+						<td><br /> <label>Selecteaza Categoria: </label>
+							<div class="dropdown">
+								<select name="drop_down_list" class="form-control" id="sel1">
+									<option
+										th:each="categoryItem, categoryIndex : ${dish.categories}"
+										th:text="${categoryItem.category.name}"
+										th:value="${categoryIndex.index}"
+										th:selected="${categoryItem.selected}" />
+								</select>
+							</div> 
+							<br />
+							<div>
+								<table class = "table tcolor table-bordered">
+									<thead class = "thead thead-dark">
+										<tr>
+											<th scope = "col">ID</th>
+											<th scope = "col">NUME</th>
+											<th scope = "col">INGREDIENTE</th>
+											<th scope = "col">GREUTATE</th>
+											<th scope = "col">PRET</th>
+											<th scope = "col">SELECTAT</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr th:each="foodItem, iter : ${dish.foods}">
+											<td th:text="${foodItem.food.id}"></td>
+											<td th:text="${foodItem.food.name}"></td>
+											<td th:text="${foodItem.food.ingredients}"></td>
+											<td th:text="${foodItem.food.weight}"></td>
+											<td th:text="${foodItem.food.price}"></td>
+											<td>
+											<input class = "form-checl-input" name="verif" type="checkbox"
+											th:value="${iter.index}" th:checked="${foodItem.selected}" />
+											</td>
+										</tr>
+										<tr>
+											<td><input name="verif" type="hidden" th:value="-1" /></td>
+										<tr>
+									</tbody>
+								</table>
+							</div> <br /></td>
+					</tr>
+				</table>
+				<input class="btn btn-primary" name="submit" type="submit" th:value="AddMenu" />
+				<input class="btn btn-primary" name="submit" type="submit" value="Cancel" /> 
+				<input class="btn btn-primary" name="submit" type="submit" th:value="SaveAll" />
+			</div>
+
+			<div th:if="${addMenuIsAvailable == False}">
+				<input class="btn btn-primary" name="submit" type="submit" th:value="AddMenu" />
+			</div>
+		</div>
+	</form>
+</div>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>

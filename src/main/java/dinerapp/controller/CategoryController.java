@@ -19,18 +19,16 @@ import dinerapp.repository.CategoryRepository;
 
 @Controller
 public class CategoryController {
-
   private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-
-  @Autowired
-  private CategoryRepository categoryRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
 
   @GetMapping("/categoryView")
   public String getAllCateogires(final Model model) {
     model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
     // model.addAttribute("category", new Category());
     LOGGER.info(getListOfCategory().toString());
-    return "categoryView";
+    return "views/categoryView";
   }
 
   @PostMapping("/categoryView")
@@ -60,7 +58,7 @@ public class CategoryController {
         model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
         break;
     }
-    return "categoryView";
+    return "views/categoryView";
   }
 
   private List<Category> getListOfCategory() {

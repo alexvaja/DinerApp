@@ -19,57 +19,56 @@ import dinerapp.repository.FoodRepository;
 
 @Controller
 public class FoodControler {
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private FoodRepository foodRepo;
 
-  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	@GetMapping("/foodView")
+	public String getAllFoods(final Model model) {
+		LOGGER.info("getAllFoods");
+		final FoodViewModel foodViewModel = new FoodViewModel();
+		foodViewModel.setFoodItems(getListOfFood());
+		model.addAttribute("foodViewModel", foodViewModel);
+		return "views/foodView";
+	}
 
-  @Autowired
-  private FoodRepository foodRepo;
+	@PostMapping("/foodView")
+	public String openFoodView(final Model model, @ModelAttribute final Food food,
+			@RequestParam("submit") final String reqParam) {
+		LOGGER.info("am intrat in mancare2");
+		LOGGER.info(reqParam);
+		Boolean addFoodIsAvailable = true;
+		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+		model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
+		model.addAttribute("food", new Food());
+		LOGGER.info(food.toString());
+		switch (reqParam) {
+		case "Add":
+			addFoodIsAvailable = true;
+			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+			LOGGER.info(addFoodIsAvailable.toString());
+			break;
+		case "Save":
+			foodRepo.save(food);
+			addFoodIsAvailable = false;
+			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+			model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
+			LOGGER.info(addFoodIsAvailable.toString());
+			break;
+		case "Cancel":
+			addFoodIsAvailable = false;
+			LOGGER.info(addFoodIsAvailable.toString());
+			break;
+		}
+		return "views/foodView";
+	}
 
-  @GetMapping("/foodView")
-  public String getAllFoods(final Model model) {
-    LOGGER.info("getAllFoods");
-    final FoodViewModel foodViewModel = new FoodViewModel();
-    foodViewModel.setFoodItems(getListOfFood());
-    model.addAttribute("foodViewModel", foodViewModel);
-    return "foodView";
-  }
-
-  @PostMapping("/foodView")
-  public String openFoodView(final Model model, @ModelAttribute final Food food, @RequestParam("submit") final String reqParam) {
-    LOGGER.info("am intrat in mancare2");
-    LOGGER.info(reqParam);
-    Boolean addFoodIsAvailable = true;
-    model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-    model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
-    model.addAttribute("food", new Food());
-    LOGGER.info(food.toString());
-    switch (reqParam) {
-      case "Add" :
-        addFoodIsAvailable = true;
-        model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-        LOGGER.info(addFoodIsAvailable.toString());
-        break;
-      case "Save" :
-        foodRepo.save(food);
-        addFoodIsAvailable = false;
-        model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-        model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
-        LOGGER.info(addFoodIsAvailable.toString());
-        break;
-      case "Cancel" :
-        addFoodIsAvailable = false;
-        LOGGER.info(addFoodIsAvailable.toString());
-        break;
-    }
-    return "foodView";
-  }
-
-  private List<Food> getListOfFood() {
-    final Iterable<Food> list = foodRepo.findAll();
-    final List<Food> searchedList = new ArrayList<>();
-    for (final Food food : list) {
-      searchedList.add(food);
-    }
-    return searchedList;
-  }
+	private List<Food> getListOfFood() {
+		final Iterable<Food> list = foodRepo.findAll();
+		final List<Food> searchedList = new ArrayList<>();
+		for (final Food food : list) {
+			searchedList.add(food);
+		}
+		return searchedList;
+	}
 }
