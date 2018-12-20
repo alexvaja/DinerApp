@@ -1,7 +1,10 @@
 package dinerapp.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,10 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 
+import dinerapp.dto.CategoryDTO;
+import dinerapp.dto.DishDTO;
+import dinerapp.dto.FoodDTO;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.entity.Category;
-import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Food;
 import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.FoodRepository;
@@ -27,56 +34,137 @@ public class MenuController {
 	@Autowired
 	FoodRepository foodRepository;
 	
-	int integer = 0;
-	
+	@SessionScope
 	@GetMapping("/menuView")
-	public String getAllMenu(Model model) {
-		
-		System.out.println("GET MENU");
-		System.out.println(getlistOfFood());
-		System.out.println(getListOfCategory());
-		
-		Boolean addMenuIsAvailable = false;
-		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		model.addAttribute("menuViewModel", new MenuViewModel());
-		
-		return "menuView";
-	}
+	public String sessionExample(Model model, Principal principal, HttpSession session) {
+			session.setAttribute("menuViewModel", new MenuViewModel());
+					
+			Boolean addMenuIsAvailable = false;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+			
+			return "menuView";
+	} 
 	
 	@PostMapping("/menuView")
-	public String setAllMenu(Model model, @RequestParam("submit") String reqParam, 
-										  @ModelAttribute("menuViewModel") MenuViewModel menuViewModel) {
+	public String setAllMenu(Model model, @SessionAttribute MenuViewModel menuViewModel,
+										  @RequestParam(value="submit") String reqParam,
+										  @RequestParam(value="menu_title", required=false) String menuTitle,
+										  @RequestParam(value="menu_date", required=false) String menuDate,
+										  @RequestParam(value="drop_down_list", required=false) String dropDownList,
+										  @RequestParam(value="verif", required=false) String selectedMenuFood) {
 		
-		System.out.println("SET MENU");
-		System.out.println(reqParam);
+		System.out.println("Vine param: " + reqParam);
+		System.out.println("Categories:" + dropDownList);
+		System.out.println("Foods: " + selectedMenuFood);
+		
 		
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-		model.addAttribute("categoryList", getListOfCategory());
-		model.addAttribute("foodList", getlistOfFood());
-		model.addAttribute("menuViewModel", menuViewModel);
-		
 		
 		switch(reqParam) {
-		case "AddMenu":
+			case "AddMenu":
+
+				addMenuIsAvailable = true;
+				model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 			
-			integer++;
-			addMenuIsAvailable = true;
-			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			System.out.println(menuViewModel);
-			menuViewModel.addNewDish(new Dish());
-			model.addAttribute("menuViewModel", menuViewModel);
-			break;
-		case "Cancel":
-			menuViewModel.deleteAllElement();
-			break;
-		case "SaveAll":
-			break;
+				List<DishDTO> dishes = menuViewModel.getDishes();
+	
+				//List<DishDTO> listDish = menuViewModel.getDishes();
+				//
+				String[] indexFood = null;
+				
+				if (selectedMenuFood != null) {
+					indexFood = selectedMenuFood.split(",");
+					
+					int i = 0;	
+					
+					for (DishDTO dishDTO : dishes) {
+						List<FoodDTO> listFood = dishDTO.getFoods();
+						
+						for (FoodDTO foodDTO : listFood) {
+							foodDTO.setSelected(false);
+						}
+							
+						while (Integer.valueOf(indexFood[i])!=-1) {
+							listFood.get(Integer.valueOf(indexFood[i])).setSelected(true);
+							i++;
+						}
+						
+						i++;			
+						dishDTO.setFoods(listFood);
+					}		
+				}
+				//////
+				String[] indexCategory = null;
+				
+				if(dropDownList != null) {
+					indexCategory = dropDownList.split(",");
+					
+					int i=0;
+					
+					for (DishDTO dishDTO : dishes) {
+						List<CategoryDTO> listCategory = dishDTO.getCategories();
+						
+						for (CategoryDTO categoryDTO : listCategory) {
+							categoryDTO.setSelected(false);
+						}
+					
+						listCategory.get(Integer.parseInt(indexCategory[i])).setSelected(true);;
+						
+						i++;
+						dishDTO.setCategories(listCategory);
+					}		
+				}
+						
+	//			if(indexCategory!=null) {
+	//				for (int ind = 0; ind < indexCategory.length; ind++) {
+	//					categories.remove(ind);
+	//				}
+	//			}
+				
+				dishes.add(getEmptyDish());
+				menuViewModel.setDishes(dishes);
+				menuViewModel.setTitle(menuTitle);
+				menuViewModel.setDate(menuDate);
+				
+				break;
+			case "Cancel":
+				menuViewModel.getDishes().clear();
+				break;
+			case "SaveAll":
+				break;
 		}
 		return "menuView";
 	}
 	
-	private List<Category> getListOfCategory() {
+	private void cevaFood(String[] indexFood) {
+		
+	}
+	
+	private DishDTO getEmptyDish() {
+		List<Category> listOfCategories = getListOfCategoriesFromDB();
+		List<Food> listOfFoods = getListOfFoodsFromDB();
+		
+		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
+		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
+		
+		for (Category category : listOfCategories) {
+			listOfCategoriesDTO.add(new CategoryDTO(category, false));
+		}
+		
+		for(Food food : listOfFoods) {
+			listOfFoodsDTO.add(new FoodDTO(food, false));
+		}
+		
+		DishDTO dishDTO = new DishDTO();
+		dishDTO.setCategories(listOfCategoriesDTO);
+		dishDTO.setFoods(listOfFoodsDTO);
+		
+		return dishDTO;
+		
+	}
+	
+	private List<Category> getListOfCategoriesFromDB() {
 		
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList= new ArrayList<>();
@@ -86,7 +174,7 @@ public class MenuController {
 		return searchedList;
 	}
 	
-	private List<Food> getlistOfFood() {
+	private List<Food> getListOfFoodsFromDB() {
 		
 		Iterable<Food> list = foodRepository.findAll();
 		List<Food> searchedList = new ArrayList<>();
@@ -95,50 +183,4 @@ public class MenuController {
 		}
 		return searchedList;	
 	}
-	
-//	private MenuViewModel getVM() 
-//	{
-//		MenuViewModel menuViewModel = new MenuViewModel();
-//		//Category
-//		Category category1 = new Category(1, "Meniu 1", 17.);
-//		
-//		Category category2 = new Category(2, "Meniu 2", 19.);
-//		
-//		Category category3 = new Category(3, "Meniu Vegetarian", 20.5);
-//		//Food
-//		Food food1 = new Food(5, "Ciorba", "apa, sare, piper, morcovi", 250, 6);
-//
-//		Food food2 = new Food(6, "Supa", "apa, sare, piper, morcovi", 300, 5);
-//		
-//		Food food3 = new Food(7, "Tocanita", "apa, sare, piper, morcovi", 260, 10);
-//		
-//		Food food4 = new Food(8, "Gulas", "apa, sare, piper, morcovi", 600, 12);
-//		//Dish
-//		Dish dish1 = new Dish();
-//		dish1.setCategory(category1);
-//		dish1.addNewFood(food1);
-//		dish1.addNewFood(food3);
-//		dish1.addNewFood(food4);
-//		
-//		Dish dish2 = new Dish();
-//		dish2.setCategory(category2);
-//		dish2.addNewFood(food1);
-//		dish2.addNewFood(food3);
-//		dish2.addNewFood(food4);
-//		
-//		Dish dish3 = new Dish();
-//		dish3.setCategory(category3);
-//		dish3.addNewFood(food1);
-//		dish3.addNewFood(food2);
-//		dish3.addNewFood(food3);
-//		dish3.addNewFood(food4);
-//		
-//		menuViewModel.addNewDish(dish1);
-//		menuViewModel.addNewDish(dish2);
-//		menuViewModel.addNewDish(dish3);
-//		menuViewModel.addNewDish(dish1);
-//		menuViewModel.addNewDish(dish2);
-//		
-//		return menuViewModel;
-//	}
 }
