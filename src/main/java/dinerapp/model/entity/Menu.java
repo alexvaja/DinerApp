@@ -21,7 +21,7 @@ public class Menu
 	private Integer id;
 	
 	@Column(name="menu_data")
-	private String data;
+	private String date;
 	
 	@Column(name="menu_state")
 	private String state;
@@ -45,11 +45,11 @@ public class Menu
 	}
 
 	public String getData() {
-		return data;
+		return date;
 	}
 
 	public void setData(String data) {
-		this.data = data;
+		this.date = data;
 	}
 
 	public String getState() {
@@ -103,6 +103,6 @@ public class Menu
 
 	@Override
 	public String toString() {
-		return "Menu [" + id + ", " + data + ", " + state + ", " + title + ", " + dishes + "]";
+		return "Menu [" + id + ", " + date + ", " + state + ", " + title + ", " + dishes + "]";
 	}
 }
