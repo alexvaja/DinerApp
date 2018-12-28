@@ -92,6 +92,6 @@ public class Category
 
 	@Override
 	public String toString() {
-		return "Category [" + id + ", " + name + ", " + price + ", " + dishes + "]";
+		return "Category [" + id + ", " + name + ", " + price + "]";
 	}
 }

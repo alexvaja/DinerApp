@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import dinerapp.constants.MenuStates;
+
 @Entity
 @Table(name="menu")
 public class Menu 
@@ -34,6 +36,7 @@ public class Menu
 
 	public Menu() {
 		super();
+		this.state = MenuStates.NEW.toString();
 	}
 
 	public Integer getId() {
@@ -103,6 +106,6 @@ public class Menu
 
 	@Override
 	public String toString() {
-		return "Menu [" + id + ", " + date + ", " + state + ", " + title + ", " + dishes + "]";
+		return "Menu [" + id + ", " + date + ", " + state + ", " + title + "]";
 	}
 }

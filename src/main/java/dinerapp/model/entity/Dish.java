@@ -5,10 +5,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +32,13 @@ public class Dish
 	@JoinColumn(name = "id_menu", nullable = false)
 	private Menu menu;
 	
-	@ManyToMany(mappedBy = "dishes")
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name="dish_food",
+			joinColumns={@JoinColumn(name="id_dish")},
+			inverseJoinColumns={@JoinColumn(name="id_food")}
+			)
 	private List<Food> foods = new ArrayList<>();
 
 	public Dish() {
@@ -96,6 +104,6 @@ public class Dish
 
 	@Override
 	public String toString() {
-		return "Dish [" + id + ", " + category + ", " + menu + ", " + foods + "]";
+		return "Dish [" + id + ", " + category + ", " + menu + "]";
 	}
 }
