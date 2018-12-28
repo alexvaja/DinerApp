@@ -1,8 +1,9 @@
 package dinerapp.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import dinerapp.entity.RoleCantina;
 
-public interface RoleCantinaRepository extends CrudRepository<RoleCantina, Integer> {
+import dinerapp.model.entity.Role;
+
+public interface RoleCantinaRepository extends CrudRepository<Role, Integer> {
 
 }
