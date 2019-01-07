@@ -1,4 +1,4 @@
-package dinerapp.dto;
+package dinerapp.model.dto;
 
 import java.util.ArrayList;
 import java.util.List;

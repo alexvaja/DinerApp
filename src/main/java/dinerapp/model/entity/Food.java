@@ -35,12 +35,7 @@ public class Food
 	@Column(name="food_price")
 	private double price;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name="dish_food",
-			joinColumns={@JoinColumn(name="id_dish")},
-			inverseJoinColumns={@JoinColumn(name="id_food")}
-			)
+	@ManyToMany(mappedBy = "foods")
 	private List<Dish> dishes = new ArrayList<>();
 
 	public Food() {
@@ -123,6 +118,6 @@ public class Food
 	@Override
 	public String toString() {
 		return "Food [" + id + ", " + name + ", " + ingredients + ", " + weight + ", "
-				+ price + ", " + dishes + "]";
+				+ price + "]";
 	}
 }
