@@ -5,7 +5,7 @@ public class MenuDTO {
 	private Integer id;
 	private String date;
 	private String state;
-	private String Title;
+	private String title;
 	
 	public MenuDTO() {
 		super();
@@ -36,15 +36,15 @@ public class MenuDTO {
 	}
 
 	public String getTitle() {
-		return Title;
+		return title;
 	}
 
 	public void setTitle(String title) {
-		Title = title;
+		this.title = title;
 	}
 
 	@Override
 	public String toString() {
-		return "MeniuDTO [" + id + ", " + date + ", " + state + ", " + Title + "]";
+		return "MeniuDTO [" + id + ", " + date + ", " + state + ", " + title + "]";
 	}
 }
