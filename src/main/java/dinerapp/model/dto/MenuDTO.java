@@ -1,5 +1,7 @@
 package dinerapp.model.dto;
 
+import dinerapp.constants.MenuStates;
+
 public class MenuDTO {
 
 	private Integer id;
@@ -9,6 +11,7 @@ public class MenuDTO {
 	
 	public MenuDTO() {
 		super();
+		this.state = MenuStates.NEW.toString();
 	}
 
 	public Integer getId() {
