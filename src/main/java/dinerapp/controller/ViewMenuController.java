@@ -32,13 +32,10 @@ import dinerapp.repository.MenuRepository;
 public class ViewMenuController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
 	CategoryRepository categoryRepository;
-
 	@Autowired
 	FoodRepository foodRepository;
-
 	@Autowired
 	MenuRepository menuRepository;
 
@@ -47,9 +44,7 @@ public class ViewMenuController {
 
 	@GetMapping("/viewMenuView")
 	public String getAllMenus() {
-
 		return "views/viewMenuView";
-
 	}
 
 	@PostMapping("/viewMenuView")
