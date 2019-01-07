@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css//override.css" />
+<div>
+	<form action="#" th:action="@{/viewMenuView}" th:object="${session.menuViewModel}" method="post">
+		<div>
+			<h1>Meniu</h1>
+			
+			<input name="submit" type="submit" th:value="Edit"/>
+			<input name="submit" type="submit" th:value="Publish"/>
+			
+		</div>
+	</form>
+</div>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>

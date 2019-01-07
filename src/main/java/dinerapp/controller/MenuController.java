@@ -37,6 +37,7 @@ import dinerapp.repository.MenuRepository;
 public class MenuController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	CategoryRepository categoryRepository;
 
@@ -107,12 +108,13 @@ public class MenuController {
 		}
 		case "SaveAll": {
 			List<DishDTO> dishes = menuViewModel.getDishes();
-			
-			if (menuDate == null || !isDateExist(menuDate)) {
+
+			if (canSave(menuDate, menuViewModel.getState(), menuViewModel.getDate())) {
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
 
+				//menu.setId(new Integer(63));
 				menu.setData(menuDate);
 				menu.setTitle(menuTitle);
 				menu.setState(MenuStates.SAVED.toString());
@@ -127,27 +129,17 @@ public class MenuController {
 				}
 
 				for (DishDTO dishDTO : dishes) {
-					Dish dish = new Dish();
+					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
 
-					dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-
-					List<FoodDTO> savedFood = dishDTO.getFoods();
-					List<Food> selectedFood = new ArrayList<>();
-
-					for (FoodDTO foodDTO : savedFood) {
-						if (foodDTO.getSelected() == true) {
-							selectedFood.add(foodDTO.getFood());
-						}
-					}
-
-					if (!selectedFood.isEmpty()) {
-						dish.setFoods(selectedFood);
+					if (!selectedFoods.isEmpty()) {
+						Dish dish = new Dish();
+						dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+						dish.setFoods(selectedFoods);
 						dish.setMenu(menu);
 						dishRepository.save(dish);
 						selectedDishList.add(dish);
 					}
 				}
-				// menu.setDishes(selectedDishList);
 
 				addMenuIsAvailable = false;
 				session.removeAttribute("menuViewModel");
@@ -156,139 +148,60 @@ public class MenuController {
 
 			break;
 		}
-		case "Edit": {
-			List<DishDTO> dishes = new ArrayList<>();
-			addMenuIsAvailable = true;
-
-			List<Menu> listOfMenus = getAllMenusFromTable();
-
-			Menu menu = listOfMenus.get(listOfMenus.size() - 1);
-
-			System.out.println("Meniu: " + menu);
-
-			for (Dish dish : menu.getDishes()) {
-				System.out.println("DISH: " + dish);
-
-				DishDTO dishDTO = new DishDTO();
-
-				List<CategoryDTO> categoriesDTO = new ArrayList<>();
-				for (Category category : getAllCategoriesFromTable()) {
-					if (category.equals(dish.getCategory())) {
-						categoriesDTO.add(new CategoryDTO(category, true));
-					} else {
-						categoriesDTO.add(new CategoryDTO(category, false));
-					}
-				}
-
-				List<FoodDTO> foodsDTO = new ArrayList<>();
-				List<Food> lastSavedFoods = dish.getFoods();
-				for (Food food : getAllFoodsFromTable()) {
-					foodsDTO.add(new FoodDTO(food, false));
-				}
-
-				for (FoodDTO foodDTO : foodsDTO) {
-					for (Food food : lastSavedFoods) {
-						if (foodDTO.getFood().equals(food)) {
-							foodDTO.setSelected(true);
-						}
-					}
-				}
-
-				dishDTO.setCategories(categoriesDTO);
-				dishDTO.setFoods(foodsDTO);
-				System.out.println(dishDTO);
-				dishes.add(dishDTO);
-			}
-
-			System.out.println("Titlul: " + menuTitle);
-			System.out.println("Date: " + menuDate);
-			System.out.println("List categories: " + selectedMenuCategories);
-			System.out.println("List foods: " + selectedMenuFoods);
-
-			// category
-			if (selectedMenuCategories != null) {
-
-				String[] indexCategory = null;
-
-				indexCategory = selectedMenuCategories.split(",");
-
-				int index = 0;
-
-				for (DishDTO dishDTO : dishes) {
-					List<CategoryDTO> listCategory = dishDTO.getCategories();
-
-					for (CategoryDTO categoryDTO : listCategory) {
-						categoryDTO.setSelected(false);
-					}
-
-					listCategory.get(Integer.parseInt(indexCategory[index])).setSelected(true);
-
-					index++;
-					dishDTO.setCategories(listCategory);
-				}
-			}
-
-			// food
-			if (selectedMenuFoods != null) {
-
-				String[] indexFood = selectedMenuFoods.split(",");
-
-				int index = 0;
-
-				for (DishDTO dishDTO : dishes) {
-					List<FoodDTO> listFood = dishDTO.getFoods();
-
-					for (FoodDTO foodDTO : listFood) {
-						foodDTO.setSelected(false);
-					}
-
-					while (Integer.valueOf(indexFood[index]) != -1) {
-						listFood.get(Integer.valueOf(indexFood[index])).setSelected(true);
-						index++;
-					}
-
-					index++;
-					dishDTO.setFoods(listFood);
-				}
-			}
-
-			menuViewModel.setDate(menu.getData());
-			menuViewModel.setTitle(menu.getTitle());
-			menuViewModel.setDishes(dishes);
-			menuViewModel.setState(menu.getState());
-
-			session.setAttribute("menuViewModel", menuViewModel);
-			break;
-		}
 		}
 
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		return "views/menuView";
 	}
-	
+
+	private Boolean canSave(String menuDate, String state, String existingDate) {
+		System.out.println("Data in canSave" + menuDate + "pana aici");
+		if (menuDate.isEmpty()) {
+			return false;
+		}
+
+		if (state.equals(MenuStates.NEW.toString())) {
+			if (isDateExist(menuDate)) {
+				return false;
+			}
+		}
+		
+		if (state.equals(MenuStates.SAVED.toString())) {
+			if (existingDate.equals(menuDate)) {
+				return true;
+			} else {
+				if (isDateExist(menuDate)) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
 	private Category getSelectedCategory(List<CategoryDTO> savedCategory) {
 		for (CategoryDTO categoryDTO : savedCategory) {
-			if (categoryDTO.getSelected() == true) {
+			if (categoryDTO.getSelected()) {
 				return categoryDTO.getCategory();
 			}
 		}
 		return null;
 	}
-	
+
 	private List<Food> getSelectedFoodsForCategory(List<FoodDTO> savedFoods) {
 		List<Food> selectedFoods = new ArrayList<>();
 
 		for (FoodDTO foodDTO : savedFoods) {
-			if (foodDTO.getSelected() == true) {
+			if (foodDTO.getSelected()) {
 				selectedFoods.add(foodDTO.getFood());
 			}
 		}
 		return selectedFoods;
 	}
-	
+
 	private Boolean isDateExist(String menuDate) {
 		List<Menu> menuList = getAllMenusFromTable();
-		
+
 		for (Menu menu : menuList) {
 			if (menu.getData().equals(menuDate)) {
 				return true;
