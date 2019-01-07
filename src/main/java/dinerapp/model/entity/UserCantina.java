@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="user")
-public class User {
+public class UserCantina {
 
 	@Id
 	@Column(name="id_user")
@@ -29,14 +29,16 @@ public class User {
 	@Column(name="user_password")
 	private String password;
 	
+
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(
 			name="user_role",
 			joinColumns= {@JoinColumn(name="id_user")},
 			inverseJoinColumns= {@JoinColumn(name="id_role")})
-	private List<Role> roles = new ArrayList<>();
+	
+	private List<RoleCantina> roles = new ArrayList<>();
 
-	public User() {
+	public UserCantina() {
 		super();
 	}
 
@@ -64,11 +66,11 @@ public class User {
 		this.password = password;
 	}
 
-	public List<Role> getRoles() {
+	public List<RoleCantina> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<RoleCantina> roles) {
 		this.roles = roles;
 	}
 
@@ -79,7 +81,6 @@ public class User {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -88,7 +89,7 @@ public class User {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		UserCantina other = (UserCantina) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

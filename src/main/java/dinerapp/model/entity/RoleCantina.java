@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="role")
-public class Role 
+public class RoleCantina 
 {
 	@Id
 	@Column(name="id_role")
@@ -24,9 +24,9 @@ public class Role
 	private String name;
 	
 	@ManyToMany(mappedBy="roles")
-	private List<User> users = new ArrayList<>();
+	private List<UserCantina> users = new ArrayList<>();
 
-	public Role() {
+	public RoleCantina() {
 		super();
 	}
 
@@ -46,11 +46,11 @@ public class Role
 		this.name = name;
 	}
 
-	public List<User> getUsers() {
+	public List<UserCantina> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<UserCantina> users) {
 		this.users = users;
 	}
 
@@ -70,7 +70,7 @@ public class Role
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Role other = (Role) obj;
+		RoleCantina other = (RoleCantina) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
