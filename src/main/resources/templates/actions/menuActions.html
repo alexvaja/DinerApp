@@ -8,12 +8,12 @@
 			<div th:if="${addMenuIsAvailable == True}" class = form-group >
 				<label for = "Titlu">Titlu:</label> 
 				<div>
-					<input type="text" name="menu_title" th:value="*{title}" class="form-control"/>
+					<input type="text" name="menu_title" th:value="*{menu.title}" class="form-control"/>
 				</div> 
 				
 				<label for = "Data">Data:</label>
 				<div class = "input-group date" data-provide="datepicker">
-					<input type="date" name="menu_date" th:value="*{date}" class="form-control"/>
+					<input type="date" name="menu_date" th:value="*{menu.date}" class="form-control"/>
 					<label>Data trebuie trecuta obligatoriu!</label>
 				</div>
 				
