@@ -3,7 +3,6 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.constants.MenuStates;
 import dinerapp.model.dto.DishDTO;
 import dinerapp.model.dto.MenuDTO;
 
@@ -16,7 +15,6 @@ public class MenuViewModel {
 		super();
 		dishes = new ArrayList<>();
 		menu = new MenuDTO();
-		menu.setState(MenuStates.NEW.toString());
 	}
 
 	public MenuViewModel(List<DishDTO> dishes, MenuDTO menu) {
