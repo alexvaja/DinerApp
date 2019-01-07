@@ -19,6 +19,7 @@ import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
 import dinerapp.model.dto.FoodDTO;
+import dinerapp.model.dto.MenuDTO;
 import dinerapp.model.entity.Category;
 import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Food;
@@ -57,14 +58,14 @@ public class ViewMenuController {
 
 		switch (reqParam) {
 		case "Edit": {
+			LOGGER.info("ViewMenuController - Edit case");
+			
 			List<DishDTO> dishes = new ArrayList<>();
 			List<Menu> listOfMenus = getAllMenusFromTable();
 
 			// de inlocuit
 			Menu menu = listOfMenus.get(listOfMenus.size() - 1);
-			//System.out.println("id meniu la aducere" + menu.getId());
-			//menu.setTitle("PapaPula");
-			menuRepository.save(menu);
+			//menuRepository.save(menu);
 			
 			for (Dish dish : menu.getDishes()) {
 				DishDTO dishDTO = new DishDTO();
@@ -100,10 +101,18 @@ public class ViewMenuController {
 			
 			MenuViewModel menuViewModel = new MenuViewModel();
 
-			menuViewModel.setDate(menu.getData());
-			menuViewModel.setTitle(menu.getTitle());
+			MenuDTO menuDTO = new MenuDTO();
+			menuDTO.setId(menu.getId());
+			menuDTO.setDate(menu.getData());
+			menuDTO.setState(menu.getState());
+			menuDTO.setTitle(menu.getTitle());
+			menuViewModel.setMenu(menuDTO);
+			
+			
+			//menuViewModel.setDate(menu.getData());
+			//menuViewModel.setTitle(menu.getTitle());
 			menuViewModel.setDishes(dishes);
-			menuViewModel.setState(menu.getState());
+			//menuViewModel.setState(menu.getState());
 
 			session.setAttribute("menuViewModel", menuViewModel);
 			model.addAttribute("addMenuIsAvailable", true);

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.swing.plaf.MenuItemUI;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
 import dinerapp.model.dto.FoodDTO;
+import dinerapp.model.dto.MenuDTO;
 import dinerapp.model.entity.Category;
 import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Food;
@@ -94,9 +94,14 @@ public class MenuController {
 
 			dishes.add(createDefaultDishesDTO());
 
+			MenuDTO menuDTO = new MenuDTO();
+			menuDTO.setDate(menuDate);
+			menuDTO.setTitle(menuTitle);
+			
 			menuViewModel.setDishes(dishes);
-			menuViewModel.setTitle(menuTitle);
-			menuViewModel.setDate(menuDate);
+			menuViewModel.setMenu(menuDTO);
+			//menuViewModel.setTitle(menuTitle);
+			//menuViewModel.setDate(menuDate);
 
 			break;
 		}
@@ -108,13 +113,17 @@ public class MenuController {
 		}
 		case "SaveAll": {
 			List<DishDTO> dishes = menuViewModel.getDishes();
-
-			if (canSave(menuDate, menuViewModel.getState(), menuViewModel.getDate())) {
+			System.out.println(menuDate);
+			System.out.println(menuViewModel.getMenu().getState());
+			System.out.println(menuViewModel.getMenu().getDate());
+			
+			if (canSave(menuDate, menuViewModel.getMenu().getState(), menuViewModel.getMenu().getDate())) {
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
 
-				//menu.setId(new Integer(63));
+				//aici pun id
+				menu.setId(menuViewModel.getMenu().getId());
 				menu.setData(menuDate);
 				menu.setTitle(menuTitle);
 				menu.setState(MenuStates.SAVED.toString());
