@@ -12,6 +12,6 @@ public class NextDayReportController {
   @GetMapping("/nextDayReportView")
   public String getNextDayReports() {
     LOGGER.info("am intrat in raportul pe ziua urmatoare." + "Mai ceva ca Hitler in Polonia cu panzerul");
-    return "nextDayReportView";
+    return "views/nextDayReportView";
   }
 }

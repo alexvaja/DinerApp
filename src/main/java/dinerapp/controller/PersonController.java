@@ -1,5 +1,4 @@
 package dinerapp.controller;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -36,7 +34,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
 import dinerapp.entity.Malicious;
 import dinerapp.entity.Person;
 import dinerapp.model.PersonViewModel;
@@ -55,15 +52,15 @@ public class PersonController {
 	@Autowired
 	private ServletContext servletContext;
 
-	@GetMapping("/insertView")
+	@GetMapping("/person")
 	public String greetingForm(Model model, HttpServletResponse response) {
 		model.addAttribute("personViewModel", new PersonViewModel());
-		return "insertView";
+		return "views/nextDayReportView";
 	}
 
-	@PostMapping("/insertView")
-	public String formProcess(@ModelAttribute PersonViewModel personViewModel, 
-			@RequestParam("submit") String reqParam, HttpServletResponse response) {
+	@PostMapping("/person")
+	public String formProcess(@ModelAttribute PersonViewModel personViewModel, @RequestParam("submit") String reqParam,
+			HttpServletResponse response,Model model) {
 		List<Person> searchedPersons = new ArrayList<>();
 		List<Malicious> maliciousPersons = new ArrayList<>();
 
@@ -90,11 +87,17 @@ public class PersonController {
 
 				exportToPDF(searchedPersons, maliciousPersons, "output/txt.pdf", searchedName);
 			}
-			return "insertView";
+			return "views/nextDayReportView";
 
 		case "Download":
 			loadToDatabase("https://www.bis.doc.gov/dpl/dpl.txt");
-			return "insertView";
+			System.out.println("Popularea s-a realizat !");
+			model.addAttribute("mesaj","S-a realizat descarcarea");
+			return "views/nextDayReportView";
+			
+		case "Reset":
+			personViewModel.setName("");
+			return "views/nextDayReportView";
 
 		case "Export":
 			try {
@@ -102,16 +105,15 @@ public class PersonController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return "insertView";
-
+			return "views/nextDayReportView";
 		default:
-			return "insertView";
+			return "views/nextDayReportView";
 		}
 	}
 
 	private void exportToPDF(List<Person> searchedPersons, List<Malicious> maliciousPersons, String fileName,
 			String searchedName) {
-		Document pdfDoc = new Document(PageSize.A4);
+		Document pdfDoc = new Document(PageSize.A4,13,13,100,90);
 
 		Font cellFontBold = FontFactory.getFont("Times Roman", 8, BaseColor.BLACK);
 		cellFontBold.setStyle(Font.BOLD);
@@ -121,25 +123,19 @@ public class PersonController {
 		textFont.setStyle(Font.BOLD);
 
 		try {
-
 			HeaderFooterPageEvent event = new HeaderFooterPageEvent();
 			PdfWriter.getInstance(pdfDoc, new FileOutputStream(fileName)).setPageEvent(event);
-
 			pdfDoc.open();
+
 			Paragraph title = new Paragraph("Information about: " + searchedName, textFont);
-			pdfDoc.add(Chunk.NEWLINE);
 			title.setSpacingBefore(60f);
 			title.setSpacingAfter(30f);
-			title.setAlignment(Element.ALIGN_CENTER);
 			pdfDoc.add(title);
 
 			if (!searchedPersons.isEmpty()) {
 				PdfPTable table = new PdfPTable(12);
 				table.setWidths(new int[] { 10, 10, 5, 3, 3, 5, 5, 5, 3, 4, 8, 8 });
 				table.setWidthPercentage(100);
-				// table.setSpacingBefore(0f);
-				// table.setSpacingAfter(0f);
-
 				table.addCell(setCell(cellFontBold, "NAME"));
 				table.addCell(setCell(cellFontBold, "STREET ADDRESS"));
 				table.addCell(setCell(cellFontBold, "CITY"));
@@ -158,6 +154,7 @@ public class PersonController {
 						table.addCell(setCell(cellFont, s));
 					}
 				}
+				table.setHeaderRows(1);
 				pdfDoc.add(table);
 			}
 
@@ -180,21 +177,12 @@ public class PersonController {
 				pdfDoc.add(table);
 			}
 
-			//LocalDate localDate = LocalDate.now();
-
-			//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			//String formated = localDate.format(formatter);
-
-			//Paragraph footer = new Paragraph(formated, cellFont);
-			//pdfDoc.add(footer);
-
 		} catch (FileNotFoundException | DocumentException e) {
 			e.printStackTrace();
 		} finally {
 			pdfDoc.close();
 		}
 	}
-
 	private PdfPCell setCell(Font cellFontBold, String text) {
 		Paragraph p = new Paragraph(text, cellFontBold);
 		PdfPCell cell = new PdfPCell(p);

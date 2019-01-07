@@ -42,7 +42,6 @@
 											<th scope = "col">SELECTAT</th>
 										</tr>
 									</thead>
-
 									<tbody>
 										<tr th:each="foodItem, iter : ${dish.foods}">
 											<td th:text="${foodItem.food.id}"></td>
@@ -51,7 +50,7 @@
 											<td th:text="${foodItem.food.weight}"></td>
 											<td th:text="${foodItem.food.price}"></td>
 											<td>
-											<input class = "form-checl-input" name="verif" type="checkbox"
+											<input class = "form-check-input" name="verif" type="checkbox"
 											th:value="${iter.index}" th:checked="${foodItem.selected}" />
 											</td>
 										</tr>
