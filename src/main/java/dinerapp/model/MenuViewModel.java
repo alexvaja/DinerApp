@@ -40,7 +40,7 @@ public class MenuViewModel {
 	}
 
 	@Override
-	public String toString() {
+ 	public String toString() {
 		return "MenuViewModel [" + dishes + ", " + menu + "]";
 	}
 }

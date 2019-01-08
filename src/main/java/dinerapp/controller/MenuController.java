@@ -113,9 +113,7 @@ public class MenuController {
 		}
 		case "SaveAll": {
 			List<DishDTO> dishes = menuViewModel.getDishes();
-			System.out.println(menuDate);
-			System.out.println(menuViewModel.getMenu().getState());
-			System.out.println(menuViewModel.getMenu().getDate());
+			System.out.println("Lista dishes: " + dishes);
 			
 			if (canSave(menuDate, menuViewModel.getMenu().getState(), menuViewModel.getMenu().getDate())) {
 				List<Dish> selectedDishList = new ArrayList<>();
@@ -155,7 +153,7 @@ public class MenuController {
 				session.setAttribute("menuViewModel", new MenuViewModel());
 			}
 
-			break;
+			return "views/viewMenuView";
 		}
 		}
 
@@ -165,6 +163,7 @@ public class MenuController {
 
 	private Boolean canSave(String menuDate, String state, String existingDate) {
 		System.out.println("Data in canSave" + menuDate + "pana aici");
+		System.out.println(state);
 		if (menuDate.isEmpty()) {
 			return false;
 		}

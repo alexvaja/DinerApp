@@ -65,7 +65,6 @@ public class ViewMenuController {
 
 			// de inlocuit
 			Menu menu = listOfMenus.get(listOfMenus.size() - 1);
-			//menuRepository.save(menu);
 			
 			for (Dish dish : menu.getDishes()) {
 				DishDTO dishDTO = new DishDTO();
