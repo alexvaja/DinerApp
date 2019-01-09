@@ -3,36 +3,24 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.constants.MenuStates;
 import dinerapp.model.dto.DishDTO;
+import dinerapp.model.dto.MenuDTO;
 
 public class MenuViewModel {
 
 	private List<DishDTO> dishes;	
-	private String title;	
-	private String date;
-	private String state;
+	private MenuDTO menu;
 
 	public MenuViewModel() {
 		super();
 		dishes = new ArrayList<>();
-		state = MenuStates.NEW.toString();
+		menu = new MenuDTO();
 	}
-	
-	public MenuViewModel(List<DishDTO> dishes, String title, String date, String state) {
+
+	public MenuViewModel(List<DishDTO> dishes, MenuDTO menu) {
 		super();
 		this.dishes = dishes;
-		this.title = title;
-		this.date = date;
-		this.state = state;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
+		this.menu = menu;
 	}
 
 	public List<DishDTO> getDishes() {
@@ -43,24 +31,16 @@ public class MenuViewModel {
 		this.dishes = dishes;
 	}
 
-	public String getTitle() {
-		return title;
+	public MenuDTO getMenu() {
+		return menu;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
+	public void setMenu(MenuDTO menu) {
+		this.menu = menu;
 	}
 
 	@Override
-	public String toString() {
-		return "MenuViewModel [" + dishes + ", " + title + ", " + date + ", " + state + "]";
-	}	
+ 	public String toString() {
+		return "MenuViewModel [" + dishes + ", " + menu + "]";
+	}
 }
