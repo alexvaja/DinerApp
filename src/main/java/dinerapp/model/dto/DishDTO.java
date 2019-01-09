@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DishDTO {
+	
+	private Integer id;
 
 	private List<CategoryDTO> categories;
 	
@@ -15,10 +17,19 @@ public class DishDTO {
 		this.foods = new ArrayList<>();
 	}
 
-	public DishDTO(List<CategoryDTO> categories, List<FoodDTO> foods) {
+	public DishDTO(Integer id, List<CategoryDTO> categories, List<FoodDTO> foods) {
 		super();
+		this.id = id;
 		this.categories = categories;
 		this.foods = foods;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public List<CategoryDTO> getCategories() {
@@ -39,6 +50,6 @@ public class DishDTO {
 
 	@Override
 	public String toString() {
-		return "DishDTO [" + categories + ", " + foods + "]";
+		return "DishDTO [" + id + ", " + categories + ", " + foods + "]";
 	}
 }

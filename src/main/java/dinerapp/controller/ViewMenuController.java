@@ -50,7 +50,6 @@ public class ViewMenuController {
 	public String getAllMenus() {
 
 		return "views/viewMenuView";
-
 	}
 
 	@PostMapping("/viewMenuView")
@@ -91,10 +90,9 @@ public class ViewMenuController {
 						}
 					}
 				}
-
+				dishDTO.setId(dish.getId());
 				dishDTO.setCategories(categoriesDTO);
 				dishDTO.setFoods(foodsDTO);
-				System.out.println(dishDTO);
 				dishes.add(dishDTO);
 			}
 			
@@ -104,6 +102,7 @@ public class ViewMenuController {
 			menuDTO.setId(menu.getId());
 			menuDTO.setDate(menu.getData());
 			menuDTO.setState(menu.getState());
+			System.out.println("Menu State in db: " + menuDTO.getState());
 			menuDTO.setTitle(menu.getTitle());
 			menuViewModel.setMenu(menuDTO);
 			
@@ -139,6 +138,7 @@ public class ViewMenuController {
 	}
 
 	public List<Menu> getAllMenusFromTable() {
+		
 		Iterable<Menu> list = menuRepository.findAll();
 		List<Menu> searchedList = new ArrayList<>();
 		for (Menu menu : list) {

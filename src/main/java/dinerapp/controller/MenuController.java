@@ -3,6 +3,7 @@ package dinerapp.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -75,7 +76,7 @@ public class MenuController {
 		LOGGER.info("SET MENU");
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
-
+		System.out.println("MENU VIEW MODEL: " + menuViewModel);
 		switch (reqParam) {
 		case "AddMenu": {
 			LOGGER.info("Am intrat in AddMenu case");
@@ -93,8 +94,10 @@ public class MenuController {
 			}
 
 			dishes.add(createDefaultDishesDTO());
-
+			
 			MenuDTO menuDTO = new MenuDTO();
+			menuDTO.setState(menuViewModel.getMenu().getState());//
+			menuDTO.setId(menuViewModel.getMenu().getId());
 			menuDTO.setDate(menuDate);
 			menuDTO.setTitle(menuTitle);
 			
@@ -114,7 +117,9 @@ public class MenuController {
 		case "SaveAll": {
 			List<DishDTO> dishes = menuViewModel.getDishes();
 			System.out.println("Lista dishes: " + dishes);
-			
+			System.out.println("Data din View: " + menuDate);
+			System.out.println("Data din Meniu: " + menuViewModel.getMenu().getDate());
+			System.out.println("State-ul in Meniu:" + menuViewModel.getMenu().getState());
 			if (canSave(menuDate, menuViewModel.getMenu().getState(), menuViewModel.getMenu().getDate())) {
 				List<Dish> selectedDishList = new ArrayList<>();
 
@@ -136,21 +141,37 @@ public class MenuController {
 				}
 
 				for (DishDTO dishDTO : dishes) {
+					System.out.println("Am Intrat in Paine");
 					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
 
+					System.out.println("Lista de mancarruri: " + dishDTO.getId());
+					System.out.println(selectedFoods);
+					
 					if (!selectedFoods.isEmpty()) {
-						Dish dish = new Dish();
-						dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-						dish.setFoods(selectedFoods);
-						dish.setMenu(menu);
-						dishRepository.save(dish);
-						selectedDishList.add(dish);
+						if (dishDTO.getId() == 	null) {
+							Dish dish = new Dish();
+							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+							dish.setFoods(selectedFoods);
+							dish.setMenu(menu);
+							dishRepository.save(dish);
+							selectedDishList.add(dish);
+						} else {
+							Optional <Dish> d = dishRepository.findById(dishDTO.getId());
+							Dish dish = d.get();
+							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+							dish.setFoods(selectedFoods);
+							dish.setMenu(menu);
+							dishRepository.save(dish);
+							selectedDishList.add(dish);	
+						}
+					} else if (dishDTO.getId() != null) {
+						dishRepository.deleteById(dishDTO.getId());;	
 					}
 				}
 
 				addMenuIsAvailable = false;
 				session.removeAttribute("menuViewModel");
-				session.setAttribute("menuViewModel", new MenuViewModel());
+				//session.setAttribute("menuViewModel", new MenuViewModel());
 			}
 
 			return "views/viewMenuView";
