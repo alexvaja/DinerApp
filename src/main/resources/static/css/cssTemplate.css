@@ -10,6 +10,7 @@
   }
   .col-1 {
     background: #2A3F54;
+    width: 205px;
   }
   .col-2 {
     display: flex;
@@ -31,4 +32,10 @@
   header, footer, article, nav {
     padding: 1em;
     resize:auto;
+  }
+  .leftBar{
+  	position:fixed;
+  	z-index: 1;
+  	overflow-x: hidden;
+  	width:200px;
   }

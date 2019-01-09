@@ -6,14 +6,15 @@
 	href="../../static/css/cssTemplate.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
-<section>
-	<div>
-		<img class = "logo" src="../../resources/static/images/logo.png" th:src="@{images/logo.png}"/>
-	</div> 
-</section>
-	<nav>
+	<nav class ="leftBar">
+		<section>
+			<div>
+				<img class="logo" src="../../resources/static/images/logo.png"
+					th:src="@{images/logo.png}" />
+			</div>
+		</section>
 		<br>
-		<div>		
+		<div>
 			<button class="accordion btn btn-primary" type="button">Adauga</button>
 			<div class="panel">
 				<a class="subMenu subMenuHover" href="/foodView"
@@ -29,9 +30,9 @@
 			<button class="accordion btn btn-primary" type="button">Meniu</button>
 			<div class="panel">
 				<a class="subMenu subMenuHover" href="/viewMenuView"
-					th:href="@{/viewMenuView}" target="_blank"> Vizualizeaza meniu</a>
+					th:href="@{/viewMenuView}"> Vizualizeaza meniu</a>
 				<a class="subMenu subMenuHover" href="/editMenuView"
-					th:href="@{/editMenuView}" target="_blank"> Editeaza meniu </a>
+					th:href="@{/editMenuView}"> Editeaza meniu </a>
 			</div>
 		</div>
 		<br>
@@ -52,17 +53,13 @@
 			<button class="accordion btn btn-primary" type="button">Rapoarte</button>
 			<div class="panel">
 
-				<a class="subMenu subMenuHover"
-					href="/nextDayReportView.html"
-					th:href="@{/nextDayReportView}">
-					Raport ziua urmatoare </a> <br>
+				<a class="subMenu subMenuHover" href="/nextDayReportView.html"
+					th:href="@{/nextDayReportView}"> Raport ziua urmatoare </a> <br>
 
-				<a class="subMenu subMenuHover"
-					href="/nextWeekReportView.html"
-					th:href="@{/nextWeekReportView}">
-				    Raport saptamana urmatoare </a>
+				<a class="subMenu subMenuHover" href="/nextWeekReportView.html"
+					th:href="@{/nextWeekReportView}"> Raport saptamana urmatoare </a>
 			</div>
-		</div> 
+		</div>
 	</nav>
 
 	<script>

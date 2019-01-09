@@ -13,3 +13,4 @@ public class NextWeekReportController
 		return "views/nextWeekReportView";
 	}
 }
+ 

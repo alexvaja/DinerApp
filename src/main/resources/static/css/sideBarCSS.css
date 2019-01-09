@@ -46,8 +46,14 @@ a.subMenuHover:hover, a.subMenuHover:active {
 	background-color: lightsteelblue;
 }
 
-.logo
-{
-	height:48px;
-	margin-left: 40px;
+.logo {
+	height: 48px;
+	margin-left: 17px;
+}
+
+.leftBar {
+	position: fixed;
+	z-index: 1;
+	overflow-x: hidden;
+	width: 200px;
 }
