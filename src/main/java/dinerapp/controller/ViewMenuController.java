@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,14 +32,13 @@ import dinerapp.repository.MenuRepository;
 @Controller
 public class ViewMenuController {
 
-	//private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	CategoryRepository categoryRepository;
 	@Autowired
 	FoodRepository foodRepository;
 	@Autowired
 	MenuRepository menuRepository;
-
 	@Autowired
 	DishRepository dishRepository;
 
