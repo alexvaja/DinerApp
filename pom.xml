@@ -87,16 +87,8 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>0.4.5</version>
         <configuration>
-          <imageName>dinerappimage</imageName>
-          <baseImage>java</baseImage>
-          <entryPoint>["java","-jar","${project.build.finalName}.jar"]</entryPoint>
-          <resources>
-            <resource>
-              <targetPath>/target</targetPath>
-              <directory>${projct.build.directory}</directory>
-              <include>${project.build.finalName}.jar</include>
-            </resource>
-          </resources>
+          <imageName>dinerapp-springboot-img</imageName>
+          <dockerFileDir>${project.basedir}</dockerFileDir>
         </configuration>
       </plugin>
     </plugins>
