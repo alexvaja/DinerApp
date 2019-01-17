@@ -47,12 +47,12 @@ public class Menu
 		this.id = id;
 	}
 
-	public String getData() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setData(String data) {
-		this.date = data;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	public String getState() {
