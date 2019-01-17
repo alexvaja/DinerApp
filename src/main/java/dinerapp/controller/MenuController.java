@@ -127,7 +127,7 @@ public class MenuController {
 
 				//aici pun id
 				menu.setId(menuViewModel.getMenu().getId());
-				menu.setData(menuDate);
+				menu.setDate(menuDate);
 				menu.setTitle(menuTitle);
 				menu.setState(MenuStates.SAVED.toString());
 				menuRepository.save(menu);
@@ -232,7 +232,7 @@ public class MenuController {
 		List<Menu> menuList = getAllMenusFromTable();
 
 		for (Menu menu : menuList) {
-			if (menu.getData().equals(menuDate)) {
+			if (menu.getDate().equals(menuDate)) {
 				return true;
 			}
 		}
