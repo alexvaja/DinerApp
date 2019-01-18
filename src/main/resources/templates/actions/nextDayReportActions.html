@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+</head>
+<body>
+<body>
+	<h1>Next day report Table</h1>
+	<form action='#' th:object="${orderViewModel}" th:action="@{/nextDayReportView}"
+		method="post">
+		<div class="form-group">
+			<table class="table tcolor table-bordered">
+				<thead class="thead thead-dark">
+					<tr>
+						<th scope="col">Food Name</th>
+						<th scope = "col"> Quantity </th>
+					</tr>
+				</thead>
+				<tbody>
+<!-- 					<tr th:each="Food, iter : *{foods}">				
+						<td th:text="${Food.name}">...</td>
+			 -->
+	 					<tr th:each="food, iter : *{foods}">
+							<td th:text="${food.name}">...</td>
+							<td th:text="${orderViewModel.quantities[iter.index]}">...</td>
+						</tr>		 
+				</tbody>
+			</table>
+		</div>
+	</form>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>

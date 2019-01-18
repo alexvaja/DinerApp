@@ -44,6 +44,12 @@ public class ViewMenuController {
 
 	@GetMapping("/viewMenuView")
 	public String getAllMenus() {
+		List<Menu> var = new ArrayList<>();
+		var.addAll(getAllMenusFromTable());
+		for(Menu menu:var)
+		{
+			System.out.println(menu.getData());
+		}
 		return "views/viewMenuView";
 	}
 
