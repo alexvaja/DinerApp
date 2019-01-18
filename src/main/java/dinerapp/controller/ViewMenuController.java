@@ -61,7 +61,6 @@ public class ViewMenuController {
 		
 		editMenuViewModel.setMenus(listOfUnpublishedMenus);
 		model.addAttribute("editMenuViewModel", editMenuViewModel);
-
 		return "views/viewMenuView";
 	}
 
