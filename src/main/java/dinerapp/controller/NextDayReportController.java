@@ -49,10 +49,11 @@ public class NextDayReportController {
 	@GetMapping("/nextDayReportView")
 	public String sessionExample(Model model) 
 	{
-		System.out.println("Am intrat in pula lu galmeanu");
+		System.out.println("");
 		OrderViewModel orderViewModel = new OrderViewModel();
 		List<Order> orders = new ArrayList<>();
 		List<Food> foods = new ArrayList<>();
+		
 		foods.addAll(getListOfFoods());
 		orders.addAll(getListOfOrders());
 		sortOrderList(orders);
