@@ -3,19 +3,19 @@ package dinerapp.security.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.model.entity.RoleCantina;
-import dinerapp.model.entity.UserCantina;
+import dinerapp.model.entity.Role;
+import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.UserCantinaRepository;
 import dinerapp.security.utils.EncrytedPasswordUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,50 +25,50 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		UserCantina userCantina = getUserByName(userName);
+		UserDiner userDiner = getUserByName(userName);
 
-		if (userCantina == null) {
+		if (userDiner == null) {
 			System.out.println("User not found! " + userName);
 			throw new UsernameNotFoundException("User " + userName + " was not found in the database");
 		}
 
-		System.out.println("Found User: " + userCantina);
+		System.out.println("Found User: " + userDiner);
 
-		List<RoleCantina> roleNames = this.getUserRoles(userCantina);
+		List<Role> roleNames = this.getUserRoles(userDiner);
 
 		System.out.println("User Roles: " + roleNames);
 
 		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
 		if (roleNames != null) {
-			for (RoleCantina role : roleNames) {
+			for (Role role : roleNames) {
 				// ROLE_USER, ROLE_ADMIN,..
 				GrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
 				grantList.add(authority);
 			}
 		}
 
-		UserDetails userDetails = (UserDetails) new User(userCantina.getName(), EncrytedPasswordUtils.encrytePassword(userCantina.getPassword()), grantList);
+		UserDetails userDetails = (UserDetails) new User(userDiner.getName(), EncrytedPasswordUtils.encrytePassword(userDiner.getPassword()), grantList);
 
 		System.out.println("User Details: " + userDetails);
 
 		return userDetails;
 	}
 
-	private UserCantina getUserByName(String userName) {
-		Iterable<UserCantina> userList = userCantinaRepository.findAll();
+	private UserDiner getUserByName(String userName) {
+		Iterable<UserDiner> userList = userCantinaRepository.findAll();
 
-		for (UserCantina user : userList) {
-			System.out.println(user.getName() + " " + userName);
-			if (user.getName().equals(userName)) {
-				return user;
+		for (UserDiner userDiner : userList) {
+			System.out.println(userDiner.getName() + " " + userName);
+			if (userDiner.getName().equals(userName)) {
+				return userDiner;
 			}
 		}
 		return null;
 	}
 
-	private List<RoleCantina> getUserRoles(UserCantina userCantina) {
-		if (userCantina != null) {
-			return userCantina.getRoles();
+	private List<Role> getUserRoles(UserDiner userDiner) {
+		if (userDiner != null) {
+			return userDiner.getRoles();
 		}
 		return null;
 	}

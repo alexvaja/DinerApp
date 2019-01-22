@@ -15,12 +15,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="nume : ${#numbers.sequence(0,5)}">
-					<td th:text="${nume}"></td>
+				<tr th:each="nr : ${list}">
+					<td th:text="${nr}"></td>
 					<td><input type="checkbox"/></td>
 				</tr>
 			</tbody>		
 		</table>
+		
+		<input type="submit" th:value="Submit"/>
 	</form>
 </body>
 </html>

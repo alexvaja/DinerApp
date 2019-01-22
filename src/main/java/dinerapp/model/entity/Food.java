@@ -34,43 +34,58 @@ public class Food
 	
 	@ManyToMany(mappedBy = "foods")
 	private List<Dish> dishes = new ArrayList<>();
+	
+	@ManyToMany(mappedBy = "foodss")
+	private List<Order> orders = new ArrayList<>();
 
 	public Food() {
 		super();
 	}
+	
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getIngredients() {
 		return ingredients;
 	}
+
 	public void setIngredients(String ingredients) {
 		this.ingredients = ingredients;
 	}
+
 	public int getWeight() {
 		return weight;
 	}
+
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+
 	public double getPrice() {
 		return price;
 	}
+
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
 	public List<Dish> getDishes() {
 		return dishes;
 	}
+
 	public void setDishes(List<Dish> dishes) {
 		this.dishes = dishes;
 	}

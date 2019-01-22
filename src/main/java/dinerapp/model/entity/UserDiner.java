@@ -12,11 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="user")
-public class UserCantina {
+public class UserDiner {
 
 	@Id
 	@Column(name="id_user")
@@ -29,16 +30,17 @@ public class UserCantina {
 	@Column(name="user_password")
 	private String password;
 	
+	@OneToMany(mappedBy = "userDiner", fetch=FetchType.EAGER)
+	private List<Order> orders = new ArrayList<>();
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany()
 	@JoinTable(
 			name="user_role",
 			joinColumns= {@JoinColumn(name="id_user")},
 			inverseJoinColumns= {@JoinColumn(name="id_role")})
-	
-	private List<RoleCantina> roles = new ArrayList<>();
+	private List<Role> roles = new ArrayList<>();
 
-	public UserCantina() {
+	public UserDiner() {
 		super();
 	}
 
@@ -66,11 +68,11 @@ public class UserCantina {
 		this.password = password;
 	}
 
-	public List<RoleCantina> getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<RoleCantina> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 
@@ -89,7 +91,7 @@ public class UserCantina {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserCantina other = (UserCantina) obj;
+		UserDiner other = (UserDiner) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -100,6 +102,6 @@ public class UserCantina {
 
 	@Override
 	public String toString() {
-		return "User [" + id + ", " + name + ", " + password + ", " + roles + "]";
+		return "User [" + id + ", " + name + ", " + password + "]";
 	}
 }

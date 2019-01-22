@@ -174,7 +174,7 @@ public class MenuController {
 				//session.setAttribute("menuViewModel", new MenuViewModel());
 			}
 
-			return "views/viewMenuView";
+			return "redirect:/viewMenuView";
 		}
 		}
 

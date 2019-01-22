@@ -15,32 +15,36 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import dinerapp.model.entity.UserDiner;
+
 @Entity
-@Table(name="dish")
-public class Dish 
-{
+@Table(name = "orders")
+public class Order {
+
 	@Id
-	@Column(name="id_dish")
+	@Column(name = "id_order")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@ManyToOne
-	@JoinColumn(name = "id_category", nullable = false)
-	private Category category;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_user", nullable = false)
+	private UserDiner userDiner;
 	
-	@ManyToOne
-	@JoinColumn(name = "id_menu", nullable = false)
-	private Menu menu;
+	@Column(name = "taken")
+	private Boolean taken;
+	
+	@Column(name = "date", nullable = false)
+	private String date;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name="dish_food",
-			joinColumns={@JoinColumn(name="id_dish")},
+			name="order_food",
+			joinColumns={@JoinColumn(name="id_order")},
 			inverseJoinColumns={@JoinColumn(name="id_food")}
 			)
-	private List<Food> foods = new ArrayList<>();
+	private List<Food> foodss = new ArrayList<>();
 
-	public Dish() {
+	public Order() {
 		super();
 	}
 	
@@ -52,38 +56,46 @@ public class Dish
 		this.id = id;
 	}
 
-	public Category getCategory() {
-		return category;
+	public UserDiner getUser() {
+		return userDiner;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setUser(UserDiner userDiner) {
+		this.userDiner = userDiner;
 	}
 
-	public Menu getMenu() {
-		return menu;
+	public Boolean getTaken() {
+		return taken;
 	}
 
-	public void setMenu(Menu menu) {
-		this.menu = menu;
+	public void setTaken(Boolean taken) {
+		this.taken = taken;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	public List<Food> getFoods() {
-		return foods;
+		return foodss;
 	}
 
 	public void setFoods(List<Food> foods) {
-		this.foods = foods;
+		this.foodss = foods;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -92,17 +104,17 @@ public class Dish
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Dish other = (Dish) obj;
-		if (id == null) {
-			if (other.id != null)
+		Order other = (Order) obj;
+		if (date == null) {
+			if (other.date != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!date.equals(other.date))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Dish [" + id + ", " + category + ", " + menu + "]";
+		return "Order [id=" + id + ", user=" + userDiner + ", taken=" + taken + ", date=" + date + "]";
 	}
 }
