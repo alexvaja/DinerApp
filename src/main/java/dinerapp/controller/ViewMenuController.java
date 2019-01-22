@@ -52,14 +52,14 @@ public class ViewMenuController {
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
 		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
-		
-		for (Menu menu : listOfMenusFromTable) {
-			if (menu.getState().equals(MenuStates.SAVED.toString())) {
-				listOfUnpublishedMenus.add(menu);
+			System.out.println("am intrat in fff");
+			for (Menu menu : listOfMenusFromTable) {
+				if (menu.getState().equals(MenuStates.SAVED.toString())) {
+					listOfUnpublishedMenus.add(menu);
+				}
 			}
-		}
-		
 		editMenuViewModel.setMenus(listOfUnpublishedMenus);
+		
 		model.addAttribute("editMenuViewModel", editMenuViewModel);
 		return "views/viewMenuView";
 	}
@@ -99,7 +99,9 @@ public class ViewMenuController {
 			List<Menu> listOfMenus = getAllMenusFromTable();
 
 			// de inlocuit
-			Menu menu = listOfMenus.get(Integer.parseInt(idMenu));
+			//Menu menu = listOfMenus.get(Integer.parseInt(idMenu));
+			//Menu menu = listOfUnpublishedMenus.get(Integer.parseInt(idMenu));
+			Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
 			
 			for (Dish dish : menu.getDishes()) {
 				DishDTO dishDTO = new DishDTO();
@@ -154,8 +156,8 @@ public class ViewMenuController {
 		}
 		case "Publish":
 			List<Menu> listOfMenus = getAllMenusFromTable();
-			System.out.println(listOfMenus);
-			Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
+			//System.out.println(listOfMenus);
+			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
 			if (!editMenuViewModel.getMenus().isEmpty()) {
 				Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
 				editMenuViewModel.getMenus().remove(menu);

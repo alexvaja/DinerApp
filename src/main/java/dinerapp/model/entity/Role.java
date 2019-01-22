@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="role")
-public class RoleCantina 
+public class Role 
 {
 	@Id
 	@Column(name="id_role")
@@ -23,10 +24,10 @@ public class RoleCantina
 	@Column(name="role_name")
 	private String name;
 	
-	@ManyToMany(mappedBy="roles")
-	private List<UserCantina> users = new ArrayList<>();
+	@ManyToMany(mappedBy="roles", fetch=FetchType.EAGER)
+	private List<UserDiner> users = new ArrayList<>();
 
-	public RoleCantina() {
+	public Role() {
 		super();
 	}
 
@@ -46,11 +47,11 @@ public class RoleCantina
 		this.name = name;
 	}
 
-	public List<UserCantina> getUsers() {
+	public List<UserDiner> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<UserCantina> users) {
+	public void setUsers(List<UserDiner> users) {
 		this.users = users;
 	}
 
@@ -70,7 +71,7 @@ public class RoleCantina
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RoleCantina other = (RoleCantina) obj;
+		Role other = (Role) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

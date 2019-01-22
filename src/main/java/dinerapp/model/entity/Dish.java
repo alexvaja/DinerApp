@@ -32,7 +32,6 @@ public class Dish
 	@JoinColumn(name = "id_menu", nullable = false)
 	private Menu menu;
 	
-	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name="dish_food",
@@ -44,7 +43,7 @@ public class Dish
 	public Dish() {
 		super();
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}

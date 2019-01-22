@@ -1,10 +1,17 @@
 package dinerapp.model.entity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,32 +25,37 @@ public class Order {
 	private Integer id;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_employee", nullable = false)
-	private Employee employee;
-	
-	@ManyToOne
 	@JoinColumn(name = "id_food", nullable = false)
 	private Food food;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_user", nullable = false)
+	private UserDiner userDiner;
 	
+	@Column(name = "taken")
+	private Boolean taken;
+
 	@Column(name = "date", nullable = false)
 	private String date;
 	
-	
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name="order_food",
+			joinColumns={@JoinColumn(name="id_order")},
+			inverseJoinColumns={@JoinColumn(name="id_food")}
+			)
+	private List<Food> foodss = new ArrayList<>();
 
 	public Order() {
 		super();
 	}
-	
-	public Order(Employee employee, Food food) {
+
+	public Order(Food food, UserDiner userDiner, Boolean taken, String date) {
 		super();
-		this.employee = employee;
 		this.food = food;
+		this.userDiner = userDiner;
+		this.taken = taken;
+		this.date = date;
 	}
 
 	public Integer getId() {
@@ -54,14 +66,6 @@ public class Order {
 		this.id = id;
 	}
 
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
 	public Food getFood() {
 		return food;
 	}
@@ -69,6 +73,39 @@ public class Order {
 	public void setFood(Food food) {
 		this.food = food;
 	}
+
+	public UserDiner getUserDiner() {
+		return userDiner;
+	}
+
+	public void setUserDiner(UserDiner userDiner) {
+		this.userDiner = userDiner;
+	}
+
+	public Boolean getTaken() {
+		return taken;
+	}
+
+	public void setTaken(Boolean taken) {
+		this.taken = taken;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public List<Food> getFoodss() {
+		return foodss;
+	}
+
+	public void setFoodss(List<Food> foodss) {
+		this.foodss = foodss;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,9 +130,9 @@ public class Order {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", employee=" + employee + ", food=" + food + ", date=" + date + "]";
+		return "Order [" + id + ", " + userDiner + ", " + taken + ", " + date + "]";
 	}
-	
 }

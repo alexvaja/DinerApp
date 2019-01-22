@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -35,14 +34,14 @@ public class Food
 	
 	@ManyToMany(mappedBy = "foods")
 	private List<Dish> dishes = new ArrayList<>();
-
-	@OneToMany(mappedBy = "food")
-	private List<Order> orders = new ArrayList<>();
 	
+	@ManyToMany(mappedBy = "foodss")
+	private List<Order> orders = new ArrayList<>();
+
 	public Food() {
 		super();
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -51,61 +50,49 @@ public class Food
 		this.id = id;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	public String getIngredients() {
 		return ingredients;
 	}
-
 
 	public void setIngredients(String ingredients) {
 		this.ingredients = ingredients;
 	}
 
-
 	public int getWeight() {
 		return weight;
 	}
-
 
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
 
-
 	public double getPrice() {
 		return price;
 	}
-
 
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
-
 	public List<Dish> getDishes() {
 		return dishes;
 	}
-
 
 	public void setDishes(List<Dish> dishes) {
 		this.dishes = dishes;
 	}
 
-
 	public List<Order> getOrders() {
 		return orders;
 	}
-
 
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
