@@ -32,10 +32,11 @@ public class Menu
 	private String title;
 	
 	@OneToMany(mappedBy = "menu")
-	private List<Dish> dishes = new ArrayList<>();
+	private List<Dish> dishes;
 
 	public Menu() {
 		super();
+		this.dishes = new ArrayList<>();
 		this.state = MenuStates.NEW.toString();
 	}
 

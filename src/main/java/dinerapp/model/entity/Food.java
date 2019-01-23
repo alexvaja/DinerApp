@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,13 +34,23 @@ public class Food
 	private double price;
 	
 	@ManyToMany(mappedBy = "foods")
-	private List<Dish> dishes = new ArrayList<>();
+	private List<Dish> dishes;
 	
-	@ManyToMany(mappedBy = "foodss")
-	private List<Order> orders = new ArrayList<>();
-
+	@OneToMany(mappedBy="foodd")
+	private List<OrderQuantity> foodss;
+	
 	public Food() {
 		super();
+		this.dishes = new ArrayList<>();
+		this.foodss = new ArrayList<>();
+	}
+
+	public Food(String name, String ingredients, int weight, double price) {
+		super();
+		this.name = name;
+		this.ingredients = ingredients;
+		this.weight = weight;
+		this.price = price;
 	}
 
 	public Integer getId() {
@@ -90,12 +101,12 @@ public class Food
 		this.dishes = dishes;
 	}
 
-	public List<Order> getOrders() {
-		return orders;
+	public List<OrderQuantity> getFoodss() {
+		return foodss;
 	}
 
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
+	public void setFoodss(List<OrderQuantity> foodss) {
+		this.foodss = foodss;
 	}
 
 	@Override

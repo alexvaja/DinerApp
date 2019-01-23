@@ -24,8 +24,8 @@ public class Role
 	@Column(name="role_name")
 	private String name;
 	
-	@ManyToMany(mappedBy="roles", fetch=FetchType.EAGER)
-	private List<UserDiner> users = new ArrayList<>();
+//	@ManyToMany(mappedBy="roles")
+//	private List<UserDiner> users;
 
 	public Role() {
 		super();
@@ -45,14 +45,6 @@ public class Role
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<UserDiner> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<UserDiner> users) {
-		this.users = users;
 	}
 
 	@Override
@@ -82,6 +74,6 @@ public class Role
 
 	@Override
 	public String toString() {
-		return "Role [" + id + ", " + name + ", " + users + "]";
+		return "Role [" + id + ", " + name + "]";
 	}
 }

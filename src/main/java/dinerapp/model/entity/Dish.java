@@ -38,10 +38,11 @@ public class Dish
 			joinColumns={@JoinColumn(name="id_dish")},
 			inverseJoinColumns={@JoinColumn(name="id_food")}
 			)
-	private List<Food> foods = new ArrayList<>();
+	private List<Food> foods;
 
 	public Dish() {
 		super();
+		this.foods = new ArrayList<>();
 	}
 	
 	public Integer getId() {

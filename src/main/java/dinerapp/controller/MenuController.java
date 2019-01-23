@@ -80,7 +80,7 @@ public class MenuController {
 		switch (reqParam) {
 		case "AddMenu": {
 			LOGGER.info("Am intrat in AddMenu case");
-			List<DishDTO> dishes = menuViewModel.getDishes();
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
@@ -96,13 +96,13 @@ public class MenuController {
 			dishes.add(createDefaultDishesDTO());
 			
 			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setState(menuViewModel.getMenu().getState());//
-			menuDTO.setId(menuViewModel.getMenu().getId());
+			menuDTO.setState(menuViewModel.getMenuDTO().getState());//
+			menuDTO.setId(menuViewModel.getMenuDTO().getId());
 			menuDTO.setDate(menuDate);
 			menuDTO.setTitle(menuTitle);
 			
-			menuViewModel.setDishes(dishes);
-			menuViewModel.setMenu(menuDTO);
+			menuViewModel.setDishesDTO(dishes);
+			menuViewModel.setMenuDTO(menuDTO);
 			//menuViewModel.setTitle(menuTitle);
 			//menuViewModel.setDate(menuDate);
 
@@ -115,18 +115,18 @@ public class MenuController {
 			break;
 		}
 		case "SaveAll": {
-			List<DishDTO> dishes = menuViewModel.getDishes();
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			System.out.println("Lista dishes: " + dishes);
 			System.out.println("Data din View: " + menuDate);
-			System.out.println("Data din Meniu: " + menuViewModel.getMenu().getDate());
-			System.out.println("State-ul in Meniu:" + menuViewModel.getMenu().getState());
-			if (canSave(menuDate, menuViewModel.getMenu().getState(), menuViewModel.getMenu().getDate())) {
+			System.out.println("Data din Meniu: " + menuViewModel.getMenuDTO().getDate());
+			System.out.println("State-ul in Meniu:" + menuViewModel.getMenuDTO().getState());
+			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
 
 				//aici pun id
-				menu.setId(menuViewModel.getMenu().getId());
+				menu.setId(menuViewModel.getMenuDTO().getId());
 				menu.setDate(menuDate);
 				menu.setTitle(menuTitle);
 				menu.setState(MenuStates.SAVED.toString());

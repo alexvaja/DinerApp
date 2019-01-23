@@ -142,12 +142,12 @@ public class ViewMenuController {
 			menuDTO.setState(menu.getState());
 			System.out.println("Menu State in db: " + menuDTO.getState());
 			menuDTO.setTitle(menu.getTitle());
-			menuViewModel.setMenu(menuDTO);
+			menuViewModel.setMenuDTO(menuDTO);
 			
 			
 			//menuViewModel.setDate(menu.getData());
 			//menuViewModel.setTitle(menu.getTitle());
-			menuViewModel.setDishes(dishes);
+			menuViewModel.setDishesDTO(dishes);
 			//menuViewModel.setState(menu.getState());
 
 			session.setAttribute("menuViewModel", menuViewModel);

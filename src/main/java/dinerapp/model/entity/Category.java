@@ -27,13 +27,12 @@ public class Category
 	private Double price;
 	
 	@OneToMany(mappedBy = "category")
-	private List<Dish> dishes = new ArrayList<>();
+	private List<Dish> dishes;
 
 	public Category() {
 		super();
-	}
-	
-	
+		this.dishes = new ArrayList<>();
+	}	
 
 	public Category(Integer id, String name, Double price) {
 		super();

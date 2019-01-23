@@ -30,18 +30,19 @@ public class UserDiner {
 	@Column(name="user_password")
 	private String password;
 	
-	@OneToMany(mappedBy = "userDiner", fetch=FetchType.EAGER)
-	private List<Order> orders = new ArrayList<>();
+	@OneToMany(mappedBy = "userDiner")
+	private List<Order> orders;
 
-	@ManyToMany()
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(
 			name="user_role",
 			joinColumns= {@JoinColumn(name="id_user")},
 			inverseJoinColumns= {@JoinColumn(name="id_role")})
-	private List<Role> roles = new ArrayList<>();
+	private List<Role> roles;
 
 	public UserDiner() {
 		super();
+		this.roles = new ArrayList<>();
 	}
 
 	public Integer getId() {
@@ -74,6 +75,14 @@ public class UserDiner {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 	@Override
