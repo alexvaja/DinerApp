@@ -13,13 +13,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
+import com.itextpdf.text.log.SysoCounter;
+
 import dinerapp.constants.MenuStates;
+import dinerapp.exceptions.DuplicateCategoryException;
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
@@ -50,16 +55,41 @@ public class MenuController {
 
 	@Autowired
 	DishRepository dishRepository;
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
+	
+	@ExceptionHandler({ DuplicateCategoryException.class })
+	public String duplicateError() {
+		System.out.println("categorii duplicate");
+		return "redirect:menuView";
+	}
 
 	@SessionScope
 	@GetMapping("/menuView")
-	public String sessionExample(Model model, Principal principal, HttpSession session) {
+	public String sessionExample(Model model, Principal principal, HttpSession session) throws NewSessionException {
 		LOGGER.info("GET MENU");
-		session.setAttribute("menuViewModel", new MenuViewModel());
-
-		// vaja style
-		Boolean addMenuIsAvailable = false;
-		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+		
+		if (session.isNew())
+			throw new NewSessionException();
+		
+		System.out.println("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
+		
+		if (session.getAttribute("menuViewModel") == null) {
+			session.setAttribute("errorMessage", true);
+			session.setAttribute("menuViewModel", new MenuViewModel());
+			
+			Boolean addMenuIsAvailable = false;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+		} else {
+			// vaja style
+			Boolean addMenuIsAvailable = true;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);			
+			
+		}
 
 		return "views/menuView";
 	}
@@ -71,7 +101,7 @@ public class MenuController {
 			@RequestParam(value = "menu_title", required = false) String menuTitle,
 			@RequestParam(value = "menu_date", required = false) String menuDate,
 			@RequestParam(value = "dropdown_list", required = false) String selectedMenuCategories,
-			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods) {
+			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods) throws DuplicateCategoryException{
 
 		LOGGER.info("SET MENU");
 		Boolean addMenuIsAvailable = false;
@@ -115,12 +145,35 @@ public class MenuController {
 			break;
 		}
 		case "SaveAll": {
+			System.out.println("Am intrat pe SAVE ALL");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
-			System.out.println("Lista dishes: " + dishes);
-			System.out.println("Data din View: " + menuDate);
-			System.out.println("Data din Meniu: " + menuViewModel.getMenuDTO().getDate());
-			System.out.println("State-ul in Meniu:" + menuViewModel.getMenuDTO().getState());
+
+//			System.out.println("Lista dishes: " + dishes);
+//			System.out.println("Data din View: " + menuDate);
+//			System.out.println("Data din Meniu: " + menuViewModel.getMenuDTO().getDate());
+//			System.out.println("State-ul in Meniu:" + menuViewModel.getMenuDTO().getState());
 			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
+				
+				if (selectedMenuCategories != null) {
+					updateListSelectedCategory(selectedMenuCategories, dishes);
+				}
+				
+				if (selectedMenuFoods != null) {
+					updateListSelectedFoods(selectedMenuFoods, dishes);
+				}
+				
+				//
+				List<Category> c = getAllCategoriesFromMenu(dishes);
+				System.out.println("Lista de category: " + c);
+				
+				if (!isValid(c)) {
+					session.setAttribute("errorMessage", false);
+					throw new DuplicateCategoryException("mesaj");
+				} else {
+					session.setAttribute("errorMessage", true);
+				} 
+				//
+				
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
@@ -132,13 +185,6 @@ public class MenuController {
 				menu.setState(MenuStates.SAVED.toString());
 				menuRepository.save(menu);
 
-				if (selectedMenuCategories != null) {
-					updateListSelectedCategory(selectedMenuCategories, dishes);
-				}
-
-				if (selectedMenuFoods != null) {
-					updateListSelectedFoods(selectedMenuFoods, dishes);
-				}
 
 				for (DishDTO dishDTO : dishes) {
 					System.out.println("Am Intrat in Paine");
@@ -180,6 +226,24 @@ public class MenuController {
 
 		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		return "views/menuView";
+	}
+
+
+	
+	//
+	private List<Category> getAllCategoriesFromMenu(List<DishDTO> dishesDTO) {
+		
+		List<Category> categoriesFromMenu = new ArrayList<>();
+		
+		for (DishDTO dishDTO : dishesDTO) {
+			for (CategoryDTO categoryDTO : dishDTO.getCategories()) {
+				if (categoryDTO.getSelected()) {
+					categoriesFromMenu.add(categoryDTO.getCategory());
+				}
+			}
+		}
+		
+		return categoriesFromMenu;
 	}
 
 	private Boolean canSave(String menuDate, String state, String existingDate) {
@@ -339,5 +403,15 @@ public class MenuController {
 			index++;
 			dishDTO.setFoods(listFood);
 		}
+	}
+	
+	private boolean isValid(List<Category> values) {
+		for (int i = 0; i < values.size() - 1; i++) {
+			for (int j = i + 1; j < values.size(); j++) {
+				if (values.get(i).getName().equals(values.get(j).getName()))
+					return false;
+			}
+		}
+		return true;
 	}
 }
