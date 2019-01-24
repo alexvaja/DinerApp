@@ -5,14 +5,24 @@ import java.util.List;
 
 import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Order;
+import dinerapp.model.entity.OrderQuantity;
 
-public class OrderViewModel {
-
+public class OrderViewModel 
+{
 	private List<Order> orders;
 	private List<Food> foods;
 	private List<Integer> quantities;
+	private List<OrderQuantity> orderQuantity;
+	private String date;
 	
- 	public OrderViewModel()
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public OrderViewModel()
 	{
 		super();
 		this.orders = new ArrayList<>();
@@ -23,6 +33,12 @@ public class OrderViewModel {
 		this.orders = new ArrayList<>(orders);
 	}
 	
+ 	public List<OrderQuantity> getOrderQuantity() {
+		return orderQuantity;
+	}
+	public void setOrderQuantity(List<OrderQuantity> orderQuantity) {
+		this.orderQuantity = orderQuantity;
+	}
 	public List<Order> getOrders() {
 		return orders;
 	}
@@ -41,11 +57,10 @@ public class OrderViewModel {
 	public void setQuantities(List<Integer> quantities) {
 		this.quantities = quantities;
 	}
-	
 	@Override
 	public String toString() {
-		return "OrderViewModel [orders=" + orders + ", foods=" + foods + ", quantities=" + quantities + "]";
+		return "OrderViewModel [orders=" + orders + ", foods=" + foods + ", quantities=" + quantities
+				+ ", orderQuantity=" + orderQuantity + ", date=" + date + "]";
 	}
-	
-	
+
 }
