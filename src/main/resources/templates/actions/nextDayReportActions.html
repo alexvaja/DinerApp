@@ -8,24 +8,30 @@
 <body>
 <body>
 	<h1>Next day report Table</h1>
-	<form action='#' th:object="${orderViewModel}" th:action="@{/nextDayReportView}"
-		method="post">
+	<form action='#' th:object="${orderViewModel}"
+		th:action="@{/nextDayReportView}" method="post">
+		
+		<div class="input-group date" data-provide="datepicker">
+			<label>Selecteaza data pentru a vedea raportul</label>
+			<input type="date" name="report_date"class="form-control" /> 
+		</div>
+		<input class = "btn btn-primary" name = "submit" type = "submit" th:value = "submit"/>
+		<br><br>
 		<div class="form-group">
 			<table class="table tcolor table-bordered">
 				<thead class="thead thead-dark">
 					<tr>
 						<th scope="col">Food Name</th>
-						<th scope = "col"> Quantity </th>
+						<th scope="col">Quantity</th>
 					</tr>
 				</thead>
 				<tbody>
-<!-- 					<tr th:each="Food, iter : *{foods}">				
-						<td th:text="${Food.name}">...</td>
-			 -->
-	 					<tr th:each="food, iter : *{foods}">
+					<tr th:each="food, iter : *{foods}">
+						<th:block th:if = "${orderViewModel.quantities[iter.index] != 0}"> 			
 							<td th:text="${food.name}">...</td>
 							<td th:text="${orderViewModel.quantities[iter.index]}">...</td>
-						</tr>		 
+						</th:block>					
+					</tr>
 				</tbody>
 			</table>
 		</div>
