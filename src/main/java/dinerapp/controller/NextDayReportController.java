@@ -116,14 +116,6 @@ public class NextDayReportController {
 				}
 				case "export":
 				{
-					try
-					{
-						downloadFile(response, "output/raport.pdf");
-					}
-					catch(IOException e)
-					{
-						e.printStackTrace();
-					}		
 					return "views/nextDayReportView";
 
 				}
