@@ -1,8 +1,11 @@
 package dinerapp.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,15 +65,15 @@ public class NextDayReportController {
 	}
 
 	@GetMapping("/nextDayReportView")
-	public String sessionExample(Model model) 
-	{
+	public String sessionExample(Model model) {
 		OrderViewModel orderViewModel = new OrderViewModel();
 		model.addAttribute("orderViewModel", orderViewModel);
 		return "views/nextDayReportView";
 	}
+
 	@PostMapping("/nextDayReportView")
 	private String postMap(Model model, @ModelAttribute OrderViewModel orderViewModel, @RequestParam(value = "submit") String reqParam,
-			@RequestParam(value = "report_date", required = true) String reportDate)
+			@RequestParam(value = "report_date", required = true) String reportDate, HttpServletResponse response)
 	{
 			orderViewModel.setDate(reportDate);
 			
@@ -111,9 +114,21 @@ public class NextDayReportController {
 					orderViewModel.setFoods(foods);
 					orderViewModel.setQuantities(quantities);
 				}
+				case "export":
+				{
+					try
+					{
+						downloadFile(response, "output/raport.pdf");
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}		
+					return "views/nextDayReportView";
+
+				}
 			}
 			model.addAttribute("orderViewModel", orderViewModel);
 			return "views/nextDayReportView";
 	}
 }
-
