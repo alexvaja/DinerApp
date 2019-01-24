@@ -12,12 +12,14 @@ public class NextWeekViewModel {
 	private List<Order> orders;
 	private List<UserDiner> users;
 	private List<OrderQuantity> orderQuantity;
+	private List<String> dates;
 	
 	public NextWeekViewModel() {
 		super();
 		this.orders = new ArrayList<>();
 		this.users = new ArrayList<>();
 		this.orderQuantity = new ArrayList<>();
+		this.dates = new ArrayList<>();
 	}
 
 	public List<Order> getOrders() {
@@ -44,8 +46,16 @@ public class NextWeekViewModel {
 		this.orderQuantity = orderQuantity;
 	}
 
+	public List<String> getDates() {
+		return dates;
+	}
+
+	public void setDates(List<String> dates) {
+		this.dates = dates;
+	}
+
 	@Override
 	public String toString() {
-		return "NextWeekViewModel [" + orders + ", " + users + ", " + orderQuantity + "]";
+		return "NextWeekViewModel [" + orders + ", " + users + ", " + orderQuantity + ", " + dates +"]";
 	}
 }
