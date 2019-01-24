@@ -19,9 +19,6 @@
 					</tr>
 				</thead>
 				<tbody>
-<!-- 					<tr th:each="Food, iter : *{foods}">				
-						<td th:text="${Food.name}">...</td>
-			 -->
 	 					<tr th:each="food, iter : *{foods}">
 							<td th:text="${food.name}">...</td>
 							<td th:text="${orderViewModel.quantities[iter.index]}">...</td>

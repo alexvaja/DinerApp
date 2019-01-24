@@ -49,6 +49,7 @@ public class NextDayReportController {
 	@GetMapping("/nextDayReportView")
 	public String sessionExample(Model model) 
 	{
+<<<<<<< HEAD
 //		System.out.println("Am intrat in pula lu galmeanu");
 //		OrderViewModel orderViewModel = new OrderViewModel();
 //		List<Order> orders = new ArrayList<>();
@@ -77,6 +78,37 @@ public class NextDayReportController {
 //		orderViewModel.setFoods(foods);
 //		orderViewModel.setQuantities(quantities);
 //		model.addAttribute("orderViewModel", orderViewModel);
+=======
+		System.out.println("");
+		OrderViewModel orderViewModel = new OrderViewModel();
+		List<Order> orders = new ArrayList<>();
+		List<Food> foods = new ArrayList<>();
+		
+		foods.addAll(getListOfFoods());
+		orders.addAll(getListOfOrders());
+		sortOrderList(orders);
+		orderViewModel.setOrders(orders);
+		
+		List<Integer> quantities = new ArrayList<>(foods.size());
+		for(int i = 0 ; i < foods.size(); i++)
+			quantities.add(i,0);
+		
+		for(Order order : orders)
+		{
+			for(int index = 0; index < foods.size(); index++)
+			{
+				if(order.getFood().equals(foods.get(index)))
+				{
+					int quantity = quantities.get(index);
+					quantity++;
+					quantities.set(index, quantity);
+				}
+			}
+		}
+		orderViewModel.setFoods(foods);
+		orderViewModel.setQuantities(quantities);
+		model.addAttribute("orderViewModel", orderViewModel);
+>>>>>>> PDFULMASII
 		return "views/nextDayReportView";
 	}
 	
