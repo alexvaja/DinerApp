@@ -3,10 +3,13 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.context.annotation.SessionScope;
+
 import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
 
+@SessionScope
 public class OrderViewModel 
 {
 	private List<Order> orders;
@@ -26,6 +29,9 @@ public class OrderViewModel
 	{
 		super();
 		this.orders = new ArrayList<>();
+		this.foods = new ArrayList<>();
+		this.quantities = new ArrayList<>();
+		this.orderQuantity = new ArrayList<>();;
 	}
 	public OrderViewModel(List<Order> orders)
 	{
@@ -54,6 +60,11 @@ public class OrderViewModel
 	public List<Integer> getQuantities() {
 		return quantities;
 	}
+	
+	public Integer getByIndex(int index) {
+		return quantities.get(index);
+	}
+	
 	public void setQuantities(List<Integer> quantities) {
 		this.quantities = quantities;
 	}

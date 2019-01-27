@@ -73,8 +73,8 @@ public class MenuController {
 	public String sessionExample(Model model, Principal principal, HttpSession session) throws NewSessionException {
 		LOGGER.info("GET MENU");
 		
-		if (session.isNew())
-			throw new NewSessionException();
+//		if (session.isNew())
+//			throw new NewSessionException();
 		
 		System.out.println("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
 		

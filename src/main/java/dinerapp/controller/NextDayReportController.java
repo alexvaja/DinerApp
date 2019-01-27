@@ -1,6 +1,6 @@
 package dinerapp.controller;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,17 +15,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itextpdf.text.DocumentException;
+
 import dinerapp.model.OrderViewModel;
 import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
+import dinerapp.pdf.ExportToPDF;
+import dinerapp.pdf.PDF;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.OrderQuantityRepository;
 import dinerapp.repository.OrderRepository;
 import dinerapp.security.utils.OrderComparer;
 
 @Controller
-public class NextDayReportController {
+public class NextDayReportController 
+{
+	
 	@Autowired
 	private OrderRepository orderRepo;
 	@Autowired
@@ -65,7 +71,7 @@ public class NextDayReportController {
 	}
 
 	@GetMapping("/nextDayReportView")
-	public String sessionExample(Model model) {
+	public String getMap(Model model) {
 		OrderViewModel orderViewModel = new OrderViewModel();
 		model.addAttribute("orderViewModel", orderViewModel);
 		return "views/nextDayReportView";
@@ -76,24 +82,22 @@ public class NextDayReportController {
 			@RequestParam(value = "report_date", required = true) String reportDate, HttpServletResponse response)
 	{
 			orderViewModel.setDate(reportDate);
-			
 			List<Order> orders = getListOfOrders();
 			List<Food> foods = getListOfFoods();
-			List<OrderQuantity> orderQuantity = geListOfOrderQuantity();
-			
+			List<OrderQuantity> orderQuantity = geListOfOrderQuantity();			
 			List<Integer> quantities = new ArrayList<>();
 			List<OrderQuantity> requestedDateOrderQuantity = new ArrayList<>();
-			
+
 			sortOrderList(orders);
 			orderViewModel.setOrders(orders);
-			
+
 			for(OrderQuantity oq : orderQuantity)
 				if(oq.getOrder().getDate().equals(reportDate))
 					requestedDateOrderQuantity.add(oq);
-		
+			
 			for (int i = 0; i < foods.size(); i++)
 				quantities.add(i, 0);
-			
+
 			switch (reqParam) 
 			{
 				case "submit":
@@ -113,14 +117,45 @@ public class NextDayReportController {
 					}
 					orderViewModel.setFoods(foods);
 					orderViewModel.setQuantities(quantities);
+					model.addAttribute("orderViewModel", orderViewModel);
+					//ExportToPDF.exportToPDF("export.pdf", foods, quantities);
+					return "views/nextDayReportView";
 				}
 				case "export":
 				{
-					return "views/nextDayReportView";
+					System.out.println("Sunt pe case export");
 
+				//ExportToPDF.downloadFile(response, "output/raport.pdf");
+					for (OrderQuantity OQ : orderQuantity) 
+					{
+						for (int index = 0; index < foods.size(); index++) 
+						{
+							if (OQ.getFoodd().equals(foods.get(index)) && OQ.getOrder().getDate().equals(reportDate)) 
+							{
+								int quantity = quantities.get(index);
+								System.out.println(OQ.getQuantity());
+								quantity += OQ.getQuantity().intValue();
+								quantities.set(index, quantity);
+							}
+						}
+					}
+					orderViewModel.setFoods(foods);
+					orderViewModel.setQuantities(quantities);
+					System.out.println("Lista food: " + foods);
+					System.out.println("Lista cantitati: " + quantities);
+					
+					model.addAttribute("orderViewModel", orderViewModel);
+
+						try {
+							ExportToPDF.exportToPDF("raportsss.pdf",foods, quantities,reportDate);
+						} catch (FileNotFoundException | DocumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					return "views/nextDayReportView";			
 				}
+				default:
+					return "views/nextDayReportView";
 			}
-			model.addAttribute("orderViewModel", orderViewModel);
-			return "views/nextDayReportView";
 	}
 }
