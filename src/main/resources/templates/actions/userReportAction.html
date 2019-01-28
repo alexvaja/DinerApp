@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head></head>
+<body>
+	<h1>Comenzi</h1>
+	
+	<form action="#" th:object="${nextWeekViewModel}" th:action="@{/nextWeekReportView}" method="post">
+		<div>
+			<div class="dropdown">
+				<label> Selecteaza data: </label>
+				<select name="dropdown_list" class="form-control" id="sel1">
+					<option th:each="date : *{dates}"
+							th:text="${date}"
+							th:value="${date}" />
+				</select>
+				
+			</div>
+
+			<input class="btn btn-primary" type="submit" th:name="submit" th:value="Search" />
+		
+			<br/>
+			<br/>
+		
+			<table class = "table tcolor table-bordered">
+				<thead class = "thead thead-dark">
+					<tr>
+						<th > Nume </th>
+						<th > Comanda <th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order : *{orders}">
+						<td th:text="${order.userDiner.name}"></td>
+						<td></td>
+						<td><input type="checkbox" th:name="checkbox_list" th:value="${order.id}"/></td>
+					</tr>
+				</tbody>		
+			</table>
+			
+			<input class="btn btn-primary" type="submit" th:name="submit" th:value="Submit"/>
+		</div>
+	</form>
+</body>
+</html>

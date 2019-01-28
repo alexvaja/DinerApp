@@ -7,14 +7,14 @@ import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
 import dinerapp.model.entity.UserDiner;
 
-public class NextWeekViewModel {
+public class UserReportViewModel {
 
 	private List<Order> orders;
 	private List<UserDiner> users;
 	private List<OrderQuantity> orderQuantity;
 	private List<String> dates;
 	
-	public NextWeekViewModel() {
+	public UserReportViewModel() {
 		super();
 		this.orders = new ArrayList<>();
 		this.users = new ArrayList<>();
