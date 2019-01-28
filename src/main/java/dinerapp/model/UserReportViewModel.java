@@ -9,13 +9,13 @@ import dinerapp.model.entity.OrderQuantity;
 public class UserReportViewModel {
 
 	private List<Order> orders;
-	private List<OrderQuantity> orderQuantity;
+	private List<OrderQuantity> orderQuantities;
 	private List<String> dates;
 	
 	public UserReportViewModel() {
 		super();
 		this.orders = new ArrayList<>();
-		this.orderQuantity = new ArrayList<>();
+		this.orderQuantities = new ArrayList<>();
 		this.dates = new ArrayList<>();
 	}
 
@@ -28,11 +28,11 @@ public class UserReportViewModel {
 	}
 
 	public List<OrderQuantity> getOrderQuantity() {
-		return orderQuantity;
+		return orderQuantities;
 	}
 
 	public void setOrderQuantity(List<OrderQuantity> orderQuantity) {
-		this.orderQuantity = orderQuantity;
+		this.orderQuantities = orderQuantity;
 	}
 
 	public List<String> getDates() {
@@ -45,6 +45,6 @@ public class UserReportViewModel {
 
 	@Override
 	public String toString() {
-		return "NextWeekViewModel [" + orders + ", " + orderQuantity + ", " + dates +"]";
+		return "NextWeekViewModel [" + orders + ", " + orderQuantities + ", " + dates +"]";
 	}
 }
