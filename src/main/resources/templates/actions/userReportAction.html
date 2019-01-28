@@ -6,7 +6,7 @@
 <body>
 	<h1>Comenzi</h1>
 	
-	<form action="#" th:object="${nextWeekViewModel}" th:action="@{/nextWeekReportView}" method="post">
+	<form action="#" th:object="${userReportViewMode}" th:action="@{/nextWeekReportView}" method="post">
 		<div>
 			<div class="dropdown">
 				<label> Selecteaza data: </label>
@@ -34,7 +34,7 @@
 					<tr th:each="order : *{orders}">
 						<td th:text="${order.userDiner.name}"></td>
 						<td></td>
-						<td><input type="checkbox" th:name="checkbox_list" th:value="${order.id}"/></td>
+						<td><input type="checkbox" th:name="checkbox_list" th:value="${order.id} "/></td>
 					</tr>
 				</tbody>		
 			</table>

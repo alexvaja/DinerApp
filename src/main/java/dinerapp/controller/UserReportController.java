@@ -39,7 +39,7 @@ public class UserReportController
 	private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@SessionScope
-	@GetMapping("/nextWeekReportView")
+	@GetMapping("/userReportView")
 	public String openNextWeekReportView(Model model) {
 		System.out.println("Am intrat pe GET");
 		System.out.println("Data de azi: " + getAllNextDate());
@@ -48,27 +48,26 @@ public class UserReportController
 		userReportViewModel.setOrders(getAllOrderFromTable());
 		userReportViewModel.setUsers(getAllUserDinerFromTable());
 		userReportViewModel.setOrderQuantity(getAllOrderQuantityFromTable());
-		//nextWeekViewModel.setDates(getAllNextDate());
+		userReportViewModel.setDates(getAllNextDate());
 		//
-		List<String> date = new ArrayList<>();
-		date.add("2019-01-27");
-		userReportViewModel.setDates(date);
-		model.addAttribute("nextWeekViewModel", userReportViewModel);
+//		List<String> date = new ArrayList<>();
+//		date.add("2019-01-27");
+//		userReportViewModel.setDates(date);
+		model.addAttribute("userReportViewMode", userReportViewModel);
 
-		return "views/nextWeekReportView";
+		return "views/userReportView";
 	}
 	
-	@PostMapping("/nextWeekReportView")
+	@PostMapping("/userReportView")
 	public String openNextWeekReportyyView(Model model, @ModelAttribute UserReportViewModel userReportViewModel,
 														@RequestParam(value = "submit", required = false) String reqParam,
-														@RequestParam(value = "dropdown_list") String reportDate) {
-
+														@RequestParam(value = "dropdown_list") String reportDate,
+														@RequestParam(value = "checkbox_list") String checkList) {
+		System.out.println("Am intrat pe POST");
 		System.out.println("Req param: " + reqParam);
 		System.out.println("Data este: " + reportDate);
-		List<String> date = new ArrayList<>();
-		date.add("2019-01-27");
-		userReportViewModel.setDates(date);
-		//
+		userReportViewModel.setDates(getAllNextDate());
+
 		List<Order> listOfOrdersFromTable = getAllOrderFromTable();
 		List<Order> todayOrder = new ArrayList<>();
 		List<UserDiner> listOfUsersFromTable = getAllUserDinerFromTable();
@@ -90,12 +89,13 @@ public class UserReportController
 		}
 		case "Submit": {
 			System.out.println("Am intrat pe case-ul de Submit!");
+			System.out.println("CheckList: " + checkList);
 			break;
 		}
 		}
 		
-		model.addAttribute("nextWeekViewModel", userReportViewModel);
-		return "views/nextWeekReportView";
+		model.addAttribute("userReportViewMode", userReportViewModel);
+		return "views/userReportView";
 	}
 	
 	private List<Order> getAllOrderFromTable() { 
