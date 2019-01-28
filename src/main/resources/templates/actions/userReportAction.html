@@ -6,7 +6,7 @@
 <body>
 	<h1>Comenzi</h1>
 	
-	<form action="#" th:object="${userReportViewMode}" th:action="@{/userReportView}" method="post">
+	<form action="#" th:object="${session.userReportViewModel}" th:action="@{/userReportView}" method="post">
 		<div>
 			<div class="dropdown">
 				<label> Selecteaza data: </label>

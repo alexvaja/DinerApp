@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
 import dinerapp.model.UserReportViewModel;
@@ -40,38 +42,31 @@ public class UserReportController
 	
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String openNextWeekReportView(Model model) {
+	public String openNextWeekReportView(Model model, HttpSession session) {
 		System.out.println("Am intrat pe GET");
-		System.out.println("Data de azi: " + getAllNextDate());
 		
 		UserReportViewModel userReportViewModel = new UserReportViewModel();
-		userReportViewModel.setOrders(getAllOrderFromTable());
-		userReportViewModel.setUsers(getAllUserDinerFromTable());
-		userReportViewModel.setOrderQuantity(getAllOrderQuantityFromTable());
 		userReportViewModel.setDates(getAllNextDate());
-		//
-//		List<String> date = new ArrayList<>();
-//		date.add("2019-01-27");
-//		userReportViewModel.setDates(date);
-		model.addAttribute("userReportViewMode", userReportViewModel);
+
+		session.setAttribute("userReportViewModel", userReportViewModel);
 
 		return "views/userReportView";
 	}
 	
 	@PostMapping("/userReportView")
-	public String openNextWeekReportyyView(Model model, @ModelAttribute UserReportViewModel userReportViewModel,
+	public String openNextWeekReportyyView(Model model, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
 														@RequestParam(value = "submit", required = false) String reqParam,
-														@RequestParam(value = "dropdown_list") String reportDate,
-														@RequestParam(value = "checkbox_list") String checkList) {
+														@RequestParam(value = "dropdown_list", required=false) String reportDate,
+														@RequestParam(value = "checkbox_list", required=false) String selectedUsers) {
 		System.out.println("Am intrat pe POST");
 		System.out.println("Req param: " + reqParam);
 		System.out.println("Data este: " + reportDate);
 		userReportViewModel.setDates(getAllNextDate());
 
 		List<Order> listOfOrdersFromTable = getAllOrderFromTable();
+		List<OrderQuantity> listOfOrdersQuantities = getAllOrderQuantityFromTable();
+		
 		List<Order> todayOrder = new ArrayList<>();
-		List<UserDiner> listOfUsersFromTable = getAllUserDinerFromTable();
-		List<UserDiner> todayOrderUsers = new ArrayList<>();
 		
 		
 		switch(reqParam) {
@@ -85,16 +80,37 @@ public class UserReportController
 				}
 			}
 			
+			System.out.println("todayList: " + todayOrder);
+
+
+			userReportViewModel.setOrders(todayOrder);
+			
 			break;
 		}
 		case "Submit": {
 			System.out.println("Am intrat pe case-ul de Submit!");
-			System.out.println("CheckList: " + checkList);
+			System.out.println("CheckList: " + selectedUsers);
+			
+			String[] selectedUsersList = selectedUsers.split(",");
+			
+			for (Order order : todayOrder) {
+				for (int index = 0; index < selectedUsersList.length; index++) {
+					if (order.getId().equals(selectedUsersList[index])) {
+						Order o = order;
+						System.out.println(o);
+						o.setTaken(true);
+						System.out.println(o);
+						orderRepository.save(o);
+					}
+				}
+				
+			}
+
 			break;
 		}
 		}
 		
-		model.addAttribute("userReportViewMode", userReportViewModel);
+		//model.addAttribute("userReportViewMode", userReportViewModel);
 		return "views/userReportView";
 	}
 	
@@ -145,4 +161,48 @@ public class UserReportController
 	private String incrementCurrentDayByIndex(String date, int index) {
 		return LocalDate.parse(date).plusDays(index).toString();
 	}
+	
+	private List<Order> getAllOrdersForGivenDate(String date) {
+		return null;
+	}
 }
+
+
+//Order order = todayOrder.get(0);
+//order.setTaken(false);
+
+//Order order1 = new Order();
+//order1.setDate("2019-01-28");
+//order1.setTaken(false);
+//UserDiner userDiner = new UserDiner();
+//userDiner.setId(3);
+//order1.setUserDiner(userDiner);
+//
+//orderRepository.save(order1);
+
+//Order order1 = new Order();
+//order1.setDate("2019-01-28");
+//order1.setTaken(false);
+//UserDiner userDiner = new UserDiner();
+//userDiner.setId(4);
+//order1.setUserDiner(userDiner);
+//
+//orderRepository.save(order1);
+
+
+//if(selectedUsers != null ) {
+//	String[] selectedUsersList = selectedUsers.split(",");
+//	
+//	for (Order order : todayOrder) {
+//		for (int index = 0; index < selectedUsersList.length; index++) {
+//			if (order.getId().equals(selectedUsersList[index])) {
+//				Order o = order;
+//				System.out.println(o);
+//				o.setTaken(true);
+//				System.out.println(o);
+//				orderRepository.save(o);
+//			}
+//		}
+//		
+//	}
+//}
