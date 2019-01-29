@@ -1,40 +1,31 @@
 package dinerapp.model.dto;
 
-import dinerapp.model.entity.UserDiner;
+import dinerapp.model.entity.Order;
 
 public class OrderDTO {
 	
-	private Integer id;
-	private String date;
+	private Order order;
+	private String toBeDeliveredFood;
 	private Boolean taken;
-	private UserDiner userDiner;
 	
 	public OrderDTO() {
 		super();
 	}
 
-	public OrderDTO(Integer id, String date, Boolean taken, UserDiner userDiner) {
-		super();
-		this.id = id;
-		this.date = date;
-		this.taken = taken;
-		this.userDiner = userDiner;
+	public Order getOrder() {
+		return order;
 	}
 
-	public Integer getId() {
-		return id;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public String getToBeDeliveredFood() {
+		return toBeDeliveredFood;
 	}
 
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
+	public void setToBeDeliveredFood(String toBeDeliveredFood) {
+		this.toBeDeliveredFood = toBeDeliveredFood;
 	}
 
 	public Boolean getTaken() {
@@ -45,16 +36,8 @@ public class OrderDTO {
 		this.taken = taken;
 	}
 
-	public UserDiner getUserDiner() {
-		return userDiner;
-	}
-
-	public void setUserDiner(UserDiner userDiner) {
-		this.userDiner = userDiner;
-	}
-
 	@Override
 	public String toString() {
-		return "OrderDTO [" + id + ", " + date + ", " + taken + ", " + userDiner + "]";
+		return "OrderDTO [" + order + ", " + toBeDeliveredFood + ", " + taken + "]";
 	}
 }
