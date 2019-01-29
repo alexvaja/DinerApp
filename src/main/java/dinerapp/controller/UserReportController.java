@@ -1,11 +1,11 @@
 package dinerapp.controller;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
+
+import com.itextpdf.text.log.SysoCounter;
 
 import dinerapp.model.UserReportViewModel;
 import dinerapp.model.dto.OrderDTO;
@@ -42,7 +44,8 @@ public class UserReportController {
 
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String openNextWeekReportView(Model model, HttpSession session) {
+	public String openNextWeekReportView(Model model, HttpSession session) throws ParseException {
+		LOGGER.info("Am intrat pe GET");
 		System.out.println("Am intrat pe GET");
 		
 		UserReportViewModel userReportViewModel = new UserReportViewModel();
@@ -54,11 +57,11 @@ public class UserReportController {
 	}
 
 	@PostMapping("/userReportView")
-	public String openNextWeekReportyyView(Model model,
-			@SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
-			@RequestParam(value = "submit", required = false) String reqParam,
-			@RequestParam(value = "dropdown_list", required = false) String reportDate,
-			@RequestParam(value = "checkbox_list", required = false) String selectedUsers) {
+	public String openNextWeekReportyyView(Model model, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
+														@RequestParam(value = "submit", required = false) String reqParam,
+														@RequestParam(value = "dropdown_list", required = false) String reportDate,
+														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException {
+													
 		System.out.println("Am intrat pe POST");
 		userReportViewModel.setDates(getAllNextDate());
 
@@ -172,20 +175,22 @@ public class UserReportController {
 		return searchedList;
 	}
 
-	private List<String> getAllNextDate() {
+	private List<String> getAllNextDate() throws ParseException {
+
 		List<String> searchedDate = new ArrayList<>();
-		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
-		System.out.println("Calendar: " + calendar);
-		System.out.println("DATA: " + date);
-		String currentDate = sdf.format(new Date());
-		
-		
+		String currentDate = sdf.format(calendar.getTime());
+		int dayIndex = 0;
+				
+		while (searchedDate.size() < 5) {
 
-		for (int dayIndex = 0; dayIndex <= 4; dayIndex++) {
-			searchedDate.add(incrementCurrentDayByIndex(currentDate, dayIndex));
+			calendar.setTime(sdf.parse(incrementCurrentDayByIndex(currentDate, dayIndex)));
+			if (calendar.get(Calendar.DAY_OF_WEEK) != 7 && calendar.get(Calendar.DAY_OF_WEEK) != 1) {
+				searchedDate.add(incrementCurrentDayByIndex(currentDate, dayIndex));
+			}
+			dayIndex++;
 		}
-
+		
 		return searchedDate;
 	}
 
