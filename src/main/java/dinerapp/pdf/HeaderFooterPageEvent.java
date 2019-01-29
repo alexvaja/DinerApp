@@ -59,7 +59,8 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
 	
 			// add image
-			Image logo = Image.getInstance("..\\DinerApp - new\\src\\main\\resources\\static\\images\\AtosLogo.png");
+			//Image logo = Image.getInstance("..\\DinerApp - new\\src\\main\\resources\\static\\images\\AtosLogo.png");
+			Image logo = Image.getInstance(".\\src\\main\\resources\\static\\images\\AtosLogo.png");
 			logo.setAbsolutePosition(100f, 550f);
 		    //Scale to new height and new width of image
 			logo.scaleAbsolute(200, 200);
@@ -68,7 +69,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			// add text-date
 			PdfPCell text = new PdfPCell();
 			text.addElement(new Paragraph(new Date().toString()));
-			text.addElement(new Paragraph("Last update was made by: "));
+			text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
 			text.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			text.setPaddingBottom(5);
 			text.setPaddingLeft(280);
