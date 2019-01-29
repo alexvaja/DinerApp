@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
 import dinerapp.model.UserReportViewModel;
+import dinerapp.model.dto.OrderDTO;
 import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
 import dinerapp.model.entity.UserDiner;
@@ -59,58 +60,84 @@ public class UserReportController
 														@RequestParam(value = "dropdown_list", required=false) String reportDate,
 														@RequestParam(value = "checkbox_list", required=false) String selectedUsers) {
 		System.out.println("Am intrat pe POST");
-		System.out.println("Req param: " + reqParam);
-		System.out.println("Data este: " + reportDate);
 		userReportViewModel.setDates(getAllNextDate());
 
 		List<Order> listOfOrdersFromTable = getAllOrderFromTable();
-		List<OrderQuantity> listOfOrdersQuantities = getAllOrderQuantityFromTable();
+		List<OrderQuantity> listOfOrdersQuantitiesFromTable = getAllOrderQuantityFromTable();
 		
-		List<Order> todayOrder = new ArrayList<>();
 		
+		
+		List<Order> todayOrders = new ArrayList<>();
+		List<OrderQuantity> todayOrdersQuantities = new ArrayList<>();
 		
 		switch(reqParam) {
 		case "Search": {
 			System.out.println("Am intrat pe case-ul de Search!");
-			System.out.println(reportDate);
-			
+
 			for (Order order : listOfOrdersFromTable) {
-				if (order.getDate().equals(reportDate)) {
-					todayOrder.add(order);
+				if (order.getDate().equals(reportDate) && order.getTaken().equals(false)) {
+					todayOrders.add(order);
 				}
 			}
 			
-			System.out.println("todayList: " + todayOrder);
+			for (OrderQuantity orderQuantity : listOfOrdersQuantitiesFromTable) {
+				for (Order order : todayOrders) {
+					if (orderQuantity.getOrder().equals(order)) {
+						todayOrdersQuantities.add(orderQuantity);
+					}
+				}
+			}
 
-
-			userReportViewModel.setOrders(todayOrder);
+			List<String> magicList = new ArrayList<>();
 			
+			for (Order order : todayOrders) {
+				String foodString = new String();
+				for (OrderQuantity orderQuantity : todayOrdersQuantities) {
+					if (order.equals(orderQuantity.getOrder())) {
+						foodString += (orderQuantity.getFoodd().getName() + " X" + orderQuantity.getQuantity().toString() + "  ");
+					}
+				}
+				magicList.add(foodString);
+			}
+			
+			List<OrderDTO> ordersDTO = new ArrayList<>();
+			for (int index = 0; index < todayOrders.size(); index++) {
+				OrderDTO orderDTO  = new OrderDTO();
+				orderDTO.setOrder(todayOrders.get(index));
+				orderDTO.setToBeDeliveredFood(magicList.get(index));
+				ordersDTO.add(orderDTO);
+			}
+			System.out.println("Lista today: " + todayOrders);
+			userReportViewModel.setListOfFoods(ordersDTO);
 			break;
 		}
 		case "Submit": {
 			System.out.println("Am intrat pe case-ul de Submit!");
-			System.out.println("CheckList: " + selectedUsers);
 			
-			String[] selectedUsersList = selectedUsers.split(",");
-			
-			for (Order order : todayOrder) {
-				for (int index = 0; index < selectedUsersList.length; index++) {
-					if (order.getId().equals(selectedUsersList[index])) {
-						Order o = order;
-						System.out.println(o);
-						o.setTaken(true);
-						System.out.println(o);
-						orderRepository.save(o);
+			for (Order order : listOfOrdersFromTable) {
+				if (order.getDate().equals(reportDate)) {
+					todayOrders.add(order);
+				}
+			}
+				
+				String[] checkedOrderList = selectedUsers.split(",");
+				
+				for(int index = 0; index < checkedOrderList.length; index++) {
+					for (Order order : todayOrders) {
+						Order newOrder = order;
+						newOrder.setTaken(true);
+						
+						if (Integer.parseInt(checkedOrderList[index]) == order.getId()) {
+							orderRepository.save(newOrder);
+						}
 					}
 				}
-				
-			}
-
+			
+			
 			break;
 		}
 		}
 		
-		//model.addAttribute("userReportViewMode", userReportViewModel);
 		return "views/userReportView";
 	}
 	
@@ -166,43 +193,3 @@ public class UserReportController
 		return null;
 	}
 }
-
-
-//Order order = todayOrder.get(0);
-//order.setTaken(false);
-
-//Order order1 = new Order();
-//order1.setDate("2019-01-28");
-//order1.setTaken(false);
-//UserDiner userDiner = new UserDiner();
-//userDiner.setId(3);
-//order1.setUserDiner(userDiner);
-//
-//orderRepository.save(order1);
-
-//Order order1 = new Order();
-//order1.setDate("2019-01-28");
-//order1.setTaken(false);
-//UserDiner userDiner = new UserDiner();
-//userDiner.setId(4);
-//order1.setUserDiner(userDiner);
-//
-//orderRepository.save(order1);
-
-
-//if(selectedUsers != null ) {
-//	String[] selectedUsersList = selectedUsers.split(",");
-//	
-//	for (Order order : todayOrder) {
-//		for (int index = 0; index < selectedUsersList.length; index++) {
-//			if (order.getId().equals(selectedUsersList[index])) {
-//				Order o = order;
-//				System.out.println(o);
-//				o.setTaken(true);
-//				System.out.println(o);
-//				orderRepository.save(o);
-//			}
-//		}
-//		
-//	}
-//}
