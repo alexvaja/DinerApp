@@ -91,28 +91,27 @@ public class NextDayReportController {
 	}
 
 	@PostMapping("/nextDayReportView")
-	public String postMap(Model model, @ModelAttribute OrderViewModel orderViewModel,
-			@RequestParam(value = "submit") String reqParam,
-			@RequestParam(value = "report_date", required = true) 
-		    String reportDate, HttpServletResponse response) 
-	{
+	public String postMap(Model model, @ModelAttribute OrderViewModel orderViewModel, HttpServletResponse response,
+									   @RequestParam(value = "submit") String reqParam,
+									   @RequestParam(value = "report_date", required = true) String reportDate) {
+		
 		orderViewModel.setDate(reportDate);
 		List<Order> orders = getListOfOrders();
 		List<Food> foods = getListOfFoods();
 		List<OrderQuantity> orderQuantity = geListOfOrderQuantity();
 		List<Integer> quantities = new ArrayList<>();
 		List<OrderQuantity> requestedDateOrderQuantity = new ArrayList<>();
-
+	
 		sortOrderList(orders);
 		orderViewModel.setOrders(orders);
-
+	
 		for (OrderQuantity oq : orderQuantity)
 			if (oq.getOrder().getDate().equals(reportDate))
 				requestedDateOrderQuantity.add(oq);
-
+	
 		for (int i = 0; i < foods.size(); i++)
 			quantities.add(i, 0);
-
+	
 		switch (reqParam) 
 		{
 			case "submit": 
@@ -126,20 +125,19 @@ public class NextDayReportController {
 			}
 			case "export": 
 			{
-				System.out.println("Sunt pe case export");
-
+	
 				// ExportToPDF.downloadFile(response, "output/raport.pdf");
 				retrieveData(orderQuantity, foods, reportDate, quantities);
-
+	
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
 				System.out.println("Lista food: " + foods);
 				System.out.println("Lista cantitati: " + quantities);
-
+	
 				model.addAttribute("orderViewModel", orderViewModel);
 				try 
 				{
-					ExportToPDF.exportToPDF("raportsss.pdf", foods, quantities, reportDate);
+					ExportToPDF.exportToPDF("Raport.pdf", foods, quantities, reportDate);
 				} 
 				catch (FileNotFoundException | DocumentException e) 
 				{
@@ -152,7 +150,8 @@ public class NextDayReportController {
 			{
 				try
 				{
-					ExportToPDF.downloadFile(response, "raportsss.pdf");
+					System.out.println("AM INTRAT IN 1!");
+					ExportToPDF.downloadFile(response, "Raport.pdf");
 				}
 				catch(IOException e)
 				{
@@ -164,6 +163,4 @@ public class NextDayReportController {
 				return "views/nextDayReportView";
 		}
 	}
-
-
 }

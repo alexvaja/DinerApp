@@ -47,24 +47,24 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 	}
 
 	private void addHeader(PdfWriter writer) {
-
+	
 		PdfPTable header = new PdfPTable(2);
 		try {
-
+	
 			header.setWidths(new int[] { 2, 24 });
 			header.setTotalWidth(527);
 			header.setLockedWidth(true);
 			header.getDefaultCell().setFixedHeight(40);
 			header.getDefaultCell().setBorder(Rectangle.BOTTOM);
 			header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
-
+	
 			// add image
-			Image logo = Image.getInstance("D:\\STS Workspace\\DinerAppNew\\src\\main\\resources\\static\\images\\AtosLogo.png");
+			Image logo = Image.getInstance("..\\DinerApp - new\\src\\main\\resources\\static\\images\\AtosLogo.png");
 			logo.setAbsolutePosition(100f, 550f);
 		    //Scale to new height and new width of image
 			logo.scaleAbsolute(200, 200);
 			header.addCell(logo);
-
+	
 			// add text-date
 			PdfPCell text = new PdfPCell();
 			text.addElement(new Paragraph(new Date().toString()));
@@ -75,7 +75,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			text.setBorder(Rectangle.BOTTOM);
 			text.setBorderColor(BaseColor.LIGHT_GRAY);
 			header.addCell(text);
-
+	
 			// add content
 			header.writeSelectedRows(0, -1, 34, 803, writer.getDirectContent());
 			
