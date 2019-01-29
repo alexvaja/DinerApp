@@ -126,7 +126,7 @@ public class NextDayReportController {
 				model.addAttribute("orderViewModel", orderViewModel);
 				return "views/nextDayReportView";
 			}
-			case "export": 
+			case "download": 
 			{
 				//orderViewModel.setDate(reportDate);
 				// ExportToPDF.downloadFile(response, "output/raport.pdf");
@@ -141,28 +141,34 @@ public class NextDayReportController {
 				try 
 				{
 					ExportToPDF.exportToPDF("Raport.pdf", foods, quantities, reportDate);
+					ExportToPDF.downloadFile(response, "Raport.pdf");
+
 				} 
 				catch (FileNotFoundException | DocumentException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
-				break;
-			}
-			case "download":
-			{
-				//orderViewModel.setDate(reportDate);
-				try
-				{
-					System.out.println("AM INTRAT IN 1!");
-					ExportToPDF.downloadFile(response, "Raport.pdf");
-				}
 				catch(IOException e)
 				{
 					e.printStackTrace();
 				}
 				break;
 			}
+//			case "download":
+//			{
+//				//orderViewModel.setDate(reportDate);
+//				try
+//				{
+//					System.out.println("AM INTRAT IN 1!");
+//					ExportToPDF.downloadFile(response, "Raport.pdf");
+//				}
+//				catch(IOException e)
+//				{
+//					e.printStackTrace();
+//				}
+//				break;
+//			}
 		}
 		session.setAttribute("orderViewModel", orderViewModel);
 		return "views/nextDayReportView";

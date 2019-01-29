@@ -1,11 +1,9 @@
 package dinerapp.pdf;
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.util.Date;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -24,7 +22,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.error_messages.MessageLocalization;
 
 public class HeaderFooterPageEvent extends PdfPageEventHelper {
 	
