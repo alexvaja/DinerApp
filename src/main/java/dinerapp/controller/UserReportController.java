@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
-import com.itextpdf.text.log.SysoCounter;
-
 import dinerapp.model.UserReportViewModel;
 import dinerapp.model.dto.OrderDTO;
 import dinerapp.model.entity.Order;
@@ -47,6 +45,7 @@ public class UserReportController {
 	public String openNextWeekReportView(Model model, HttpSession session) throws ParseException {
 		LOGGER.info("Am intrat pe GET");
 		System.out.println("Am intrat pe GET");
+		//updateDB();
 		
 		UserReportViewModel userReportViewModel = new UserReportViewModel();
 		userReportViewModel.setDates(getAllNextDate());
@@ -61,67 +60,36 @@ public class UserReportController {
 														@RequestParam(value = "submit", required = false) String reqParam,
 														@RequestParam(value = "dropdown_list", required = false) String reportDate,
 														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException {
-													
+		
 		System.out.println("Am intrat pe POST");
 		userReportViewModel.setDates(getAllNextDate());
-
-		List<Order> listOfOrdersFromTable = getAllOrderFromTable();
-		List<OrderQuantity> listOfOrdersQuantitiesFromTable = getAllOrderQuantityFromTable();
-
-		List<Order> todayOrders = new ArrayList<>();
-		List<OrderQuantity> todayOrdersQuantities = new ArrayList<>();
 
 		switch (reqParam) {
 		case "Search": {
 			System.out.println("Am intrat pe case-ul de Search!");
 
-			for (Order order : listOfOrdersFromTable) {
-				if (order.getDate().equals(reportDate) && order.getTaken().equals(false)) {
-					todayOrders.add(order);
-				}
-			}
-
-			for (OrderQuantity orderQuantity : listOfOrdersQuantitiesFromTable) {
-				for (Order order : todayOrders) {
-					if (orderQuantity.getOrder().equals(order)) {
-						todayOrdersQuantities.add(orderQuantity);
-					}
-				}
-			}
-
-			List<String> magicList = new ArrayList<>();
-
-			for (Order order : todayOrders) {
-				String foodString = new String();
-				for (OrderQuantity orderQuantity : todayOrdersQuantities) {
-					if (order.equals(orderQuantity.getOrder())) {
-						foodString += (orderQuantity.getFoodd().getName() + " X"
-								+ orderQuantity.getQuantity().toString() + "  ");
-					}
-				}
-				magicList.add(foodString);
-			}
-
-			List<OrderDTO> ordersDTO = new ArrayList<>();
+			List<Order> todayOrders = getAllOrdersToBeDeliveredForDate(reportDate);
+			//List<OrderQuantity> todayOrdersQuantities = getAllOrderQuantityToBeDelivered(todayOrders);//in plus
+			List<String> magicList = toBeDeliveredListForDate(reportDate);
+			List<OrderDTO> ordersDTO = new ArrayList<>(); //face modelul pt sesiune
+			
 			for (int index = 0; index < todayOrders.size(); index++) {
+				
 				OrderDTO orderDTO = new OrderDTO();
 				orderDTO.setOrder(todayOrders.get(index));
 				orderDTO.setToBeDeliveredFood(magicList.get(index));
 				ordersDTO.add(orderDTO);
 			}
-			System.out.println("Lista today: " + todayOrders);
+			
 			userReportViewModel.setListOfFoods(ordersDTO);
+			
 			break;
 		}
 		case "Submit": {
 			System.out.println("Am intrat pe case-ul de Submit!");
-
-			for (Order order : listOfOrdersFromTable) {
-				if (order.getDate().equals(reportDate)) {
-					todayOrders.add(order);
-				}
-			}
-
+			
+			List<Order> todayOrders = getAllOrdersToBeDeliveredForDate(reportDate);
+			
 			String[] checkedOrderList = selectedUsers.split(",");
 
 			for (int index = 0; index < checkedOrderList.length; index++) {
@@ -135,12 +103,64 @@ public class UserReportController {
 				}
 			}
 
+			
+			
 			break;
 		}
 		}
 
 		return "views/userReportView";
 	}
+	
+	private List<Order> getAllOrdersToBeDeliveredForDate(String date) {
+		
+		List<Order> listOfOrdersFromTable = getAllOrderFromTable();
+		List<Order> listOfOrdersToBeDelivered = new ArrayList<>();
+		
+		for (Order order : listOfOrdersFromTable) {
+			if (order.getDate().equals(date) && order.getTaken().equals(false)) {
+				listOfOrdersToBeDelivered.add(order);
+			}
+		}
+		return listOfOrdersToBeDelivered;
+	}
+	
+	private List<OrderQuantity> getAllOrderQuantityToBeDelivered(List<Order> orders) {
+		
+		List<OrderQuantity> listOfOrdersQuantitiesFromTable = getAllOrderQuantityFromTable();
+		List<OrderQuantity> listOfOrdersQuantitiesToBeDelivered = new ArrayList<>();
+
+			for (OrderQuantity orderQuantity : listOfOrdersQuantitiesFromTable) {
+				for (Order order : orders) {
+					if (orderQuantity.getOrder().equals(order)) {
+						listOfOrdersQuantitiesToBeDelivered.add(orderQuantity);
+					}
+				}
+			}
+		return listOfOrdersQuantitiesToBeDelivered;
+	}
+	
+	private List<String> toBeDeliveredListForDate(String date) {//modifica nume magicList
+		
+		List<String> magicList = new ArrayList<>();
+		List<Order> todayOrders = getAllOrdersToBeDeliveredForDate(date);
+		List<OrderQuantity> todayOrdersQuantities = getAllOrderQuantityToBeDelivered(todayOrders);
+		
+		for (Order order : todayOrders) {
+			String foodString = new String();
+			for (OrderQuantity orderQuantity : todayOrdersQuantities) {
+				if (order.equals(orderQuantity.getOrder())) {
+					foodString += (orderQuantity.getFoodd().getName() + " X"
+							+ orderQuantity.getQuantity().toString() + "  ");
+				}
+			}
+			magicList.add(foodString);
+		}
+		
+		return magicList;
+	}
+	
+	
 
 	private List<Order> getAllOrderFromTable() {
 		Iterable<Order> list = orderRepository.findAll();
@@ -152,17 +172,16 @@ public class UserReportController {
 
 		return searchedList;
 	}
-
-//	private List<UserDiner> getAllUserDinerFromTable() { 
-//		Iterable<UserDiner> list = userDinerRepository.findAll();
-//		List<UserDiner> searchedList = new ArrayList<>();
-//		
-//		for (UserDiner userDiner : list) {
-//			searchedList.add(userDiner);
-//		}
-//		
-//		return searchedList;
-//	}	
+	
+	private void updateDB() {
+		
+		List<Order> order = getAllOrderFromTable();
+		for (Order o : order) {
+			Order newO = o;
+			newO.setTaken(false);
+			orderRepository.save(newO);
+		}
+	}	
 
 	private List<OrderQuantity> getAllOrderQuantityFromTable() {
 		Iterable<OrderQuantity> list = orderQuantityRepository.findAll();
@@ -197,8 +216,4 @@ public class UserReportController {
 	private String incrementCurrentDayByIndex(String date, int index) {
 		return LocalDate.parse(date).plusDays(index).toString();
 	}
-
-//	private List<Order> getAllOrdersForGivenDate(String date) {
-//		return null;
-//	}
 }
