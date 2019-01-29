@@ -4,7 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import dinerapp.model.entity.OrderQuantity;
 
-public interface OrderQuantityRepository extends CrudRepository<OrderQuantity,Integer> 
-{
+public interface OrderQuantityRepository extends CrudRepository<OrderQuantity,Integer>  {
 	
 }
