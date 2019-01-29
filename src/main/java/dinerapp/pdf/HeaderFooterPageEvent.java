@@ -66,7 +66,7 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			// add text-date
 			PdfPCell text = new PdfPCell();
 			text.addElement(new Paragraph(new Date().toString()));
-			text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
+			//text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
 			text.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			text.setPaddingBottom(5);
 			text.setPaddingLeft(280);
