@@ -3,36 +3,25 @@ package dinerapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import dinerapp.model.entity.Order;
-import dinerapp.model.entity.OrderQuantity;
+import dinerapp.model.dto.OrderDTO;
 
 public class UserReportViewModel {
 
-	private List<Order> orders;
-	private List<OrderQuantity> orderQuantities;
+//	private List<Order> orders;
+//	private List<OrderQuantity> orderQuantities;
+	private List<OrderDTO> listOfFoods;
 	private List<String> dates;
 	
 	public UserReportViewModel() {
 		super();
-		this.orders = new ArrayList<>();
-		this.orderQuantities = new ArrayList<>();
 		this.dates = new ArrayList<>();
+		this.listOfFoods = new ArrayList<>();
 	}
 
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public List<OrderQuantity> getOrderQuantity() {
-		return orderQuantities;
-	}
-
-	public void setOrderQuantity(List<OrderQuantity> orderQuantity) {
-		this.orderQuantities = orderQuantity;
+	public UserReportViewModel(List<OrderDTO> listOfFoods, List<String> dates) {
+		super();
+		this.listOfFoods = listOfFoods;
+		this.dates = dates;
 	}
 
 	public List<String> getDates() {
@@ -43,8 +32,16 @@ public class UserReportViewModel {
 		this.dates = dates;
 	}
 
+	public List<OrderDTO> getListOfFoods() {
+		return listOfFoods;
+	}
+
+	public void setListOfFoods(List<OrderDTO> listOfFoods) {
+		this.listOfFoods = listOfFoods;
+	}
+
 	@Override
 	public String toString() {
-		return "NextWeekViewModel [" + orders + ", " + orderQuantities + ", " + dates +"]";
+		return "UserReportViewModel [" + listOfFoods + ", " + dates + "]";
 	}
 }
