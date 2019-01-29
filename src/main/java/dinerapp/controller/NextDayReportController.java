@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -147,18 +148,18 @@ public class NextDayReportController {
 				} 
 				return "views/nextDayReportView";
 			}
-//			case "download":
-//			{
-//				try
-//				{
-//					ExportToPDF.downloadFile(response, "raportsss.pdf");
-//				}
-//				catch(IOException e)
-//				{
-//					e.printStackTrace();
-//				}
-//				return "views/nextDayReportView";
-//			}
+			case "download":
+			{
+				try
+				{
+					ExportToPDF.downloadFile(response, "raportsss.pdf");
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+				return "views/nextDayReportView";
+			}
 			default:
 				return "views/nextDayReportView";
 		}

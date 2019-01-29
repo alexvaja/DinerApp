@@ -50,7 +50,7 @@ public class ExportToPDF
 		try {
 
 			HeaderFooterPageEvent event = new HeaderFooterPageEvent();
-			PdfWriter.getInstance(pdfDoc, new FileOutputStream("Rapoarte.pdf")).setPageEvent(event);
+			PdfWriter.getInstance(pdfDoc, new FileOutputStream(fileName)).setPageEvent(event);
 			pdfDoc.open();
 
 			pdfDoc.add(new Paragraph("Raportul pentru data de " + reportDate));
@@ -114,10 +114,10 @@ public class ExportToPDF
 	}
 
 	private static MediaType getMediaTypeForFileName(String fileName) {
-		String mineType = servletContext.getMimeType(fileName);
+		String mimeType = "application/pdf";
 
 		try {
-			MediaType mediaType = MediaType.parseMediaType(mineType);
+			MediaType mediaType = MediaType.parseMediaType(mimeType);
 			return mediaType;
 		} catch (Exception e) {
 			return MediaType.APPLICATION_OCTET_STREAM;

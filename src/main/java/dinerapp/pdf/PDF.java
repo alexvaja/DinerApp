@@ -16,7 +16,6 @@ import dinerapp.model.entity.Food;
 
 public class PDF 
 {
-
 	public static void exportToPDF(List <Food> foods, List <Integer> tities, String date) 
 	{
 		Document document = new Document();
@@ -25,7 +24,7 @@ public class PDF
 			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Raport.pdf"));
 			document.open();
 			
-			Image logo = Image.getInstance("/../../resources/static/images/logo.png");
+			Image logo = Image.getInstance("/../../../resources/static/images/logo.png");
 		    //Fixed Positioning
 			logo.setAbsolutePosition(100f, 550f);
 		    //Scale to new height and new width of image
