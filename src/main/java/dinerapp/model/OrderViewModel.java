@@ -16,8 +16,7 @@ public class OrderViewModel
 	private List<Food> foods;
 	private List<Integer> quantities;
 	private List<OrderQuantity> orderQuantity;
-	private String date;
-	
+	private String date;	
 	
 	public String getDate() {
 		return date;

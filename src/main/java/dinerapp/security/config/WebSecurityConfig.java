@@ -39,14 +39,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// The pages does not require login
 		http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
-//		http.authorizeRequests().antMatchers("/categoryView").authenticated();
-//		http.authorizeRequests().antMatchers("/employeeOrderView").authenticated();
-//		http.authorizeRequests().antMatchers("/foodView").authenticated();
-//		http.authorizeRequests().antMatchers("/insertView").authenticated();
-//		http.authorizeRequests().antMatchers("/menuView").authenticated();
-//		http.authorizeRequests().antMatchers("/nextDayReportView").authenticated();
-//		http.authorizeRequests().antMatchers("/viewMenuView").authenticated();
-//		
+		http.authorizeRequests().antMatchers("/categoryView").authenticated();
+		http.authorizeRequests().antMatchers("/employeeOrderView").authenticated();
+		http.authorizeRequests().antMatchers("/foodView").authenticated();
+		http.authorizeRequests().antMatchers("/insertView").authenticated();
+		http.authorizeRequests().antMatchers("/menuView").authenticated();
+		http.authorizeRequests().antMatchers("/nextDayReportView").authenticated();
+		http.authorizeRequests().antMatchers("/viewMenuView").authenticated();
+		
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
 		http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");

@@ -1,7 +1,6 @@
 package dinerapp.constants;
 
-public enum MenuStates {
-	
+public enum MenuStates {	
 	NEW,
 	SAVED,
 	PUBLISHED

@@ -46,8 +46,6 @@ public class ViewMenuController {
 
 	@GetMapping("/viewMenuView")
 	public String getAllMenus(Model model) {
-	
-		System.out.println("SUNT PE GET EDIT MENU");
 		
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
@@ -67,8 +65,6 @@ public class ViewMenuController {
 	@PostMapping("/viewMenuView")
 	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
 		
-		System.out.println("SUNT PE POST EDIT MENU");
-		
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
 		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
@@ -80,8 +76,6 @@ public class ViewMenuController {
 		}
 		
 		editMenuViewModel.setMenus(listOfUnpublishedMenus);
-		//
-		System.out.println(params);
 		String idMenu = null;
 		
 		for(String key : params.keySet()) {
@@ -89,14 +83,13 @@ public class ViewMenuController {
 		}
 		
 		String reqParam = params.getFirst(idMenu);
-		System.out.println("ID MENIU: " + idMenu);
 
 		switch (reqParam) {
 		case "Edit": {
 			LOGGER.info("ViewMenuController - Edit case");
 			
 			List<DishDTO> dishes = new ArrayList<>();
-			List<Menu> listOfMenus = getAllMenusFromTable();
+			//List<Menu> listOfMenus = getAllMenusFromTable();
 
 			// de inlocuit
 			//Menu menu = listOfMenus.get(Integer.parseInt(idMenu));
@@ -155,17 +148,14 @@ public class ViewMenuController {
 			return "views/menuView";
 		}
 		case "Publish":
-			List<Menu> listOfMenus = getAllMenusFromTable();
-			//System.out.println(listOfMenus);
+			//List<Menu> listOfMenus = getAllMenusFromTable();
 			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
 			if (!editMenuViewModel.getMenus().isEmpty()) {
 				Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
 				editMenuViewModel.getMenus().remove(menu);
 				menu.setState(MenuStates.PUBLISHED.toString());
 				menuRepository.save(menu);	
-			}
-			
-			
+			}			
 			break;
 		}
 

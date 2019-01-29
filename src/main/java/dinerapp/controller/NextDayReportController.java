@@ -77,7 +77,6 @@ public class NextDayReportController {
 			for (int index = 0; index < foods.size(); index++) {
 				if (OQ.getFoodd().equals(foods.get(index)) && OQ.getOrder().getDate().equals(reportDate)) {
 					int quantity = quantities.get(index);
-					System.out.println(OQ.getQuantity());
 					quantity += OQ.getQuantity().intValue();
 					quantities.set(index, quantity);
 				}
@@ -128,25 +127,17 @@ public class NextDayReportController {
 			}
 			case "download": 
 			{
-				//orderViewModel.setDate(reportDate);
-				// ExportToPDF.downloadFile(response, "output/raport.pdf");
 				retrieveData(orderQuantity, foods, reportDate, quantities);
-	
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
-				System.out.println("Lista food: " + foods);
-				System.out.println("Lista cantitati: " + quantities);
-	
 				model.addAttribute("orderViewModel", orderViewModel);
 				try 
 				{
 					ExportToPDF.exportToPDF("Raport.pdf", foods, quantities, reportDate);
 					ExportToPDF.downloadFile(response, "Raport.pdf");
-
 				} 
 				catch (FileNotFoundException | DocumentException e) 
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 				catch(IOException e)
@@ -155,20 +146,6 @@ public class NextDayReportController {
 				}
 				break;
 			}
-//			case "download":
-//			{
-//				//orderViewModel.setDate(reportDate);
-//				try
-//				{
-//					System.out.println("AM INTRAT IN 1!");
-//					ExportToPDF.downloadFile(response, "Raport.pdf");
-//				}
-//				catch(IOException e)
-//				{
-//					e.printStackTrace();
-//				}
-//				break;
-//			}
 		}
 		session.setAttribute("orderViewModel", orderViewModel);
 		return "views/nextDayReportView";

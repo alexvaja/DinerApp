@@ -24,7 +24,7 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class HeaderFooterPageEvent extends PdfPageEventHelper {
-	
+
 	private PdfTemplate t;
 	private Image total;
 
@@ -44,39 +44,40 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 	}
 
 	private void addHeader(PdfWriter writer) {
-	
+
 		PdfPTable header = new PdfPTable(2);
 		try {
-	
+
 			header.setWidths(new int[] { 2, 24 });
 			header.setTotalWidth(527);
 			header.setLockedWidth(true);
 			header.getDefaultCell().setFixedHeight(40);
 			header.getDefaultCell().setBorder(Rectangle.BOTTOM);
 			header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
-	
+
 			// add image
-			//Image logo = Image.getInstance("..\\DinerApp - new\\src\\main\\resources\\static\\images\\AtosLogo.png");
+			// Image logo = Image.getInstance("..\\DinerApp -
+			// new\\src\\main\\resources\\static\\images\\AtosLogo.png");
 			Image logo = Image.getInstance(".\\src\\main\\resources\\static\\images\\AtosLogo.png");
 			logo.setAbsolutePosition(100f, 550f);
-		    //Scale to new height and new width of image
+			// Scale to new height and new width of image
 			logo.scaleAbsolute(200, 200);
 			header.addCell(logo);
-	
+
 			// add text-date
 			PdfPCell text = new PdfPCell();
 			text.addElement(new Paragraph(new Date().toString()));
-			//text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
+			// text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
 			text.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			text.setPaddingBottom(5);
 			text.setPaddingLeft(280);
 			text.setBorder(Rectangle.BOTTOM);
 			text.setBorderColor(BaseColor.LIGHT_GRAY);
 			header.addCell(text);
-	
+
 			// add content
 			header.writeSelectedRows(0, -1, 34, 803, writer.getDirectContent());
-			
+
 		} catch (DocumentException de) {
 			throw new ExceptionConverter(de);
 		} catch (MalformedURLException e) {
@@ -119,7 +120,6 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			PdfContentByte canvas = writer.getDirectContent();
 			canvas.beginMarkedContentSequence(PdfName.ARTIFACT);
 			footer.writeSelectedRows(0, -1, 34, 50, canvas);
-															
 
 			canvas.endMarkedContentSequence();
 		} catch (DocumentException e) {

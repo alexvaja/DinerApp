@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
-import com.itextpdf.text.log.SysoCounter;
 
 import dinerapp.constants.MenuStates;
 import dinerapp.exceptions.DuplicateCategoryException;
@@ -147,11 +146,6 @@ public class MenuController {
 		case "SaveAll": {
 			System.out.println("Am intrat pe SAVE ALL");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
-
-//			System.out.println("Lista dishes: " + dishes);
-//			System.out.println("Data din View: " + menuDate);
-//			System.out.println("Data din Meniu: " + menuViewModel.getMenuDTO().getDate());
-//			System.out.println("State-ul in Meniu:" + menuViewModel.getMenuDTO().getState());
 			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
 				
 				if (selectedMenuCategories != null) {
@@ -187,7 +181,6 @@ public class MenuController {
 
 
 				for (DishDTO dishDTO : dishes) {
-					System.out.println("Am Intrat in Paine");
 					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
 
 					System.out.println("Lista de mancarruri: " + dishDTO.getId());
@@ -228,9 +221,6 @@ public class MenuController {
 		return "views/menuView";
 	}
 
-
-	
-	//
 	private List<Category> getAllCategoriesFromMenu(List<DishDTO> dishesDTO) {
 		
 		List<Category> categoriesFromMenu = new ArrayList<>();
@@ -247,8 +237,6 @@ public class MenuController {
 	}
 
 	private Boolean canSave(String menuDate, String state, String existingDate) {
-		System.out.println("Data in canSave" + menuDate + "pana aici");
-		System.out.println(state);
 		if (menuDate.isEmpty()) {
 			return false;
 		}
@@ -319,21 +307,17 @@ public class MenuController {
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
 		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
-
 		for (Category category : listOfCategories) {
 			listOfCategoriesDTO.add(new CategoryDTO(category, false));
 		}
-
 		return listOfCategoriesDTO;
 	}
 
 	private List<FoodDTO> createAllFoodsDTO(List<Food> listOfFoods) {
 		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
-
 		for (Food food : listOfFoods) {
 			listOfFoodsDTO.add(new FoodDTO(food, false));
 		}
-
 		return listOfFoodsDTO;
 	}
 
