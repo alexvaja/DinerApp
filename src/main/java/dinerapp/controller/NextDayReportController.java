@@ -7,14 +7,16 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 
 import com.itextpdf.text.DocumentException;
 
@@ -83,15 +85,17 @@ public class NextDayReportController {
 		}
 	}
 	
+	@SessionScope
 	@GetMapping("/nextDayReportView")
-	public String getMap(Model model) {
+	public String getMap(Model model, HttpSession session) {
 		OrderViewModel orderViewModel = new OrderViewModel();
-		model.addAttribute("orderViewModel", orderViewModel);
+		//model.addAttribute("orderViewModel", orderViewModel);
+		session.setAttribute("orderViewModel", orderViewModel);
 		return "views/nextDayReportView";
 	}
 
 	@PostMapping("/nextDayReportView")
-	public String postMap(Model model, @ModelAttribute OrderViewModel orderViewModel, HttpServletResponse response,
+	public String postMap(Model model, @SessionAttribute("orderViewModel") OrderViewModel orderViewModel, HttpSession session, HttpServletResponse response,
 									   @RequestParam(value = "submit") String reqParam,
 									   @RequestParam(value = "report_date", required = true) String reportDate) {
 		
@@ -120,12 +124,11 @@ public class NextDayReportController {
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
 				model.addAttribute("orderViewModel", orderViewModel);
-				// ExportToPDF.exportToPDF("export.pdf", foods, quantities);
 				return "views/nextDayReportView";
 			}
 			case "export": 
 			{
-	
+				//orderViewModel.setDate(reportDate);
 				// ExportToPDF.downloadFile(response, "output/raport.pdf");
 				retrieveData(orderQuantity, foods, reportDate, quantities);
 	
@@ -144,10 +147,11 @@ public class NextDayReportController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
-				return "views/nextDayReportView";
+				break;
 			}
 			case "download":
 			{
+				//orderViewModel.setDate(reportDate);
 				try
 				{
 					System.out.println("AM INTRAT IN 1!");
@@ -157,10 +161,10 @@ public class NextDayReportController {
 				{
 					e.printStackTrace();
 				}
-				return "views/nextDayReportView";
+				break;
 			}
-			default:
-				return "views/nextDayReportView";
 		}
+		session.setAttribute("orderViewModel", orderViewModel);
+		return "views/nextDayReportView";
 	}
 }

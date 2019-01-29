@@ -8,12 +8,11 @@
 <body>
 <body>
 	<h1>Next day report Table</h1>
-	<form action='#' th:object="${orderViewModel}"
-		th:action="@{/nextDayReportView}" method="post">
+	<form action='#' th:object="${session.orderViewModel}" th:action="@{/nextDayReportView}" method="post">
 		
 		<div class="input-group date" data-provide="datepicker">
 			<label>Selecteaza data pentru a vedea raportul</label>
-			<input type="date" name="report_date"class="form-control" /> 
+			<input type="date" name="report_date" class="form-control" th:value="*{date}"/> 
 		</div>
 		
 		<br>
