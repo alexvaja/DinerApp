@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,17 +102,17 @@ public class NextDayReportController {
 		List<OrderQuantity> orderQuantity = geListOfOrderQuantity();
 		List<Integer> quantities = new ArrayList<>();
 		List<OrderQuantity> requestedDateOrderQuantity = new ArrayList<>();
-
+	
 		sortOrderList(orders);
 		orderViewModel.setOrders(orders);
-
+	
 		for (OrderQuantity oq : orderQuantity)
 			if (oq.getOrder().getDate().equals(reportDate))
 				requestedDateOrderQuantity.add(oq);
-
+	
 		for (int i = 0; i < foods.size(); i++)
 			quantities.add(i, 0);
-
+	
 		switch (reqParam) 
 		{
 			case "submit": 
@@ -125,20 +126,19 @@ public class NextDayReportController {
 			}
 			case "export": 
 			{
-				System.out.println("Sunt pe case export");
-
+	
 				// ExportToPDF.downloadFile(response, "output/raport.pdf");
 				retrieveData(orderQuantity, foods, reportDate, quantities);
-
+	
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
 				System.out.println("Lista food: " + foods);
 				System.out.println("Lista cantitati: " + quantities);
-
+	
 				model.addAttribute("orderViewModel", orderViewModel);
 				try 
 				{
-					ExportToPDF.exportToPDF("raportsss.pdf", foods, quantities, reportDate);
+					ExportToPDF.exportToPDF("Raport.pdf", foods, quantities, reportDate);
 				} 
 				catch (FileNotFoundException | DocumentException e) 
 				{
@@ -147,22 +147,21 @@ public class NextDayReportController {
 				} 
 				return "views/nextDayReportView";
 			}
-//			case "download":
-//			{
-//				try
-//				{
-//					ExportToPDF.downloadFile(response, "raportsss.pdf");
-//				}
-//				catch(IOException e)
-//				{
-//					e.printStackTrace();
-//				}
-//				return "views/nextDayReportView";
-//			}
+			case "download":
+			{
+				try
+				{
+					System.out.println("AM INTRAT IN 1!");
+					ExportToPDF.downloadFile(response, "Raport.pdf");
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+				return "views/nextDayReportView";
+			}
 			default:
 				return "views/nextDayReportView";
 		}
 	}
-
-
 }
