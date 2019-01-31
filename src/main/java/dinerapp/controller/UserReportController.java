@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.UserReportViewModel;
 import dinerapp.model.dto.OrderDTO;
 import dinerapp.model.entity.Order;
@@ -39,10 +41,20 @@ public class UserReportController {
 	private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
 
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String openNextWeekReportView(Model model, HttpSession session) throws ParseException {
+	public String openNextWeekReportView(Model model, HttpSession session) throws ParseException, NewSessionException {
+		
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
 		
 		LOGGER.info("Am intrat pe GET");
 		
