@@ -7,29 +7,17 @@ import dinerapp.model.dto.OrderDTO;
 
 public class UserReportViewModel {
 
-//	private List<Order> orders;
-//	private List<OrderQuantity> orderQuantities;
 	private List<OrderDTO> listOfFoods;
-	private List<String> dates;
+	private String date;
 	
 	public UserReportViewModel() {
 		super();
-		this.dates = new ArrayList<>();
 		this.listOfFoods = new ArrayList<>();
 	}
 
 	public UserReportViewModel(List<OrderDTO> listOfFoods, List<String> dates) {
 		super();
 		this.listOfFoods = listOfFoods;
-		this.dates = dates;
-	}
-
-	public List<String> getDates() {
-		return dates;
-	}
-
-	public void setDates(List<String> dates) {
-		this.dates = dates;
 	}
 
 	public List<OrderDTO> getListOfFoods() {
@@ -40,8 +28,16 @@ public class UserReportViewModel {
 		this.listOfFoods = listOfFoods;
 	}
 
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
-		return "UserReportViewModel [" + listOfFoods + ", " + dates + "]";
+		return "UserReportViewModel [" + listOfFoods + ", " + date + "]";
 	}
 }
