@@ -9,9 +9,8 @@
 			<table class = "table tcolor table-bordered">
 				<thead class = "thead thead-dark">
 					<tr>
-						<th> ID MENU </th>
-						<th> MENU TITLE </th>
-						<th> MENU DATE </th>
+						<th> NUME MENIU </th>
+						<th> DATA MENIU </th>
 						<th> COLOANA </th>
 					</tr>
 				</thead>
@@ -30,7 +29,7 @@
 				
 				<tbody th:if="${#lists.isEmpty(editMenuViewModel.menus)}">
 					<tr>
-						<td colspan="4">CE PULA MEA VREI</td>
+						<td colspan="4">Nu exista nimic de afisat</td>
 					</tr>
 				</tbody>
 			</table>

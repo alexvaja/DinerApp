@@ -108,7 +108,7 @@ public class MenuController {
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		System.out.println("MENU VIEW MODEL: " + menuViewModel);
 		switch (reqParam) {
-		case "AddMenu": {
+		case "Adauga Meniu": {
 			LOGGER.info("Am intrat in AddMenu case");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
@@ -138,13 +138,13 @@ public class MenuController {
 
 			break;
 		}
-		case "Cancel": {
+		case "Anuleaza": {
 			addMenuIsAvailable = false;
 			session.removeAttribute("menuViewModel");
 			session.setAttribute("menuViewModel", new MenuViewModel());
 			break;
 		}
-		case "SaveAll": {
+		case "Salvare": {
 			System.out.println("Am intrat pe SAVE ALL");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
