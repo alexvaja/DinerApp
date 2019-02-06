@@ -51,7 +51,8 @@ public class FoodControler {
 
 	@PostMapping("/foodView")
 	public String openFoodView(final Model model, @ModelAttribute final Food food,
-			@RequestParam("submit") final String reqParam) {
+			@RequestParam("submit") final String reqParam) 
+	{
 		LOGGER.info("am intrat in mancare2");
 		LOGGER.info(reqParam);
 		Boolean addFoodIsAvailable = true;
@@ -60,19 +61,19 @@ public class FoodControler {
 		model.addAttribute("food", new Food());
 		LOGGER.info(food.toString());
 		switch (reqParam) {
-		case "Add":
+		case "Adauga":
 			addFoodIsAvailable = true;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			LOGGER.info(addFoodIsAvailable.toString());
 			break;
-		case "Save":
+		case "Salveaza":
 			foodRepo.save(food);
 			addFoodIsAvailable = false;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
 			LOGGER.info(addFoodIsAvailable.toString());
 			break;
-		case "Cancel":
+		case "Anuleaza":
 			addFoodIsAvailable = false;
 			LOGGER.info(addFoodIsAvailable.toString());
 			break;
