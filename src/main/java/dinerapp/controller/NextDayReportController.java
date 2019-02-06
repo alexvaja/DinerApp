@@ -85,15 +85,15 @@ public class NextDayReportController {
 	}
 	
 	@SessionScope
-	@GetMapping("/nextDayReportView")
+	@GetMapping("/reportView")
 	public String getMap(Model model, HttpSession session) {
 		OrderViewModel orderViewModel = new OrderViewModel();
 		//model.addAttribute("orderViewModel", orderViewModel);
 		session.setAttribute("orderViewModel", orderViewModel);
-		return "views/nextDayReportView";
+		return "views/reportView";
 	}
 
-	@PostMapping("/nextDayReportView")
+	@PostMapping("/reportView")
 	public String postMap(Model model, @SessionAttribute("orderViewModel") OrderViewModel orderViewModel, HttpSession session, HttpServletResponse response,
 									   @RequestParam(value = "submit") String reqParam,
 									   @RequestParam(value = "report_date", required = true) String reportDate) {
@@ -123,7 +123,7 @@ public class NextDayReportController {
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
 				model.addAttribute("orderViewModel", orderViewModel);
-				return "views/nextDayReportView";
+				return "views/reportView";
 			}
 			case "download": 
 			{
@@ -148,6 +148,6 @@ public class NextDayReportController {
 			}
 		}
 		session.setAttribute("orderViewModel", orderViewModel);
-		return "views/nextDayReportView";
+		return "views/reportView";
 	}
 }
