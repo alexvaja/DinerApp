@@ -60,17 +60,17 @@ public class CategoryController {
 		LOGGER.info(category.toString());
 		LOGGER.info(reqParam);
 		switch (reqParam) {
-		case "Add":
+		case "Adauga":
 			addCategoryIsAvailable = true;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			break;
-		case "Save":
+		case "Salveaza":
 			categoryRepository.save(category);
 			addCategoryIsAvailable = false;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 			break;
-		case "Cancel":
+		case "Anuleaza":
 			addCategoryIsAvailable = false;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			break;
