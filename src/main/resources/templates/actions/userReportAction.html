@@ -8,18 +8,9 @@
 	
 	<form action="#" th:object="${session.userReportViewModel}" th:action="@{/userReportView}" method="post">
 		<div>
-			<div class="dropdown">
-				<label> Selecteaza data: </label>
-				<select name="dropdown_list" class="form-control" id="sel1">
-					<option th:each="date : *{dates}"
-							th:text="${date}"
-							th:value="${date}" />
-				</select>
-			<br><br>
-			</div>
-
-			<input class="btn btn-primary" type="submit" th:name="submit" th:value="Search" />
-		
+			<label> Comenzi pentru data de: </label>
+			<input type="date" th:value="*{date}" readonly="readonly"/>
+			
 			<br>
 			<br/>
 		
@@ -52,11 +43,3 @@
 	</form>
 </body>
 </html>
-
-<!-- 							<th:block  th:with="foodString = ${''}">
-								<th:block th:each="orderQuantity : *{orderQuantities}" th:if="${orderQuantity.order == order}">
-									<span th:src="@{${foodString} + ${orderQuantity.foodd.name + ' X ' + orderQuantity.quantity}}">
-									</span>
-								</th:block>
-								<td scope="col" rowspan="4" th:text="${foodString}"></td>
-							</th:block> -->

@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dinerapp.constants.MenuStates;
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.EditMenuViewModel;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
@@ -43,9 +45,19 @@ public class ViewMenuController {
 	MenuRepository menuRepository;
 	@Autowired
 	DishRepository dishRepository;
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
 
 	@GetMapping("/viewMenuView")
-	public String getAllMenus(Model model) {
+	public String getAllMenus(Model model, HttpSession session) throws NewSessionException {
+		
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
 		
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
@@ -160,6 +172,7 @@ public class ViewMenuController {
 		}
 
 		model.addAttribute("editMenuViewModel", editMenuViewModel);
+
 		return "views/viewMenuView";
 	}
 

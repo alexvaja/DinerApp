@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import com.itextpdf.text.DocumentException;
 
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.OrderViewModel;
 import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Order;
@@ -35,11 +37,19 @@ public class NextDayReportController {
 
 	@Autowired
 	private OrderRepository orderRepo;
+	
 	@Autowired
 	private FoodRepository foodRepo;
+	
 	@Autowired
 	private OrderQuantityRepository orderQuantityRepo;
-
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
+	
 	private List<Order> getListOfOrders() {
 		final Iterable<Order> list = orderRepo.findAll();
 		final List<Order> orderList = new ArrayList<>();
@@ -86,7 +96,11 @@ public class NextDayReportController {
 	
 	@SessionScope
 	@GetMapping("/reportView")
-	public String getMap(Model model, HttpSession session) {
+	public String getMap(Model model, HttpSession session) throws NewSessionException
+	{
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
 		OrderViewModel orderViewModel = new OrderViewModel();
 		//model.addAttribute("orderViewModel", orderViewModel);
 		session.setAttribute("orderViewModel", orderViewModel);

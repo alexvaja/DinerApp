@@ -3,28 +3,45 @@ package dinerapp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.FoodViewModel;
 import dinerapp.model.entity.Food;
 import dinerapp.repository.FoodRepository;
 
 @Controller
 public class FoodControler {
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private FoodRepository foodRepo;
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
 
 	@GetMapping("/foodView")
-	public String getAllFoods(final Model model) {
+	public String getAllFoods(Model model, HttpSession session) throws NewSessionException {
+		
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
+		
 		LOGGER.info("getAllFoods");
 		final FoodViewModel foodViewModel = new FoodViewModel();
 		foodViewModel.setFoodItems(getListOfFood());
