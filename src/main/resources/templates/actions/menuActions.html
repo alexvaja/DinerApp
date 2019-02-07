@@ -3,22 +3,26 @@
 <link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css//override.css" />
 <div>
 	<form action="#" th:action="@{/menuView}" th:object="${session.menuViewModel}" method="post">
+		<div th:if="${session.errorMessage} == False">
+			<h1>Crapa sau nu crapa asta-i intrebarea..</h1>
+		</div>
+	
 		<div>
 			<h1>Adaugare meniu</h1>
 			<div th:if="${addMenuIsAvailable == True}" class = form-group >
 				<label for = "Titlu">Titlu:</label> 
 				<div>
-					<input type="text" name="menu_title" th:value="*{menu.title}" class="form-control"/>
+					<input type="text" name="menu_title" th:value="*{menuDTO.title}" class="form-control"/>
 				</div> 
 				
 				<label for = "Data">Data:</label>
 				<div class = "input-group date" data-provide="datepicker">
-					<input type="date" name="menu_date" th:value="*{menu.date}" class="form-control"/>
+					<input type="date" name="menu_date" th:value="*{menuDTO.date}" class="form-control"/>
 					<label>Data trebuie trecuta obligatoriu!</label>
 				</div>
 				
 				<table>
-					<tr th:each="dish, dishIndex : *{dishes}">
+					<tr th:each="dish, dishIndex : *{dishesDTO}">
 						<td><br /> <label>Selecteaza Categoria: </label>
 							<div class="dropdown">
 								<select name="dropdown_list" class="form-control" id="sel1">
@@ -62,13 +66,13 @@
 							</div> <br /></td>
 					</tr>
 				</table>
-				<input class="btn btn-primary" name="submit" type="submit" th:value="AddMenu" />
-				<input class="btn btn-primary" name="submit" type="submit" value="Cancel" /> 
-				<input class="btn btn-primary" name="submit" type="submit" th:value="SaveAll" />
+				<input class="btn btn-primary" name="submit" type="submit" value="Adauga Meniu" />
+				<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
+				<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
 			</div>
 
 			<div th:if="${addMenuIsAvailable == False}">
-				<input class="btn btn-primary" name="submit" type="submit" th:value="AddMenu" />
+				<input class="btn btn-primary" name="submit" type="submit" value="Adauga Meniu" />
 			</div>
 		</div>
 	</form>

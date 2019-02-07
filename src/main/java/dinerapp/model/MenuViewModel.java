@@ -8,39 +8,33 @@ import dinerapp.model.dto.MenuDTO;
 
 public class MenuViewModel {
 
-	private List<DishDTO> dishes;	
-	private MenuDTO menu;
+	private List<DishDTO> dishesDTO;	
+	private MenuDTO menuDTO;
 
 	public MenuViewModel() {
 		super();
-		dishes = new ArrayList<>();
-		menu = new MenuDTO();
+		dishesDTO = new ArrayList<>();
+		menuDTO = new MenuDTO();
 	}
 
-	public MenuViewModel(List<DishDTO> dishes, MenuDTO menu) {
-		super();
-		this.dishes = dishes;
-		this.menu = menu;
+	public List<DishDTO> getDishesDTO() {
+		return dishesDTO;
 	}
 
-	public List<DishDTO> getDishes() {
-		return dishes;
+	public void setDishesDTO(List<DishDTO> dishesDTO) {
+		this.dishesDTO = dishesDTO;
 	}
 
-	public void setDishes(List<DishDTO> dishes) {
-		this.dishes = dishes;
+	public MenuDTO getMenuDTO() {
+		return menuDTO;
 	}
 
-	public MenuDTO getMenu() {
-		return menu;
-	}
-
-	public void setMenu(MenuDTO menu) {
-		this.menu = menu;
+	public void setMenuDTO(MenuDTO menuDTO) {
+		this.menuDTO = menuDTO;
 	}
 
 	@Override
- 	public String toString() {
-		return "MenuViewModel [" + dishes + ", " + menu + "]";
+	public String toString() {
+		return "MenuViewModel [" + dishesDTO + ", " + menuDTO + "]";
 	}
 }

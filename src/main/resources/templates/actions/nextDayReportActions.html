@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+</head>
+<body>
+<body>
+	<h1>Next day report Table</h1>
+	<form action='#' th:object="${session.orderViewModel}" th:action="@{/reportView}" method="post">
+		
+		<div class="input-group date" data-provide="datepicker">
+			<label>Selecteaza data pentru a vedea raportul</label>
+			<input type="date" name="report_date" class="form-control" th:value="*{date}"/> 
+		</div>
+		
+		<br>
+		<input class = "btn btn-primary" name = "submit" type = "submit" th:value = "submit"/>
+		<input class = "btn btn-primary" name = "submit" type = "submit" th:value = "download"/>
+		<!-- <input class = "btn btn-primary" name = "submit" type = "submit" th:value = "download"/> -->
+		<br><br>
+		<div class="form-group">
+			<table class="table tcolor table-bordered">
+				<thead class="thead thead-dark">
+					<tr>
+						<th scope="col">Food Name</th>
+						<th scope="col">Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+	 					<tr th:each="food, iter : *{foods}">
+						<th:block th:if = "${orderViewModel.quantities[iter.index] != 0}"> 			
+							<td th:text="${food.name}">...</td>
+							<td th:text="${orderViewModel.quantities[iter.index]}">...</td>
+						</th:block>					
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>

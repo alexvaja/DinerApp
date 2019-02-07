@@ -13,13 +13,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
+
 import dinerapp.constants.MenuStates;
+import dinerapp.exceptions.DuplicateCategoryException;
+import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
@@ -50,16 +54,42 @@ public class MenuController {
 
 	@Autowired
 	DishRepository dishRepository;
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
+	
+	@ExceptionHandler({ DuplicateCategoryException.class })
+	public String duplicateError() {
+		System.out.println("categorii duplicate");
+		return "redirect:menuView";
+	}
 
 	@SessionScope
 	@GetMapping("/menuView")
-	public String sessionExample(Model model, Principal principal, HttpSession session) {
+	public String sessionExample(Model model, Principal principal, HttpSession session) throws NewSessionException {
 		LOGGER.info("GET MENU");
-		session.setAttribute("menuViewModel", new MenuViewModel());
-
-		// vaja style
-		Boolean addMenuIsAvailable = false;
-		model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+		
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
+		
+		System.out.println("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
+		
+		if (session.getAttribute("menuViewModel") == null) {
+			session.setAttribute("errorMessage", true);
+			session.setAttribute("menuViewModel", new MenuViewModel());
+			
+			Boolean addMenuIsAvailable = false;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+		} else {
+			// vaja style
+			Boolean addMenuIsAvailable = true;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);			
+			
+		}
 
 		return "views/menuView";
 	}
@@ -71,16 +101,16 @@ public class MenuController {
 			@RequestParam(value = "menu_title", required = false) String menuTitle,
 			@RequestParam(value = "menu_date", required = false) String menuDate,
 			@RequestParam(value = "dropdown_list", required = false) String selectedMenuCategories,
-			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods) {
+			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods) throws DuplicateCategoryException{
 
 		LOGGER.info("SET MENU");
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		System.out.println("MENU VIEW MODEL: " + menuViewModel);
 		switch (reqParam) {
-		case "AddMenu": {
+		case "Adauga Meniu": {
 			LOGGER.info("Am intrat in AddMenu case");
-			List<DishDTO> dishes = menuViewModel.getDishes();
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
@@ -96,52 +126,62 @@ public class MenuController {
 			dishes.add(createDefaultDishesDTO());
 			
 			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setState(menuViewModel.getMenu().getState());//
-			menuDTO.setId(menuViewModel.getMenu().getId());
+			menuDTO.setState(menuViewModel.getMenuDTO().getState());//
+			menuDTO.setId(menuViewModel.getMenuDTO().getId());
 			menuDTO.setDate(menuDate);
 			menuDTO.setTitle(menuTitle);
 			
-			menuViewModel.setDishes(dishes);
-			menuViewModel.setMenu(menuDTO);
+			menuViewModel.setDishesDTO(dishes);
+			menuViewModel.setMenuDTO(menuDTO);
 			//menuViewModel.setTitle(menuTitle);
 			//menuViewModel.setDate(menuDate);
 
 			break;
 		}
-		case "Cancel": {
+		case "Anuleaza": {
 			addMenuIsAvailable = false;
 			session.removeAttribute("menuViewModel");
 			session.setAttribute("menuViewModel", new MenuViewModel());
 			break;
 		}
-		case "SaveAll": {
-			List<DishDTO> dishes = menuViewModel.getDishes();
-			System.out.println("Lista dishes: " + dishes);
-			System.out.println("Data din View: " + menuDate);
-			System.out.println("Data din Meniu: " + menuViewModel.getMenu().getDate());
-			System.out.println("State-ul in Meniu:" + menuViewModel.getMenu().getState());
-			if (canSave(menuDate, menuViewModel.getMenu().getState(), menuViewModel.getMenu().getDate())) {
+		case "Salvare": {
+			System.out.println("Am intrat pe SAVE ALL");
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
+			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
+				
+				if (selectedMenuCategories != null) {
+					updateListSelectedCategory(selectedMenuCategories, dishes);
+				}
+				
+				if (selectedMenuFoods != null) {
+					updateListSelectedFoods(selectedMenuFoods, dishes);
+				}
+				
+				//
+				List<Category> c = getAllCategoriesFromMenu(dishes);
+				System.out.println("Lista de category: " + c);
+				
+				if (!isValid(c)) {
+					session.setAttribute("errorMessage", false);
+					throw new DuplicateCategoryException("mesaj");
+				} else {
+					session.setAttribute("errorMessage", true);
+				} 
+				//
+				
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
 
 				//aici pun id
-				menu.setId(menuViewModel.getMenu().getId());
-				menu.setData(menuDate);
+				menu.setId(menuViewModel.getMenuDTO().getId());
+				menu.setDate(menuDate);
 				menu.setTitle(menuTitle);
 				menu.setState(MenuStates.SAVED.toString());
 				menuRepository.save(menu);
 
-				if (selectedMenuCategories != null) {
-					updateListSelectedCategory(selectedMenuCategories, dishes);
-				}
-
-				if (selectedMenuFoods != null) {
-					updateListSelectedFoods(selectedMenuFoods, dishes);
-				}
 
 				for (DishDTO dishDTO : dishes) {
-					System.out.println("Am Intrat in Paine");
 					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
 
 					System.out.println("Lista de mancarruri: " + dishDTO.getId());
@@ -174,7 +214,7 @@ public class MenuController {
 				//session.setAttribute("menuViewModel", new MenuViewModel());
 			}
 
-			return "views/viewMenuView";
+			return "redirect:/viewMenuView";
 		}
 		}
 
@@ -182,9 +222,22 @@ public class MenuController {
 		return "views/menuView";
 	}
 
+	private List<Category> getAllCategoriesFromMenu(List<DishDTO> dishesDTO) {
+		
+		List<Category> categoriesFromMenu = new ArrayList<>();
+		
+		for (DishDTO dishDTO : dishesDTO) {
+			for (CategoryDTO categoryDTO : dishDTO.getCategories()) {
+				if (categoryDTO.getSelected()) {
+					categoriesFromMenu.add(categoryDTO.getCategory());
+				}
+			}
+		}
+		
+		return categoriesFromMenu;
+	}
+
 	private Boolean canSave(String menuDate, String state, String existingDate) {
-		System.out.println("Data in canSave" + menuDate + "pana aici");
-		System.out.println(state);
 		if (menuDate.isEmpty()) {
 			return false;
 		}
@@ -232,7 +285,7 @@ public class MenuController {
 		List<Menu> menuList = getAllMenusFromTable();
 
 		for (Menu menu : menuList) {
-			if (menu.getData().equals(menuDate)) {
+			if (menu.getDate().equals(menuDate)) {
 				return true;
 			}
 		}
@@ -255,21 +308,17 @@ public class MenuController {
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
 		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
-
 		for (Category category : listOfCategories) {
 			listOfCategoriesDTO.add(new CategoryDTO(category, false));
 		}
-
 		return listOfCategoriesDTO;
 	}
 
 	private List<FoodDTO> createAllFoodsDTO(List<Food> listOfFoods) {
 		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
-
 		for (Food food : listOfFoods) {
 			listOfFoodsDTO.add(new FoodDTO(food, false));
 		}
-
 		return listOfFoodsDTO;
 	}
 
@@ -339,5 +388,15 @@ public class MenuController {
 			index++;
 			dishDTO.setFoods(listFood);
 		}
+	}
+	
+	private boolean isValid(List<Category> values) {
+		for (int i = 0; i < values.size() - 1; i++) {
+			for (int j = i + 1; j < values.size(); j++) {
+				if (values.get(i).getName().equals(values.get(j).getName()))
+					return false;
+			}
+		}
+		return true;
 	}
 }

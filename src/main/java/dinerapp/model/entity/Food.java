@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,46 +34,79 @@ public class Food
 	private double price;
 	
 	@ManyToMany(mappedBy = "foods")
-	private List<Dish> dishes = new ArrayList<>();
-
+	private List<Dish> dishes;
+	
+	@OneToMany(mappedBy="foodd")
+	private List<OrderQuantity> foodss;
+	
 	public Food() {
 		super();
+		this.dishes = new ArrayList<>();
+		this.foodss = new ArrayList<>();
 	}
+
+	public Food(String name, String ingredients, int weight, double price) {
+		super();
+		this.name = name;
+		this.ingredients = ingredients;
+		this.weight = weight;
+		this.price = price;
+	}
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getIngredients() {
 		return ingredients;
 	}
+
 	public void setIngredients(String ingredients) {
 		this.ingredients = ingredients;
 	}
+
 	public int getWeight() {
 		return weight;
 	}
+
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+
 	public double getPrice() {
 		return price;
 	}
+
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
 	public List<Dish> getDishes() {
 		return dishes;
 	}
+
 	public void setDishes(List<Dish> dishes) {
 		this.dishes = dishes;
+	}
+
+	public List<OrderQuantity> getFoodss() {
+		return foodss;
+	}
+
+	public void setFoodss(List<OrderQuantity> foodss) {
+		this.foodss = foodss;
 	}
 
 	@Override

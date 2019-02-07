@@ -1,32 +1,35 @@
 package dinerapp.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="role")
-public class RoleCantina 
-{
+@Table(name="order_quantity")
+public class OrderQuantity {
+
 	@Id
-	@Column(name="id_role")
+	@Column(name="id_quantity")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name="role_name")
-	private String name;
+	@ManyToOne
+	@JoinColumn(name = "id_order", nullable = false)
+	private Order order;
 	
-	@ManyToMany(mappedBy="roles")
-	private List<UserCantina> users = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "id_food", nullable = false)
+	private Food foodd;
+	
+	@Column(name="quantity")
+	private Integer quantity;
 
-	public RoleCantina() {
+	public OrderQuantity() {
 		super();
 	}
 
@@ -38,20 +41,28 @@ public class RoleCantina
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
-	public List<UserCantina> getUsers() {
-		return users;
+	public Food getFoodd() {
+		return foodd;
 	}
 
-	public void setUsers(List<UserCantina> users) {
-		this.users = users;
+	public void setFoodd(Food foodd) {
+		this.foodd = foodd;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	@Override
@@ -70,7 +81,7 @@ public class RoleCantina
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RoleCantina other = (RoleCantina) obj;
+		OrderQuantity other = (OrderQuantity) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -81,6 +92,6 @@ public class RoleCantina
 
 	@Override
 	public String toString() {
-		return "Role [" + id + ", " + name + ", " + users + "]";
+		return "OrderQuantity [" + id + ", " + order + ", " + foodd + ", " + quantity + "]";
 	}
 }

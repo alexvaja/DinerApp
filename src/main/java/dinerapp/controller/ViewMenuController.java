@@ -10,11 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dinerapp.constants.MenuStates;
+import dinerapp.exceptions.NewSessionException;
+import dinerapp.model.EditMenuViewModel;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
@@ -41,24 +45,68 @@ public class ViewMenuController {
 	MenuRepository menuRepository;
 	@Autowired
 	DishRepository dishRepository;
+	
+	@ExceptionHandler({ NewSessionException.class })
+	public String sessionError() {
+		System.out.println("incercare de acces nepermis");
+		return "views/loginView";
+	}
 
 	@GetMapping("/viewMenuView")
-	public String getAllMenus() {
+	public String getAllMenus(Model model, HttpSession session) throws NewSessionException {
+		
+		if (session.isNew()) {
+			throw new NewSessionException();			
+		}
+		
+		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
+		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
+		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
+			System.out.println("am intrat in fff");
+			for (Menu menu : listOfMenusFromTable) {
+				if (menu.getState().equals(MenuStates.SAVED.toString())) {
+					listOfUnpublishedMenus.add(menu);
+				}
+			}
+		editMenuViewModel.setMenus(listOfUnpublishedMenus);
+		
+		model.addAttribute("editMenuViewModel", editMenuViewModel);
 		return "views/viewMenuView";
 	}
 
 	@PostMapping("/viewMenuView")
-	public String setAllMenus(HttpSession session, @RequestParam("submit") String reqParam, Model model) {
+	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
+		
+		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
+		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
+		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
+		
+		for (Menu menu : listOfMenusFromTable) {
+			if (menu.getState().equals(MenuStates.SAVED.toString())) {
+				listOfUnpublishedMenus.add(menu);
+			}
+		}
+		
+		editMenuViewModel.setMenus(listOfUnpublishedMenus);
+		String idMenu = null;
+		
+		for(String key : params.keySet()) {
+			idMenu = key;
+		}
+		
+		String reqParam = params.getFirst(idMenu);
 
 		switch (reqParam) {
 		case "Edit": {
 			LOGGER.info("ViewMenuController - Edit case");
 			
 			List<DishDTO> dishes = new ArrayList<>();
-			List<Menu> listOfMenus = getAllMenusFromTable();
+			//List<Menu> listOfMenus = getAllMenusFromTable();
 
 			// de inlocuit
-			Menu menu = listOfMenus.get(listOfMenus.size() - 1);
+			//Menu menu = listOfMenus.get(Integer.parseInt(idMenu));
+			//Menu menu = listOfUnpublishedMenus.get(Integer.parseInt(idMenu));
+			Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
 			
 			for (Dish dish : menu.getDishes()) {
 				DishDTO dishDTO = new DishDTO();
@@ -95,16 +143,16 @@ public class ViewMenuController {
 
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setId(menu.getId());
-			menuDTO.setDate(menu.getData());
+			menuDTO.setDate(menu.getDate());
 			menuDTO.setState(menu.getState());
 			System.out.println("Menu State in db: " + menuDTO.getState());
 			menuDTO.setTitle(menu.getTitle());
-			menuViewModel.setMenu(menuDTO);
+			menuViewModel.setMenuDTO(menuDTO);
 			
 			
 			//menuViewModel.setDate(menu.getData());
 			//menuViewModel.setTitle(menu.getTitle());
-			menuViewModel.setDishes(dishes);
+			menuViewModel.setDishesDTO(dishes);
 			//menuViewModel.setState(menu.getState());
 
 			session.setAttribute("menuViewModel", menuViewModel);
@@ -112,12 +160,18 @@ public class ViewMenuController {
 			return "views/menuView";
 		}
 		case "Publish":
-			List<Menu> listOfMenus = getAllMenusFromTable();
-			Menu menu = listOfMenus.get(listOfMenus.size() - 1);
-			menu.setState(MenuStates.PUBLISHED.toString());
-			menuRepository.save(menu);
+			//List<Menu> listOfMenus = getAllMenusFromTable();
+			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
+			if (!editMenuViewModel.getMenus().isEmpty()) {
+				Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
+				editMenuViewModel.getMenus().remove(menu);
+				menu.setState(MenuStates.PUBLISHED.toString());
+				menuRepository.save(menu);	
+			}			
 			break;
 		}
+
+		model.addAttribute("editMenuViewModel", editMenuViewModel);
 
 		return "views/viewMenuView";
 	}

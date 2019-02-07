@@ -1,46 +1,31 @@
 package dinerapp.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="category")
-public class Category 
+@Table(name="role")
+public class Role 
 {
 	@Id
-	@Column(name="id_category")
+	@Column(name="id_role")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name="category_name")
+	@Column(name="role_name")
 	private String name;
 	
-	@Column(name="category_price")
-	private Double price;
-	
-	@OneToMany(mappedBy = "category")
-	private List<Dish> dishes;
+//	@ManyToMany(mappedBy="roles")
+//	private List<UserDiner> users;
 
-	public Category() {
+	public Role() {
 		super();
-		this.dishes = new ArrayList<>();
-	}	
-
-	public Category(Integer id, String name, Double price) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.price = price;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -55,22 +40,6 @@ public class Category
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public List<Dish> getDishes() {
-		return dishes;
-	}
-
-	public void setDishes(List<Dish> dishes) {
-		this.dishes = dishes;
 	}
 
 	@Override
@@ -89,7 +58,7 @@ public class Category
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Role other = (Role) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -100,6 +69,6 @@ public class Category
 
 	@Override
 	public String toString() {
-		return "Category [" + id + ", " + name + ", " + price + "]";
+		return "Role [" + id + ", " + name + "]";
 	}
 }

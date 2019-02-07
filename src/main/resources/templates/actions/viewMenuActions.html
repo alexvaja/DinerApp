@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css//override.css" />
+<link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css/override.css" />
 <div>
-	<form action="#" th:action="@{/viewMenuView}" th:object="${session.menuViewModel}" method="post">
+	<form action="#" th:action="@{/viewMenuView}" th:object="${editMenuViewModel}" method="post">
 		<div>
-			<h1>Meniu</h1>
+			<h1> Meniu </h1>
 			
-			<input name="submit" type="submit" th:value="Edit"/>
-			<input name="submit" type="submit" th:value="Publish"/>
-			
+			<table class = "table tcolor table-bordered">
+				<thead class = "thead thead-dark">
+					<tr>
+						<th> NUME MENIU </th>
+						<th> DATA MENIU </th>
+						<th> COLOANA </th>
+					</tr>
+				</thead>
+				
+				<tbody th:if="${not #lists.isEmpty(editMenuViewModel.menus)}">
+					<tr th:each="menuItem, iter : *{menus}">
+						<td th:text="${menuItem.id}"></td>
+						<td th:text="${menuItem.title}"></td>
+						<td th:text="${menuItem.date}"></td>
+						<td>
+							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Edit"/>
+							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Publish"/>
+						</td>
+					</tr>
+				</tbody>
+				
+				<tbody th:if="${#lists.isEmpty(editMenuViewModel.menus)}">
+					<tr>
+						<td colspan="4">Nu exista nimic de afisat</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</form>
 </div>
