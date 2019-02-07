@@ -1,0 +1,23 @@
+version: '3'
+
+services: 
+  docker-mysql:
+    image: atos/custom-mysql-img
+    container_name: dinerapp-prod
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=dinerapp
+  spring-boot-jpa-docker-webapp:
+    image: atos/dinnerapp
+    depends_on:
+      - docker-mysql
+    ports:
+      - 5432:8080
+    environment:
+      - DATABASE_HOST=docker-mysql
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=dinerapp
+      - DATABASE_PORT=3307
