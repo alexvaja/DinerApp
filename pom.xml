@@ -107,19 +107,21 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.5</version>
-				<configuration>
-					<images>
-						<image>
-							<name>dinerapp-springboot-img</name>
-							<dockerFileDir>${project.basedir}/docker</dockerFileDir>
-						</image>
-					</images>
-				</configuration>
-			</plugin>
-		</plugins>
+  <groupId>com.spotify</groupId>
+  <artifactId>dockerfile-maven-plugin</artifactId>
+  <version>1.4.10</version>
+  <executions>
+    <execution>
+      <id>default</id>
+      <goals>
+        <goal>build</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <repository>dinerapp-img</repository>
+        </configuration>
+</plugin>		</plugins>
 	</build>
 
 	<repositories>
