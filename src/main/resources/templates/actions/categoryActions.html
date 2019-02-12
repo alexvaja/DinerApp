@@ -8,7 +8,7 @@
 <body>
 <body>
 	<h1>Category Table</h1>
-	<form action="#" th:object="${category}" th:action="@{/categoryView}" method="post">
+	<form action="#" th:object="${newCategoryDTO}" th:action="@{/categoryView}" method="post">
 		<div class = "form-group">
 			<div th:if="${addCategoryIsAvailable == True}">
 				<div>
