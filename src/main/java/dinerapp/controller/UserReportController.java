@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +77,19 @@ public class UserReportController {
 		
 		UserReportViewModel userReportViewModel = new UserReportViewModel();
 		userReportViewModel.setDate(getTodayDate());
-		userReportViewModel.setListOfFoods(getListOrdersDTOForDate(userReportViewModel.getDate()));
+		
+		List<OrderDTO> ordersDTO = new ArrayList<>(); 
+		ordersDTO.addAll(getListOrdersDTOForDate(userReportViewModel.getDate()));
+		
+		Collections.sort(ordersDTO, new Comparator<OrderDTO>(){
+			   @Override
+			   public int compare(OrderDTO leftOrder, OrderDTO rightOrder) {
+				   System.out.println(leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName()));
+				   return leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName());				   
+			   }
+			 });
+		
+		userReportViewModel.setListOfFoods(ordersDTO);
 
 		session.setAttribute("userReportViewModel", userReportViewModel);
 
@@ -87,6 +101,8 @@ public class UserReportController {
 														@RequestParam(value = "submit", required = false) String reqParam,
 														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException, InternalServerException {
 		LOGGER.info("Am intrat pe POST");
+		
+		
 		
 		switch (reqParam) {
 		case "Submit": {
@@ -105,7 +121,23 @@ public class UserReportController {
 					}
 				}	
 				
-				userReportViewModel.setListOfFoods(getListOrdersDTOForDate(userReportViewModel.getDate()));
+				
+				
+				
+				List<OrderDTO> ordersDTO = new ArrayList<>(); 
+				ordersDTO.addAll(getListOrdersDTOForDate(userReportViewModel.getDate()));
+				
+				Collections.sort(ordersDTO, new Comparator<OrderDTO>(){
+					   @Override
+					   public int compare(OrderDTO leftOrder, OrderDTO rightOrder) {
+						  // System.out.println(leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName()));
+						   return leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName());				   
+					   }
+					 });
+				
+				userReportViewModel.setListOfFoods(ordersDTO);
+				
+				//userReportViewModel.setListOfFoods(getListOrdersDTOForDate(userReportViewModel.getDate()));
 			}
 			
 			break;
