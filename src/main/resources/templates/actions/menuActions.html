@@ -38,7 +38,6 @@
 								<table class = "table tcolor table-bordered">
 									<thead class = "thead thead-dark">
 										<tr>
-											<th scope = "col">ID</th>
 											<th scope = "col">NUME</th>
 											<th scope = "col">INGREDIENTE</th>
 											<th scope = "col">GREUTATE</th>
@@ -48,7 +47,6 @@
 									</thead>
 									<tbody>
 										<tr th:each="foodItem, iter : ${dish.foods}">
-											<td class="text-center" th:text="${foodItem.food.id}"></td>
 											<td class="text-center" th:text="${foodItem.food.name}"></td>
 											<td class="text-center" th:text="${foodItem.food.ingredients}"></td>
 											<td class="text-center" th:text="${foodItem.food.weight}"></td>
