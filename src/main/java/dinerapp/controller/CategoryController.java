@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itextpdf.text.log.SysoCounter;
+
 import dinerapp.exceptions.NewSessionException;
+import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.CategoryViewModel;
+import dinerapp.model.dto.NewCategoryDTO;
 import dinerapp.model.entity.Category;
 import dinerapp.repository.CategoryRepository;
 
@@ -34,10 +38,18 @@ public class CategoryController {
 		System.out.println("incercare de acces nepermis");
 		return "views/loginView";
 	}
+	
+	@ExceptionHandler({ WrongInputDataException.class })
+	public String inputDataError() {
+		System.out.println("date de intrare gresite");
+		return "redirect:categoryView";
+	}
 
 	@GetMapping("/categoryView")
 	public String getAllCateogires(Model model, HttpSession session) throws NewSessionException {
-
+		
+		LOGGER.info("getAllCategories");
+		
 		if (session.isNew()) {
 			throw new NewSessionException();			
 		}
@@ -52,26 +64,44 @@ public class CategoryController {
 	}
 
 	@PostMapping("/categoryView")
-	public String setAllCategories(Model model, @ModelAttribute Category category,
-												@RequestParam("submit") String reqParam) {
-		LOGGER.info("setAllCategories");
+	public String setAllCategories(Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
+												@RequestParam("submit") String reqParam) throws WrongInputDataException {
+		LOGGER.info("postAllCategories");
 
 		Boolean addCategoryIsAvailable = false;
 		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
-		model.addAttribute("category", new Category());
-		LOGGER.info(category.toString());
+		model.addAttribute("newCategoryDTO", new NewCategoryDTO());
+		LOGGER.info(newCategoryDTO.toString());
 		LOGGER.info(reqParam);
+		
 		switch (reqParam) {
 		case "Adauga":
 			addCategoryIsAvailable = true;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			break;
 		case "Salveaza":
+
+			Category category = new Category();
+			
+			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty()) {
+				System.out.println("Datele nu sunt bune 1");
+				throw new WrongInputDataException();
+			} else {
+		        try {
+					category.setName(newCategoryDTO.getName());
+					category.setPrice(Double.parseDouble(newCategoryDTO.getPrice()));
+					System.out.println("Datele sunt bune ");
+		        } catch (NumberFormatException e) {
+					System.out.println("Datele nu sunt bune 2");
+		            throw new WrongInputDataException();
+		        }
+			}
 			categoryRepository.save(category);
 			addCategoryIsAvailable = false;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
+			
 			break;
 		case "Anuleaza":
 			addCategoryIsAvailable = false;
