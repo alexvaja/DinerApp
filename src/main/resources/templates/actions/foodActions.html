@@ -7,8 +7,7 @@
 <body>
 	<h1>Mancare</h1>
 	<div>
-		<form th:object="${food}" action="#" th:action="@{/foodView}"
-			method="post">
+		<form th:object="${food}" action="#" th:action="@{/foodView}" method="post">
 			<div class = "form-group">
 				<div th:if="${addFoodIsAvailable == true }">
 					<div>
@@ -35,16 +34,21 @@
 							<input type="text" th:field="*{price}" size="40" maxlength="4" />
 						</div>
 					</div>
+					<br>
+					<div>
+						<input class="btn btn-primary" name="submit" type="submit" th:value="Save" /> 
+						<input class="btn btn-primary" name="submit" type="submit" th:value="Cancel" />
+					</div>
 				</div>
 			</div>
 			<br>
-			<div>
-				<input class="btn btn-primary" name="submit" type="submit" th:value="Adauga" /> 
-				<input class="btn btn-primary" name="submit" type="submit" th:value="Salveaza" /> 
-				<input class="btn btn-primary" name="submit" type="submit" th:value="Anuleaza" />
+
+			<div th:if="${addFoodIsAvailable == false }">
+				<input class="btn btn-primary" name="submit" type="submit" th:value="Add" />
 			</div>
+			
 			<br>
-			<br>
+			
 			<div>
 				<table class="table tcolor table-bordered">
 					<thead class="thead">

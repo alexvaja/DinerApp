@@ -43,9 +43,12 @@ public class FoodControler {
 		}
 		
 		LOGGER.info("getAllFoods");
-		final FoodViewModel foodViewModel = new FoodViewModel();
+		FoodViewModel foodViewModel = new FoodViewModel();
 		foodViewModel.setFoodItems(getListOfFood());
 		model.addAttribute("foodViewModel", foodViewModel);
+		
+		Boolean addFoodIsAvailable = false;
+		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		return "views/foodView";
 	}
 
@@ -75,6 +78,7 @@ public class FoodControler {
 			break;
 		case "Anuleaza":
 			addFoodIsAvailable = false;
+			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			LOGGER.info(addFoodIsAvailable.toString());
 			break;
 		}

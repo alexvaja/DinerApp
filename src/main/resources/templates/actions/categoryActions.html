@@ -23,16 +23,21 @@
 						<input type="text" th:field="*{price}" maxlength="27" size="40" />
 					</div>
 				</div>
+				<br>
+				<div>
+					<input class="btn btn-primary" name="submit" type="submit" th:value="Cancel" /> 
+					<input class="btn btn-primary" name="submit" type="submit" th:value="Save" /> 
+				</div>
 			</div>
-			<div th:if="${addCategoryIsAvailable == False}">
-			</div>
-		</div>
 
-		<input class="btn btn-primary" name="submit" type="submit" th:value="Adauga" /> 
-		<input class="btn btn-primary" name="submit" type="submit" th:value="Anuleaza" /> 
-		<input class="btn btn-primary" name="submit" type="submit" th:value="Salveaza" /> 
+		</div>
+		
+		<div th:if="${addCategoryIsAvailable == False}">
+			<input class="btn btn-primary" name="submit" type="submit" th:value="Add" /> 
+		</div>
 		
 		<br> <br> <br>
+		
 		<div>
 			<table class="table tcolor table-bordered">
 				<thead class="thead thead-dark">

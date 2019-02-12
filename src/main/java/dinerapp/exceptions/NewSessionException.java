@@ -1,6 +1,6 @@
 package dinerapp.exceptions;
 
-public class NewSessionException extends Exception{
+public class NewSessionException extends Exception {
 
 	private static final long serialVersionUID = 5528307312621947629L;
 
@@ -28,5 +28,4 @@ public class NewSessionException extends Exception{
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-
 } 
