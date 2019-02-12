@@ -45,6 +45,9 @@ public class CategoryController {
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 		// model.addAttribute("category", new Category());
 		LOGGER.info(getListOfCategory().toString());
+		
+		Boolean addCategoryIsAvailable = false;
+		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 		return "views/categoryView";
 	}
 
