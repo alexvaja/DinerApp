@@ -69,7 +69,7 @@ public class FoodControler {
 		Boolean addFoodIsAvailable = true;
 		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
-		model.addAttribute("food", new Food());
+		model.addAttribute("newFoodDTO", new NewFoodDTO());
 		LOGGER.info(newFoodDTO.toString());
 		
 		switch (reqParam) {
