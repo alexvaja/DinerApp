@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
+import dinerapp.exceptions.InternalServerException;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.model.UserReportViewModel;
 import dinerapp.model.dto.OrderDTO;
@@ -45,12 +48,24 @@ public class UserReportController {
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
 		System.out.println("incercare de acces nepermis");
+		
+        //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
+		return "views/loginView";
+	}
+	
+	@ExceptionHandler({ InternalServerException.class })
+	public String sessionServerError() {
+		System.out.println("internal server status");
+		
+        //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
 		return "views/loginView";
 	}
 
+
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String openNextWeekReportView(Model model, HttpSession session) throws ParseException, NewSessionException {
+	public String openNextWeekReportView(Model model, HttpSession session, 
+													  HttpServletRequest httpRequest) throws ParseException, NewSessionException, InternalServerException {
 		
 		if (session.isNew()) {
 			throw new NewSessionException();			
@@ -68,9 +83,9 @@ public class UserReportController {
 	}
 
 	@PostMapping("/userReportView")
-	public String openNextWeekReportyyView(Model model, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
+	public String openNextWeekReportyyView(Model model, HttpStatus status, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
 														@RequestParam(value = "submit", required = false) String reqParam,
-														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException {
+														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException, InternalServerException {
 		LOGGER.info("Am intrat pe POST");
 		
 		switch (reqParam) {
@@ -192,15 +207,15 @@ public class UserReportController {
 		return sdf.format(calendar.getTime());
 	}
 
-//	private void updateDB() {
-//		
-//		List<Order> order = getAllOrderFromTable();
-//		for (Order o : order) {
-//			Order newO = o;
-//			newO.setTaken(false);
-//			newO.setDate(getTodayDate());
-//			orderRepository.save(newO);
-//		}
-//	}	
+	private void updateDB() {
+		
+		List<Order> order = getAllOrderFromTable();
+		for (Order o : order) {
+			Order newO = o;
+			newO.setTaken(false);
+			newO.setDate(getTodayDate());
+			orderRepository.save(newO);
+		}
+	}	
 
 }
