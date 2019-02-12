@@ -48,12 +48,12 @@
 									</thead>
 									<tbody>
 										<tr th:each="foodItem, iter : ${dish.foods}">
-											<td th:text="${foodItem.food.id}"></td>
-											<td th:text="${foodItem.food.name}"></td>
-											<td th:text="${foodItem.food.ingredients}"></td>
-											<td th:text="${foodItem.food.weight}"></td>
-											<td th:text="${foodItem.food.price}"></td>
-											<td>
+											<td class="text-center" th:text="${foodItem.food.id}"></td>
+											<td class="text-center" th:text="${foodItem.food.name}"></td>
+											<td class="text-center" th:text="${foodItem.food.ingredients}"></td>
+											<td class="text-center" th:text="${foodItem.food.weight}"></td>
+											<td class="text-center" th:text="${foodItem.food.price}"></td>
+											<td class = "text-center">
 											<input class = "form-check-input" name="checkbox_list" type="checkbox"
 											th:value="${iter.index}" th:checked="${foodItem.selected}" />
 											</td>

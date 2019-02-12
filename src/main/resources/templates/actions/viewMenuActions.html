@@ -17,9 +17,9 @@
 				
 				<tbody th:if="${not #lists.isEmpty(editMenuViewModel.menus)}">
 					<tr th:each="menuItem, iter : *{menus}">
-						<td th:text="${menuItem.id}"></td>
-						<td th:text="${menuItem.title}"></td>
-						<td th:text="${menuItem.date}"></td>
+						<td class="text-center" th:text="${menuItem.id}"></td>
+						<td class="text-center" th:text="${menuItem.title}"></td>
+						<td class="text-center" th:text="${menuItem.date}"></td>
 						<td>
 							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Edit"/>
 							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Publish"/>

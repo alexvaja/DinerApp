@@ -56,11 +56,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="food : ${foodViewModel.foodItems}">
-							<td th:text="${food.name}">...</td>
-							<td th:text="${food.ingredients}">...</td>
-							<td th:text="${food.weight}">...</td>
-							<td th:text="${food.price}">...</td>
+						<tr th:each="food :
+						 ${foodViewModel.foodItems}">
+							<td class="text-center" th:text="${food.name}">...</td>
+							<td class="text-center" th:text="${food.ingredients}">...</td>
+							<td class="text-center" th:text="${food.weight}">...</td>
+							<td class="text-center" th:text="${food.price}">...</td>
 						</tr>
 					</tbody>
 				</table>
