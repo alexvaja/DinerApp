@@ -9,17 +9,17 @@
 			<table class = "table tcolor table-bordered">
 				<thead class = "thead thead-dark">
 					<tr>
-						<th> NUME MENIU </th>
-						<th> DATA MENIU </th>
-						<th> COLOANA </th>
+						<th class="text-center"> NUME MENIU </th>
+						<th class="text-center"> DATA MENIU </th>
+						<th class="text-center"> COLOANA </th>
 					</tr>
 				</thead>
 				
 				<tbody th:if="${not #lists.isEmpty(editMenuViewModel.menus)}">
 					<tr th:each="menuItem, iter : *{menus}">
-						<td th:text="${menuItem.id}"></td>
-						<td th:text="${menuItem.title}"></td>
-						<td th:text="${menuItem.date}"></td>
+						<td class="text-center" th:text="${menuItem.id}"></td>
+						<td class="text-center" th:text="${menuItem.title}"></td>
+						<td class="text-center" th:text="${menuItem.date}"></td>
 						<td>
 							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Edit"/>
 							<input class="btn btn-primary" th:name="${iter.index}" type="submit" th:value="Publish"/>
