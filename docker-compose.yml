@@ -16,8 +16,8 @@ services:
     ports:
       - 5432:8080
     environment:
-      - DATABASE_HOST=docker-mysql
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=root
-      - DATABASE_NAME=dinerapp
-      - DATABASE_PORT=3307
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql/dinerapp?verifyServerCertificate=false&useSSL=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    volumes:
+      - /home/centos/aplicatie-cantina/logs:/var/log/Application/
