@@ -7,8 +7,9 @@
 <body>
 	<h1>Mancare</h1>
 	<div>
-		<form th:object="${newFoodDTO}" action="#" th:action="@{/foodView}" method="post">
-			<div class = "form-group">
+		<form th:object="${newFoodDTO}" action="#" th:action="@{/foodView}"
+			method="post">
+			<div class="form-group">
 				<div th:if="${addFoodIsAvailable == true }">
 					<div>
 						<label for="foodName">Mancare:</label>
@@ -31,13 +32,15 @@
 					<div>
 						<label for="price">Pret:</label>
 						<div>
-							<input type="text" th:field="*{price}" size="40" maxlength="4" style="text-align:right"/>
+							<input type="text" th:field="*{price}" size="40" maxlength="4"
+								style="text-align: right" />
 						</div>
 					</div>
 					<br>
 					<div>
-						<input class="btn btn-primary" name="submit" type="submit" th:value="Salveaza" /> 
-						<input class="btn btn-primary" name="submit" type="submit" th:value="Anuleaza" />
+						<input class="btn btn-primary" name="submit" type="submit"
+							th:value="Salveaza" /> <input class="btn btn-primary"
+							name="submit" type="submit" th:value="Anuleaza" />
 					</div>
 				</div>
 			</div>
@@ -45,27 +48,29 @@
 
 			<div th:if="${addFoodIsAvailable == false }">
 				<input class="btn btn-primary" name="submit" type="submit" th:value="Adauga" />
+				<input class="btn btn-primary" name="submit" type="submit" th:value="Sterge" />
 			</div>
 			
 			<br>
-			
+
 			<div>
-				<table class="table tcolor table-bordered">
+				<table class="table tcolor table-bordered" id="datatable">
 					<thead class="thead">
 						<tr>
 							<td class="span2 text-center">Mancare</td>
 							<td class="span2 text-center">Ingrediente</td>
 							<td class="span2 text-center">Gramaj</td>
 							<td class="span2 text-center">Pret</td>
+							<td class="span2 text-center">Check</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="food :
-						 ${foodViewModel.foodItems}">
+						<tr th:each="food :${foodViewModel.foodItems}">
 							<td class="text-center" th:text="${food.name}">...</td>
 							<td class="text-center" th:text="${food.ingredients}">...</td>
 							<td class="text-center" th:text="${food.weight}">...</td>
 							<td class="text-center" th:text="${food.price}">...</td>
+							<td><input type="checkbox" name = "forDelete" th:value="${food.id}"></td>
 						</tr>
 					</tbody>
 				</table>

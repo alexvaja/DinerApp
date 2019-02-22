@@ -17,7 +17,6 @@
 				
 				<tbody th:if="${not #lists.isEmpty(editMenuViewModel.menus)}">
 					<tr th:each="menuItem, iter : *{menus}">
-						<td class="text-center" th:text="${menuItem.id}"></td>
 						<td class="text-center" th:text="${menuItem.title}"></td>
 						<td class="text-center" th:text="${menuItem.date}"></td>
 						<td>
