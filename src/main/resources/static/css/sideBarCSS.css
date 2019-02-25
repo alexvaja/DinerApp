@@ -54,6 +54,6 @@ a.subMenuHover:hover, a.subMenuHover:active {
 .leftBar {
 	position: fixed;
 	z-index: 1;
-	overflow-x: hidden;
+	overflow-x: visible !important;
 	width: 200px;
 }

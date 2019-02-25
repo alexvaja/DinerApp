@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -20,17 +21,23 @@ import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.FoodViewModel;
 import dinerapp.model.dto.NewFoodDTO;
+import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Food;
+import dinerapp.model.entity.Menu;
 import dinerapp.repository.FoodRepository;
+import dinerapp.repository.MenuRepository;
 
 @Controller
 public class FoodControler {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private FoodRepository foodRepo;
-	
+
+	@Autowired
+	MenuRepository menuRepository;
+
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
 		System.out.println("incercare de acces nepermis");
@@ -42,19 +49,19 @@ public class FoodControler {
 		System.out.println("date de intrare gresite");
 		return "redirect:foodView";
 	}
-	
+
 	@GetMapping("/foodView")
 	public String getAllFoods(Model model, HttpSession session) throws NewSessionException {
-		
+
 		if (session.isNew()) {
-			throw new NewSessionException();			
+			throw new NewSessionException();
 		}
-		
+
 		LOGGER.info("getAllFoods");
 		FoodViewModel foodViewModel = new FoodViewModel();
 		foodViewModel.setFoodItems(getListOfFood());
 		model.addAttribute("foodViewModel", foodViewModel);
-		
+
 		Boolean addFoodIsAvailable = false;
 		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		return "views/foodView";
@@ -62,48 +69,85 @@ public class FoodControler {
 
 	@PostMapping("/foodView")
 	public String openFoodView(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
-											@RequestParam("submit") String reqParam) throws WrongInputDataException {
-		
-		LOGGER.info("am intrat in mancare2");
+			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
+			@RequestParam("submit") String reqParam) throws WrongInputDataException {
+		LOGGER.info(foodsIdForDelete + " ");
+
 		LOGGER.info(reqParam);
-		Boolean addFoodIsAvailable = true;
+		Boolean addFoodIsAvailable = false;
 		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
 		model.addAttribute("newFoodDTO", new NewFoodDTO());
 		LOGGER.info(newFoodDTO.toString());
-		
+
 		switch (reqParam) {
 		case "Adauga":
 			addFoodIsAvailable = true;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			LOGGER.info(addFoodIsAvailable.toString());
 			break;
+
 		case "Salveaza":
 			LOGGER.info(addFoodIsAvailable.toString());
 			Food food = new Food();
-			
-			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty() || newFoodDTO.getPrice().isEmpty() || newFoodDTO.getWeight().isEmpty()) {
+
+			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
+					|| newFoodDTO.getPrice().isEmpty() || newFoodDTO.getWeight().isEmpty()) {
 				throw new WrongInputDataException();
 			} else {
-		        try {
+				try {
 					food.setName(newFoodDTO.getName());
 					food.setIngredients(newFoodDTO.getIngredients());
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
-		        } catch (NumberFormatException e) {
-		            throw new WrongInputDataException();
-		        }
-			}	
-			
+				} catch (NumberFormatException e) {
+					throw new WrongInputDataException();
+				}
+			}
+
 			foodRepo.save(food);
 			addFoodIsAvailable = false;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
 			break;
+
 		case "Anuleaza":
 			addFoodIsAvailable = false;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 			LOGGER.info(addFoodIsAvailable.toString());
+			break;
+
+		case "Sterge":
+			addFoodIsAvailable = false;
+			if (foodsIdForDelete != null) {
+				List<String> foodIds = new ArrayList<>(Arrays.asList(foodsIdForDelete.split(",")));
+				Iterable<Menu> menuList = menuRepository.findAll();
+
+				for (String item : foodIds) {
+					int idInteger = Integer.parseInt(item);
+					boolean foodInMenu = false;
+					
+					for (Menu menu : menuList) {
+						for (Dish dish : menu.getDishes()) {
+							for (Food foodId : dish.getFoods()) {
+								if (foodId.getId() == idInteger)
+									foodInMenu = true;
+							}
+						}
+
+					}
+					if (foodInMenu == false) {
+						foodRepo.deleteById(idInteger);
+					} else {
+						continue;
+					}
+
+				}
+			} else {
+				break;
+			}
+			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
+			model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
 			break;
 		}
 		return "views/foodView";
@@ -117,4 +161,10 @@ public class FoodControler {
 		}
 		return searchedList;
 	}
+
 }
+
+// 2,4,7
+//{2} {4} {7}
+//doi --> 2
+//
