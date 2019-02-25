@@ -93,7 +93,7 @@ public class CategoryController {
 
 			Category category = new Category();
 
-			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty()) {
+			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() || Integer.parseInt(newCategoryDTO.getPrice()) < 0) {
 				System.out.println("Datele nu sunt bune 1");
 				throw new WrongInputDataException();
 			} else {

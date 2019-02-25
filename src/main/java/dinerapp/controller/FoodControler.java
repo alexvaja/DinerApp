@@ -92,12 +92,13 @@ public class FoodControler {
 			Food food = new Food();
 
 			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
-					|| newFoodDTO.getPrice().isEmpty() || newFoodDTO.getWeight().isEmpty()) {
+					|| newFoodDTO.getPrice().isEmpty() || Integer.parseInt(newFoodDTO.getPrice()) < 0 
+					|| newFoodDTO.getWeight().isEmpty() || Integer.parseInt(newFoodDTO.getWeight()) < 0) {
 				throw new WrongInputDataException();
 			} else {
 				try {
 					food.setName(newFoodDTO.getName());
-					food.setIngredients(newFoodDTO.getIngredients());
+					food.setIngredients(newFoodDTO.getIngredients());				
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
 				} catch (NumberFormatException e) {
