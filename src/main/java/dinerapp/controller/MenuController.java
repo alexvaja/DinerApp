@@ -108,17 +108,28 @@ public class MenuController {
 			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods)
 			throws DuplicateCategoryException, ParseException {
 
-		LOGGER.info("SET MENU");
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		System.out.println("MENU VIEW MODEL: " + menuViewModel);
+
 		switch (reqParam) {
+
 		case "Adauga Meniu": {
+
+	
 			LOGGER.info("Am intrat in AddMenu case");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+			
+//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//			Date currentDate = new Date();
+//			Date parsedDate = null;
+//			parsedDate = format.parse(menuDate);
+//
+//			long diff = currentDate.getTime() - parsedDate.getTime();
+//			long dayDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
 			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
@@ -128,20 +139,25 @@ public class MenuController {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
 
-			dishes.add(createDefaultDishesDTO());
+			
+//			if (dayDiff <= 0) {
+//				System.out.println(dayDiff + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
+//			}
+				dishes.add(createDefaultDishesDTO());
 
-			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setState(menuViewModel.getMenuDTO().getState());//
-			menuDTO.setId(menuViewModel.getMenuDTO().getId());
-			menuDTO.setDate(menuDate);
-			menuDTO.setTitle(menuTitle);
+				MenuDTO menuDTO = new MenuDTO();
+				menuDTO.setState(menuViewModel.getMenuDTO().getState());//
+				menuDTO.setId(menuViewModel.getMenuDTO().getId());
+				menuDTO.setDate(menuDate);
+				menuDTO.setTitle(menuTitle);
 
-			menuViewModel.setDishesDTO(dishes);
-			menuViewModel.setMenuDTO(menuDTO);
-			// menuViewModel.setTitle(menuTitle);
-			// menuViewModel.setDate(menuDate);
+				menuViewModel.setDishesDTO(dishes);
+				menuViewModel.setMenuDTO(menuDTO);
+				// menuViewModel.setTitle(menuTitle);
+				// menuViewModel.setDate(menuDate);
 
-			break;
+				break;
+			
 		}
 		case "Anuleaza": {
 //			isOlderThan30();
