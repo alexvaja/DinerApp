@@ -68,7 +68,7 @@ public class UserReportController {
 	@GetMapping("/userReportView")
 	public String openNextWeekReportView(Model model, HttpSession session, 
 													  HttpServletRequest httpRequest) throws ParseException, NewSessionException, InternalServerException {
-		
+
 		if (session.isNew()) {
 			throw new NewSessionException();			
 		}
