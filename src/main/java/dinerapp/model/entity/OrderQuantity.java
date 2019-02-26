@@ -33,6 +33,13 @@ public class OrderQuantity {
 		super();
 	}
 
+	public OrderQuantity(Order order, Food foodd, Integer quantity) {
+		super();
+		this.order = order;
+		this.foodd = foodd;
+		this.quantity = quantity;
+	}
+
 	public Integer getId() {
 		return id;
 	}
