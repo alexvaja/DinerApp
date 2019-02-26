@@ -1,10 +1,12 @@
 package dinerapp.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +18,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.itextpdf.text.log.SysoCounter;
 
+import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.CategoryViewModel;
 import dinerapp.model.FoodViewModel;
+import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.NewCategoryDTO;
 import dinerapp.model.entity.Category;
 import dinerapp.model.entity.Dish;
@@ -52,6 +57,12 @@ public class CategoryController {
 		System.out.println("date de intrare gresite");
 		return "redirect:categoryView";
 	}
+	
+	@ExceptionHandler({ DuplicateCategoryException.class })
+	public String duplicateError() {
+		System.out.println("categorii duplicate");
+		return "redirect:categoryView";
+	}
 
 	@GetMapping("/categoryView")
 	public String getAllCateogires(Model model, HttpSession session) throws NewSessionException {
@@ -62,6 +73,7 @@ public class CategoryController {
 			throw new NewSessionException();
 		}
 
+		model.addAttribute("errorMessage", false);
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 		// model.addAttribute("category", new Category());
 		LOGGER.info(getListOfCategory().toString());
@@ -70,13 +82,14 @@ public class CategoryController {
 		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 		return "views/categoryView";
 	}
-
+	
 	@PostMapping("/categoryView")
 	public String setAllCategories(Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
-			@RequestParam("submit") String reqParam,
-			@RequestParam(value = "delete", required = false) String delCategory) throws WrongInputDataException {
+												@RequestParam("submit") String reqParam,
+			@RequestParam(value = "delete", required = false) String delCategory) throws WrongInputDataException, DuplicateCategoryException, ParseException  {
 		LOGGER.info("postAllCategories");
 
+		model.addAttribute("errorMessage", false);
 		Boolean addCategoryIsAvailable = false;
 		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
@@ -91,6 +104,9 @@ public class CategoryController {
 			break;
 		case "Salveaza":
 
+			List<Category> c = getListOfCategory();
+			System.out.println("Lista de category: " + c);
+			
 			Category category = new Category();
 
 			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() || Integer.parseInt(newCategoryDTO.getPrice()) < 0) {
@@ -98,6 +114,17 @@ public class CategoryController {
 				throw new WrongInputDataException();
 			} else {
 				try {
+					Boolean errorMessage = false;
+					//nu pune categorii duplicate dar nu afiseaza pe pagina mesaj
+					if (!isValid(c, newCategoryDTO.getName())) {
+						errorMessage = true;
+						model.addAttribute("errorMessage", errorMessage);
+						throw new DuplicateCategoryException("mesaj");
+					} else {
+						errorMessage = false;
+						model.addAttribute("errorMessage", errorMessage);
+					}
+					
 					category.setName(newCategoryDTO.getName());
 					category.setPrice(Double.parseDouble(newCategoryDTO.getPrice()));
 					System.out.println("Datele sunt bune ");
@@ -157,4 +184,14 @@ public class CategoryController {
 		}
 		return searchedList;
 	}
+	
+	private boolean isValid(List<Category> values, String name) {
+		for (Category category : values) {
+			if (category.getName().equals(name)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }
