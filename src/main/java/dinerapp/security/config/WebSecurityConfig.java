@@ -48,6 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/sessionTimeoutView").authenticated();
 		http.authorizeRequests().antMatchers("/userReportView").authenticated();
 		http.authorizeRequests().antMatchers("/viewMenuView").authenticated();
+		http.authorizeRequests().antMatchers("/userReportView").authenticated();
+		http.authorizeRequests().antMatchers("/reportView").authenticated();
+		http.authorizeRequests().antMatchers("/index").authenticated();
+		
 		
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
@@ -66,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Submit URL of login page.
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
 				.loginPage("/login")//
-				.defaultSuccessUrl("/userAccountInfo")//
+				.defaultSuccessUrl("/index")//
 				.failureUrl("/login?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")
