@@ -24,50 +24,56 @@
 					<label for="Data">Data:</label>
 					<div class="input-group date" data-provide="datepicker">
 						<input type="date" name="menu_date" th:value="*{menuDTO.date}"
-							class="form-control" /> <label>Data trebuie trecuta
-							obligatoriu!</label>
+							class="form-control" /> <label>Data trebuie trecuta obligatoriu!</label>
 					</div>
+					
+					 <script>
+						var today = new Date().toISOString().split('T')[0];
+						document.getElementsByName("menu_date")[0].setAttribute('min', today);
+					</script>
+			
+					
 					<div>
-							<tr th:each="dish, dishIndex : *{dishesDTO}">
-								<td><br /> <label>Selecteaza Categoria: </label>
-									<div class="dropdown">
-										<select name="dropdown_list" class="form-control" id="sel1">
-											<option
-												th:each="categoryItem, categoryIndex : ${dish.categories}"
-												th:text="${categoryItem.category.name}"
-												th:value="${categoryIndex.index}"
-												th:selected="${categoryItem.selected}" />
-										</select>
-									</div> <br />
-									<div>
-										<table class="table tcolor table-bordered">
-											<thead class="thead thead-dark">
-												<tr>
-													<th scope="col">NUME</th>
-													<th scope="col">INGREDIENTE</th>
-													<th scope="col">GREUTATE</th>
-													<th scope="col">PRET</th>
-													<th scope="col">SELECTAT</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="foodItem, iter : ${dish.foods}">
-													<td class="text-center" th:text="${foodItem.food.name}"></td>
-													<td class="text-center"
-														th:text="${foodItem.food.ingredients}"></td>
-													<td class="text-center" th:text="${foodItem.food.weight}"></td>
-													<td class="text-center" th:text="${foodItem.food.price}"></td>
-													<td class="text-center">
-														<input class="form-check-input" name="checkbox_list"
-														type="checkbox" th:value="${iter.index}"
-														th:checked="${foodItem.selected}" /></td>
-												</tr>
-												<tr>
-													<td><input name="checkbox_list" type="hidden" th:value="-1" /></td>
-											</tbody>
-										</table>
-									</div>
-							</tr>
+						<tr th:each="dish, dishIndex : *{dishesDTO}">
+							<td><br /> <label>Selecteaza Categoria: </label>
+								<div class="dropdown">
+									<select name="dropdown_list" class="form-control" id="sel1">
+										<option
+											th:each="categoryItem, categoryIndex : ${dish.categories}"
+											th:text="${categoryItem.category.name}"
+											th:value="${categoryIndex.index}"
+											th:selected="${categoryItem.selected}" />
+									</select>
+								</div> <br />
+								<div>
+									<table class="table tcolor table-bordered">
+										<thead class="thead thead-dark">
+											<tr>
+												<th scope="col">NUME</th>
+												<th scope="col">INGREDIENTE</th>
+												<th scope="col">GREUTATE</th>
+												<th scope="col">PRET</th>
+												<th scope="col">SELECTAT</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="foodItem, iter : ${dish.foods}">
+												<td class="text-center" th:text="${foodItem.food.name}"></td>
+												<td class="text-center"
+													th:text="${foodItem.food.ingredients}"></td>
+												<td class="text-center" th:text="${foodItem.food.weight}"></td>
+												<td class="text-center" th:text="${foodItem.food.price}"></td>
+												<td class="text-center"><input class="form-check-input"
+													name="checkbox_list" type="checkbox"
+													th:value="${iter.index}" th:checked="${foodItem.selected}" /></td>
+											</tr>
+											<tr>
+												<td><input name="checkbox_list" type="hidden"
+													th:value="-1" /></td>
+										</tbody>
+									</table>
+								</div>
+						</tr>
 					</div>
 					<input class="btn btn-primary" name="submit" type="submit"
 						value="Adauga Meniu" /> <input class="btn btn-primary"

@@ -6,11 +6,12 @@
 	href="../../static/css/cssTemplate.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
-	<nav class ="leftBar">
+	<nav class="leftBar">
 		<section>
 			<div>
-				<img class="logo" src="../../resources/static/images/logo.png"
-					th:src="@{images/logo.png}" />
+				<a th:href="@{index}">
+					<img class="logo" src="../../resources/static/images/logo.png" th:src="@{images/logo.png}"/>
+				</a>
 			</div>
 		</section>
 		<br>
@@ -39,9 +40,8 @@
 			<div class="panel">
 
 				<a class="subMenu subMenuHover" href="/reportView.html"
-					th:href="@{/reportView}"> Raport pe zile </a> <br>
-
-				<a class="subMenu subMenuHover" href="/userReportView.html"
+					th:href="@{/reportView}"> Raport pe zile </a> <br> <a
+					class="subMenu subMenuHover" href="/userReportView.html"
 					th:href="@{/userReportView}"> Raport utilizatori </a>
 			</div>
 		</div>
