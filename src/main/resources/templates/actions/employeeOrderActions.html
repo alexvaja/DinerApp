@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css//override.css" />
+<link rel="stylesheet" th:href="@{/css/mainPage.css}" href="../../static/css/mainPage.css"/>
+<head></head>
+<body>
+	<form action="#" th:action="@{/employeeOrderView}"
+		th:object="${session.menuViewModel}" method="post">
+		<br />
+		<div th:if="${isMenuDatePicked == false}">
+			<table>
+				<tr>
+					<td><select class="btn btn-primary" name="pickedDate">
+							<option class="btn btn-primary"
+								th:each="date : ${allAvailableMenuDates}" th:text="${date}" />
+					</select></td>
+					<td><input class="btn btn-primary" type="submit" name="submit"
+						value="Alege data" /></td>
+				</tr>
+			</table>
+		</div>
+		<div th:if="${isMenuDatePicked == true}">
+			<table>
+				<tr>
+					<td>
+						<h1>Alegeti mancarea pentru data:&nbsp;</h1>
+					</td>
+					<td>
+						<h1 th:text="*{menuDTO.date}" name="data"></h1>
+					</td>
+				</tr>
+			</table>
+			<div id="dish" th:each="dish : *{dishesDTO}">
+				<div th:each="categ : ${dish.categories}">
+					<div id="uniqueID">
+						<hr>
+						<div class="name" th:text="${categ.category.name}"></div>
+						<div class="price" th:text="${categ.category.price} + ' lei'"></div> 
+						<input name="dishCheckbox" onclick="check(parentNode.id, this)" type="checkbox" th:value="${categ.category.id}" style="float: left;margin-left: 30%;">
+						<div class="checkboxText">&nbsp;Selecteaza meniul</div>
+						<hr>
+							<table class="table tcolor table-bordered">
+							<thead class="thead thead-dark">
+								<tr>
+									<th class="text-center" scope="col">NUME</th>
+									<th class="text-center" scope="col">INGREDIENTE</th>
+									<th class="text-center" scope="col">GRAMAJ</th>
+									<th class="text-center" scope="col">PRET</th>
+									<th class="text-center" scope="col">CANTITATE</th>
+								</tr>
+							</thead>
+							<tr th:each="foodObj : ${dish.foods}">
+								<th class="text-center" scope="col" th:text="${foodObj.food.name}"></th>
+								<th class="text-center" scope="col" th:text="${foodObj.food.ingredients}"></th>
+								<th class="text-center" scope="col" th:text="${foodObj.food.weight} + 'g'"></th>
+								<th class="text-center" scope="col" th:text="${foodObj.food.price} + ' lei'"></th>
+								<th scope="col"><input style="text-align: right" type="number" class="form-control" min="0" max="10" name="quantity" value="0" disabled /></th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div>
+				<input class="btn btn-primary" name="submit" type="submit"value="Submit"/> 
+				<input class="btn btn-primary" name="submit" type="reset" value="Reset"  onClick="reset();"/> 
+				<input class="btn btn-primary" name="submit" type="submit" value="Cancel"/>
+			</div>
+		</div>
+	</form>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+<script src="selectAll.js"></script>
+</html>
