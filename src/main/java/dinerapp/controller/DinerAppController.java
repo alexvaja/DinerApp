@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.annotation.SessionScope;
 
+import com.itextpdf.text.log.SysoCounter;
+
 import dinerapp.security.config.WebUtils;
 
 @Controller
@@ -47,6 +49,7 @@ public class DinerAppController {
 
 	@RequestMapping(value = { "/userAccountInfo" }, method = RequestMethod.GET)
 	public String userInfo(Model model, Principal principal) {
+		System.out.println("ACIUWSFS");
 		String userName = principal.getName();
 		System.out.println("User Name: " + userName);
 		User loginedUser = (User) ((Authentication) principal).getPrincipal();

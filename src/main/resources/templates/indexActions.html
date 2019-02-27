@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<div class="content">
+		<h2 class="texts">APLICATIE PENTRU GESTIUNEA COMENZILOR IN CANTINA ATOS CVC</h2>
+	</div>
+	<br><br>
+	
+	<form action="/index" th:actions="@{/index}" method="post">
+		<div th:if="${viewMenu == False}">
+			<table class="table tcolor table-bordered">
+				<thead class="thead">
+					<tr>
+						<td class="span2 text-center">NUME MENIU</td>
+						<td class="span2 text-center">DATA MENIU</td>
+						<td class="span2 text-center">VIZUALIZARE</td>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="menu : ${menusList}">
+						<td class="text-center" th:text="${menu.title}"></td>
+						<td class="text-center" th:text="${menu.date}"></td>
+						<td class="text-center"><input class="btn btn-primary" type="submit" th:name="${menu.id}" th:value="Vezi"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div th:if="${viewMenu == True}">
+			<div>
+				<label>Titlu:</label>
+				<label th:text="${searchedMenu.title}"></label>
+			</div>
+			
+			<div>
+				<label>Data:</label>
+				<label th:text="${searchedMenu.date}"></label>
+			</div>
+				
+			<hr>
+			
+			<div th:each="dish : ${searchedMenu.dishes}">
+			
+				<label>Categoria:</label>
+				<label th:text="${dish.category.name}"></label>
+				
+				<hr>
+			
+				<table class="table tcolor table-bordered">
+					<thead class="thead thead-dark">
+						<tr>
+							<th>NUME</th>
+							<th>INGREDIENTE</th>
+							<th>GRAMAJ</th>
+							<th>PRET</th>
+						</tr>
+					</thead>
+					<tr th:each="food : ${dish.foods}">
+						<td class="text-center" th:text="${food.name}"></td>
+						<td class="text-center" th:text="${food.ingredients}"></td>
+						<td class="text-center" th:text="${food.weight}"></td>
+						<td class="text-center" th:text="${food.price}"></td>
+					</tr>
+				</table>
+			</div>
+		
+			<input class="btn btn-primary" type="submit" th:name="submit" th:value="Inapoi"/>
+		</div>
+	</form>
+	
+</body>
+</html>
