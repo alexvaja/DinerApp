@@ -34,12 +34,14 @@ import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Menu;
 import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
+import dinerapp.model.entity.Role;
 import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.repository.OrderQuantityRepository;
 import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
+
 
 @Controller
 public class SelectionController {
@@ -54,17 +56,10 @@ public class SelectionController {
 	@Autowired
 	private FoodRepository foodRepository;
 
-	/**
-	 * @param session
-	 * @param model
-	 * @param nameFromURL
-	 * @return String
-	 * @throws ParseException
-	 */
 	@SessionScope
 	@GetMapping("/employeeOrderView")
 	public String getAllData(HttpSession session, Model model,
-			@RequestParam(value = "name", required = false) String nameFromURL) throws ParseException {
+			@RequestParam(value = "name", required = false) String nameFromURL) throws ParseException {	
 		// sets menuViewModel attribute on session
 		session.setAttribute("menuViewModel", new MenuViewModel());	
 		// adds an attribute to the model that tells if a menu date has been picked or not
@@ -74,6 +69,9 @@ public class SelectionController {
 			String username = convertHexToAscii(nameFromURL);
 			// finds the user with the name from URL
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(username));
+			if(!this.isUserEmployee(user.get())) {
+				return "views/notAuthorized";
+			}
 			// sets the name taken from URL into session
 			session.setAttribute("nameFromUrl", user.get());		
 			// updates the list of available menu dates for user
@@ -158,79 +156,9 @@ public class SelectionController {
 		}
 
 		return "views/employeeOrderView";
-	}
-
-	/**
-	 * @param dishes
-	 * @return List<DishDTO>
-	 * @action converts a list of dishes to a list of dishesDTO
-	 */
-	private List<DishDTO> convertDishesToDishesDTO(List<Dish> dishes) {
-		List<DishDTO> dishesDTO = new ArrayList<>();
-		// iterates through the list of dishes
-		for (Dish dish : dishes) {
-			DishDTO dishDTO = new DishDTO();
-			List<CategoryDTO> categoriesDTO = new ArrayList<>();
-			List<FoodDTO> foodsDTO = new ArrayList<>();
-			// gets the categoryDTO for current dish
-			CategoryDTO categoryDTO = new CategoryDTO(dish.getCategory(), false);
-			// adds the categoryDTO to the list of categoriesDTO
-			categoriesDTO.add(categoryDTO);
-			// iterates through the list of foods for current dish
-			for (Food food : dish.getFoods()) {
-				// gets the foodDTO for current food
-				FoodDTO foodDTO = new FoodDTO(food, false);
-				// adds the foodDTO to the list of foodsDTO
-				foodsDTO.add(foodDTO);
-			}
-			// sets the categories for dishDTO
-			dishDTO.setCategories(categoriesDTO);
-			// sets the foods for dshDTO
-			dishDTO.setFoods(foodsDTO);
-			// adds the dishDTO to the list of dishesDTO
-			dishesDTO.add(dishDTO);
-		}
-		return dishesDTO;
-	}
-
-	/**
-	 * @param foods
-	 * @param quantities
-	 * @return Map<String, String>
-	 * @action creates a map from two lists
-	 */
-	private Map<String, String> mergeTwoListsIntoMap(List<String> foods, List<String> quantities){
-		// creates and empty map
-		Map<String, String> foodQuantities = new HashMap<String, String>();
-		// iterates through foodQuantities map
-		for (int i = 0; i < foods.size(); i++) {
-			// tests if there are quantities with value 0
-			if(!quantities.get(i).equals("0")) {
-				// tests if current key doesn't exist
-				if (foodQuantities.get(foods.get(i)) == null) {
-					// adds a new entry into map
-					foodQuantities.put(foods.get(i), quantities.get(i));
-				} else {
-					// gets the existing quantity for that food
-					Integer existingQuantity = Integer.parseInt(foodQuantities.get(foods.get(i)));
-					// gets the quantity that has been added
-					Integer addedQuantity = Integer.parseInt(quantities.get(i));
-					// adds the two quantities previously calculated
-					Integer finalQuantity = existingQuantity + addedQuantity;
-					// adds a new entry into map
-					foodQuantities.put(foods.get(i), finalQuantity.toString());
-				}
-			}		
-		}			
-		return foodQuantities;
 	}	
 	
-	/**
-	 * @param user
-	 * @param food
-	 * @param date
-	 * @action adds a new order to database
-	 */
+	// adds a new order to database
 	private void addNewOrder(UserDiner user, String date) {
 		// creates a new order
 		Order order = new Order();
@@ -244,11 +172,20 @@ public class SelectionController {
 		orderRepository.save(order);
 	}
 	
-	/**
-	 * @return List<String>
-	 * @throws ParseException
-	 * @action gets a list of all menu's dates that are after the current date
-	 */
+	// adds a new orderQuantity into database
+	private void addNewOrderQuantity(Map<String, String> foodQuantities, Order order) {
+		// iterates through the map of foods and quantities
+		for(Map.Entry<String, String> foodQuantity : foodQuantities.entrySet()) {
+			// gets the food with the id from map 
+			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
+			// gets the quantity for food
+			Integer quantity = Integer.parseInt(foodQuantity.getValue());
+			// adds a new OrderQuantity to database
+			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
+		}	
+	}
+	
+	// gets a list of all menu's dates that are after the current date
 	private List<String> getAllAvailbleMenuDates() throws ParseException {
 		// gets all menus from database
 		Iterable<Menu> allMenusFromDB = menuRepository.findAll();
@@ -272,12 +209,7 @@ public class SelectionController {
 		return avaialbeMenuDates;
 	}
 	
-	/**
-	 * @param user
-	 * @return List<String>
-	 * @throws ParseException
-	 * @action gets the list of all dates in which the user didn't order
-	 */
+	// gets the list of all dates in which the user didn't order
 	private List<String> getAllAvailableMenuDatesForUser(UserDiner user) throws ParseException {
 
 		// gets a list of all available menus
@@ -306,11 +238,7 @@ public class SelectionController {
 		return allMenuDates;
 	}
 	
-	/**
-	 * @param name
-	 * @return Integer
-	 * @action gets an user id based on his name
-	 */
+	// gets an user id based on his name
 	private Integer getUserIdByName(String name) {
 
 		// gets all users from database
@@ -326,39 +254,7 @@ public class SelectionController {
 		return null;
 	}
 	
-	/**
-	 * @param hexString
-	 * @return String
-	 * @action parses the name taken from URL from hex to string
-	 */
-	private String convertHexToAscii(String hexString) {
-	    StringBuilder output = new StringBuilder("");
-	     
-	    for (int i = 0; i < hexString.length(); i += 2) {
-	        String str = hexString.substring(i, i + 2);
-	        output.append((char) Integer.parseInt(str, 16));
-	    }	     
-	    return output.toString();
-	}
-
-	/**
-	 * @param user
-	 * @param model
-	 * @throws ParseException
-	 * @action updates all available menu dates for current user
-	 */
-	private void updateAvailableMenuDatesForUser(UserDiner user, Model model) throws ParseException {
-		// gets all available menu dates for current user
-		List<String> allAvailableDates = this.getAllAvailableMenuDatesForUser(user);
-		// adds all available menu dates on model
-		model.addAttribute("allAvailableMenuDates", allAvailableDates);
-	}
-	
-	/**
-	 * @param date
-	 * @return Order
-	 * @action gets an order by date
-	 */
+	// gets an order by date
 	private Order getOrderByDateAndUser(String date, UserDiner user) {
 		// gets all orders from database
 		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
@@ -372,11 +268,7 @@ public class SelectionController {
 		return null;
 	}
 	
-	/**
-	 * @param date
-	 * @return Menu
-	 * @action gets from database the menu with given date
-	 */
+	// gets from database the menu with given date
 	private Menu getMenuByDate(String date) {
 		// gets all menus from DB
 		Iterable<Menu> allMenus = menuRepository.findAll();
@@ -389,48 +281,7 @@ public class SelectionController {
 		return null;
 	}
 	
-	/**
-	 * @param date
-	 * @param user
-	 * @return boolean
-	 * @action tests if a certain order already exists in database
- 	 */
-	private boolean isDateAlreadyOrderedForUser(String date, UserDiner user) {
-		// gets all orders from database
-		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
-		// iterates through all orders
-		for(Order order : allOrdersFromDB) {
-			// tests if current oder already exists
-			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * @param foodQuantities
-	 * @param order
-	 * @action adds a new orderQuantity into database
- 	 */
-	private void addNewOrderQuantity(Map<String, String> foodQuantities, Order order) {
-		// iterates through the map of foods and quantities
-		for(Map.Entry<String, String> foodQuantity : foodQuantities.entrySet()) {
-			// gets the food with the id from map 
-			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
-			// gets the quantity for food
-			Integer quantity = Integer.parseInt(foodQuantity.getValue());
-			// adds a new OrderQuantity to database
-			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
-		}	
-	}
-	
-	/**
-	 * @param dishesIds
-	 * @param date
-	 * @return List<String>
-	 * @action gets all foods for a dish
-	 */
+	// gets all foods for a dish
 	private List<String> getFoodsForDish(List<String> dishesIds, String date){
 		// creates an empty list of strings
 		List<String> foods = new ArrayList<>();
@@ -451,5 +302,104 @@ public class SelectionController {
 			}
 		}
 		return foods;
+	}
+	
+	// tests if a certain order already exists in database
+	private boolean isDateAlreadyOrderedForUser(String date, UserDiner user) {
+		// gets all orders from database
+		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
+		// iterates through all orders
+		for(Order order : allOrdersFromDB) {
+			// tests if current oder already exists
+			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// tests if the user is employee or not
+	private boolean isUserEmployee(UserDiner user){	
+		List<Role> roles = user.getRoles();
+		for(Role role : roles) {
+			if(role.getName().equals("employee")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// parses the name taken from URL from hex to string
+	private String convertHexToAscii(String hexString) {
+	    StringBuilder output = new StringBuilder(""); 
+		for (int i = 0; i < hexString.length(); i += 2) {
+		     String str = hexString.substring(i, i + 2);
+		     output.append((char) Integer.parseInt(str, 16));
+		}	     
+		return output.toString();
+	}
+		
+	// converts a list of dishes to a list of dishesDTO
+	private List<DishDTO> convertDishesToDishesDTO(List<Dish> dishes) {
+		List<DishDTO> dishesDTO = new ArrayList<>();
+		// iterates through the list of dishes
+		for (Dish dish : dishes) {
+			DishDTO dishDTO = new DishDTO();
+			List<CategoryDTO> categoriesDTO = new ArrayList<>();
+			List<FoodDTO> foodsDTO = new ArrayList<>();
+			// gets the categoryDTO for current dish
+			CategoryDTO categoryDTO = new CategoryDTO(dish.getCategory(), false);
+			// adds the categoryDTO to the list of categoriesDTO
+			categoriesDTO.add(categoryDTO);
+			// iterates through the list of foods for current dish
+			for (Food food : dish.getFoods()) {
+				// gets the foodDTO for current food
+				FoodDTO foodDTO = new FoodDTO(food, false);
+				// adds the foodDTO to the list of foodsDTO
+				foodsDTO.add(foodDTO);
+			}
+			// sets the categories for dishDTO
+			dishDTO.setCategories(categoriesDTO);
+			// sets the foods for dshDTO
+			dishDTO.setFoods(foodsDTO);
+			// adds the dishDTO to the list of dishesDTO	
+			dishesDTO.add(dishDTO);
+		}
+		return dishesDTO;
+	}
+
+	// updates all available menu dates for current user
+	private void updateAvailableMenuDatesForUser(UserDiner user, Model model) throws ParseException {
+		// gets all available menu dates for current user
+		List<String> allAvailableDates = this.getAllAvailableMenuDatesForUser(user);
+		// adds all available menu dates on model
+		model.addAttribute("allAvailableMenuDates", allAvailableDates);
+	}
+	
+	// creates a map from two lists
+	private Map<String, String> mergeTwoListsIntoMap(List<String> foods, List<String> quantities){
+		// creates and empty map
+		Map<String, String> foodQuantities = new HashMap<String, String>();
+		// iterates through foodQuantities map
+		for (int i = 0; i < foods.size(); i++) {
+			// tests if there are quantities with value 0
+			if(!quantities.get(i).equals("0")) {
+				// tests if current key doesn't exist
+				if (foodQuantities.get(foods.get(i)) == null) {
+					// adds a new entry into map
+					foodQuantities.put(foods.get(i), quantities.get(i));
+				} else {
+					// gets the existing quantity for that food
+					Integer existingQuantity = Integer.parseInt(foodQuantities.get(foods.get(i)));
+					// gets the quantity that has been added
+					Integer addedQuantity = Integer.parseInt(quantities.get(i));
+					// adds the two quantities previously calculated
+					Integer finalQuantity = existingQuantity + addedQuantity;
+					// adds a new entry into map
+					foodQuantities.put(foods.get(i), finalQuantity.toString());
+				}
+			}		
+		}			
+		return foodQuantities;
 	}
 }
