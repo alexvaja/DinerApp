@@ -16,27 +16,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.User;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserCantinaRepository userCantinaRepository;
-
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		UserDiner userDiner = getUserByName(userName);
 
 		if (userDiner == null) {
-			System.out.println("User not found! " + userName);
+			LOGGER.error("User not found! " + userName);
 			throw new UsernameNotFoundException("User " + userName + " was not found in the database");
 		}
-
-		System.out.println("Found User: " + userDiner);
-
+		LOGGER.info("Found User: " + userDiner);
 		List<Role> roleNames = this.getUserRoles(userDiner);
-
-		System.out.println("User Roles: " + roleNames);
+		LOGGER.info("User Roles: " + roleNames);
 
 		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
 		List<Role> roles = new ArrayList<>();
@@ -56,17 +55,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			}
 		}
 		
-//		for (Role role : roles) {
-//			
-//			if (role.getName().equals("employee")) {
-//				throw new UsernameNotFoundException("User " + userName + " was not found in the database");
-//			}
-//		}
-
 		UserDetails userDetails = (UserDetails) new User(userDiner.getName(), EncrytedPasswordUtils.encrytePassword(userDiner.getPassword()), grantList);
-
-		System.out.println("User Details: " + userDetails);
-
+		LOGGER.info("User Details: " + userDetails);
 		return userDetails;
 	}
 

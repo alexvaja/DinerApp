@@ -49,7 +49,6 @@ public class UserReportController {
 	
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
 		LOGGER.error("incercare de acces nepermis");
         //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
 		return "views/loginView";
@@ -57,8 +56,7 @@ public class UserReportController {
 	
 	@ExceptionHandler({ InternalServerException.class })
 	public String sessionServerError() {
-		System.out.println("internal server status");
-		
+		LOGGER.error("internal server status");
         //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
 		return "views/loginView";
 	}
@@ -102,8 +100,6 @@ public class UserReportController {
 														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException, InternalServerException {
 		LOGGER.info("Am intrat pe POST");
 		
-		
-		
 		switch (reqParam) {
 		case "Submit": {
 			
@@ -119,11 +115,8 @@ public class UserReportController {
 							orderRepository.save(order);
 						}
 					}
-				}	
-				
-				
-				
-				
+				}							
+					
 				List<OrderDTO> ordersDTO = new ArrayList<>(); 
 				ordersDTO.addAll(getListOrdersDTOForDate(userReportViewModel.getDate()));
 				

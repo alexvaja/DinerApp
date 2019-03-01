@@ -31,7 +31,7 @@ import dinerapp.model.entity.Food;
 public class ExportToPDF 
 {
 
-
+	
 	public static void exportToPDF(String fileName, List<Food> foods, List<Integer> quantities, String reportDate) throws
 	FileNotFoundException, DocumentException {
 		
@@ -72,7 +72,6 @@ public class ExportToPDF
 			table.setHeaderRows(1);
 			pdfDoc.add(table);
 		} catch (FileNotFoundException | DocumentException e) {
-			System.out.println("SUNT PE CATCH!");
 			e.printStackTrace();
 		} finally {
 			pdfDoc.close();
@@ -88,9 +87,7 @@ public class ExportToPDF
 	}
 
 	public static void downloadFile(HttpServletResponse response, String fileName) throws IOException {
-		
-		System.out.println("AM INTRAT IN 2!");
-		System.out.println("DATE LA INTRARE: " + response + fileName);
+			
 		MediaType mediaType = getMediaTypeForFileName(fileName);
 		File file = new File(fileName);
 
@@ -114,13 +111,11 @@ public class ExportToPDF
 
 	private static MediaType getMediaTypeForFileName(String fileName) {
 
-		System.out.println("AM INTRAT IN 3!");
 //		String mineType = servletContext.getMimeType(fileName);
 		String mimeType = "application/pdf";
-		System.out.println("MINE TYPE: " + mimeType);
+
 		try {
 			MediaType mediaType = MediaType.parseMediaType(mimeType);
-			System.out.println("MEDIA TYPE: " + mediaType);
 			return mediaType;
 		} catch (Exception e) {
 			return MediaType.APPLICATION_OCTET_STREAM;

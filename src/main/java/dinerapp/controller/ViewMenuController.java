@@ -145,7 +145,7 @@ public class ViewMenuController {
 			menuDTO.setId(menu.getId());
 			menuDTO.setDate(menu.getDate());
 			menuDTO.setState(menu.getState());
-			System.out.println("Menu State in db: " + menuDTO.getState());
+
 			LOGGER.info("Menu State in db: " + menuDTO.getState());
 			menuDTO.setTitle(menu.getTitle());
 			menuViewModel.setMenuDTO(menuDTO);
