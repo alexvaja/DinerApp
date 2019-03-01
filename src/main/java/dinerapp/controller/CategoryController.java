@@ -42,19 +42,28 @@ public class CategoryController {
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		
+		String mesaj = "incercare de acces nepermis";
+		LOGGER.error(mesaj);
+		
 		return "views/loginView";
 	}
 
 	@ExceptionHandler({ WrongInputDataException.class })
 	public String inputDataError() {
-		System.out.println("date de intrare gresite");
+		
+		String mesaj ="date de intrare gresite";
+		LOGGER.error(mesaj);
+		
 		return "redirect:categoryView";
 	}
 	
 	@ExceptionHandler({ DuplicateCategoryException.class })
 	public String duplicateError() {
-		System.out.println("categorii duplicate");
+		
+		String mesaj ="categorii duplicate";
+		System.out.println(mesaj);
+		
 		return "redirect:categoryView";
 	}
 
@@ -88,6 +97,7 @@ public class CategoryController {
 		model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 		model.addAttribute("categoryViewModel", new CategoryViewModel(getListOfCategory()));
 		model.addAttribute("newCategoryDTO", new NewCategoryDTO());
+		
 		LOGGER.info(newCategoryDTO.toString());
 		LOGGER.info(reqParam);
 
@@ -99,7 +109,7 @@ public class CategoryController {
 		case "Salveaza":
 
 			List<Category> c = getListOfCategory();
-			System.out.println("Lista de category: " + c);
+			LOGGER.info("Lista de category: " + c);
 			
 			Category category = new Category();
 			
@@ -110,9 +120,12 @@ public class CategoryController {
 				throw new WrongInputDataException();
 			}
 
-			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() || Double.parseDouble(newCategoryDTO.getPrice()) < 0) {
-				System.out.println("Datele nu sunt bune 1");
+			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() 
+					|| Double.parseDouble(newCategoryDTO.getPrice()) < 0) {
+				
+				LOGGER.error("Datele nu sunt bune 1");
 				throw new WrongInputDataException();
+				
 			} else {
 				try {
 					
@@ -130,9 +143,9 @@ public class CategoryController {
 					
 					category.setName(newCategoryDTO.getName());
 					category.setPrice(Double.parseDouble(newCategoryDTO.getPrice()));
-					System.out.println("Datele sunt bune ");
+					LOGGER.error("Datele sunt bune ");
 				} catch (NumberFormatException e) {
-					System.out.println("Datele nu sunt bune 2");
+					LOGGER.error("Datele sunt bune 2");
 					throw new WrongInputDataException();
 				}
 			}
