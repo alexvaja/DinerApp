@@ -239,15 +239,15 @@ public class UserReportController {
 		return sdf.format(calendar.getTime());
 	}
 
-	private void updateDB() {
-		
-		List<Order> order = getAllOrderFromTable();
-		for (Order o : order) {
-			Order newO = o;
-			newO.setTaken(false);
-			newO.setDate(getTodayDate());
-			orderRepository.save(newO);
-		}
-	}	
+//	private void updateDB() {
+//		
+//		List<Order> order = getAllOrderFromTable();
+//		for (Order o : order) {
+//			Order newO = o;
+//			newO.setTaken(false);
+//			newO.setDate(getTodayDate());
+//			orderRepository.save(newO);
+//		}
+//	}	
 
 }

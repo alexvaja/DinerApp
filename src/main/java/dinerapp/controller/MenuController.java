@@ -1,14 +1,10 @@
 package dinerapp.controller;
 
 import java.security.Principal;
-
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;

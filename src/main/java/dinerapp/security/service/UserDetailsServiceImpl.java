@@ -39,13 +39,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		System.out.println("User Roles: " + roleNames);
 
 		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
+		List<Role> roles = new ArrayList<>();
+		
 		if (roleNames != null) {
 			for (Role role : roleNames) {
 				// ROLE_USER, ROLE_ADMIN,..
-				GrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
+				roles.add(role);
+				GrantedAuthority authority = new SimpleGrantedAuthority(role.getName().toString());
 				grantList.add(authority);
 			}
 		}
+		
+		for (GrantedAuthority authority : grantList) {
+			if (authority.getAuthority().toString().equals("employee")) {
+				throw new UsernameNotFoundException("User " + userName + " was not found in the database");
+			}
+		}
+		
+//		for (Role role : roles) {
+//			
+//			if (role.getName().equals("employee")) {
+//				throw new UsernameNotFoundException("User " + userName + " was not found in the database");
+//			}
+//		}
 
 		UserDetails userDetails = (UserDetails) new User(userDiner.getName(), EncrytedPasswordUtils.encrytePassword(userDiner.getPassword()), grantList);
 

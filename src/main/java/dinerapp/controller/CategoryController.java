@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
-
-import com.itextpdf.text.log.SysoCounter;
 
 import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.CategoryViewModel;
-import dinerapp.model.FoodViewModel;
-import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.NewCategoryDTO;
 import dinerapp.model.entity.Category;
 import dinerapp.model.entity.Dish;

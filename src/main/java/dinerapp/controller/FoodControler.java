@@ -71,9 +71,10 @@ public class FoodControler {
 	public String openFoodView(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
 			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
 			@RequestParam("submit") String reqParam) throws WrongInputDataException {
+		
 		LOGGER.info(foodsIdForDelete + " ");
-
 		LOGGER.info(reqParam);
+		
 		Boolean addFoodIsAvailable = false;
 		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
@@ -92,7 +93,7 @@ public class FoodControler {
 			Food food = new Food();
 
 			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
-					|| newFoodDTO.getPrice().isEmpty() || Integer.parseInt(newFoodDTO.getPrice()) < 0 
+					|| newFoodDTO.getPrice().isEmpty() || Double.parseDouble(newFoodDTO.getPrice()) < 0 
 					|| newFoodDTO.getWeight().isEmpty() || Integer.parseInt(newFoodDTO.getWeight()) < 0) {
 				throw new WrongInputDataException();
 			} else {

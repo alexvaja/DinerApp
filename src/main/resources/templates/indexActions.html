@@ -17,9 +17,9 @@
 			<table class="table tcolor table-bordered">
 				<thead class="thead">
 					<tr>
-						<td class="span2 text-center">NUME MENIU</td>
-						<td class="span2 text-center">DATA MENIU</td>
-						<td class="span2 text-center">VIZUALIZARE</td>
+						<td class="col text-center" >NUME MENIU</td>
+						<td class="col text-center" >DATA MENIU</td>
+						<td class="col text-center" >VIZUALIZARE</td>
 					</tr>
 				</thead>
 				
@@ -55,18 +55,18 @@
 			
 				<table class="table tcolor table-bordered">
 					<thead class="thead thead-dark">
-						<tr>
-							<th>NUME</th>
-							<th>INGREDIENTE</th>
-							<th>GRAMAJ</th>
-							<th>PRET</th>
+						<tr class = "d-flex">
+							<th class="col-1 text-center">NUME</th>
+							<th class="col-1 text-center">INGREDIENTE</th>
+							<th class="col-1 text-center">GRAMAJ</th>
+							<th class="col-1 text-center">PRET</th>
 						</tr>
 					</thead>
 					<tr th:each="food : ${dish.foods}">
-						<td class="text-center" th:text="${food.name}"></td>
-						<td class="text-center" th:text="${food.ingredients}"></td>
-						<td class="text-center" th:text="${food.weight}"></td>
-						<td class="text-center" th:text="${food.price}"></td>
+						<td class="col text-center" th:text="${food.name}"></td>
+						<td class="col text-center" th:text="${food.ingredients}"></td>
+						<td class="col text-center" th:text="${food.weight}"></td>
+						<td class="col text-center" th:text="${food.price}"></td>
 					</tr>
 				</table>
 			</div>
