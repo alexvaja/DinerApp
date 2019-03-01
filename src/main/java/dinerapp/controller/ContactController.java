@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import dinerapp.exceptions.NewSessionException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Controller
 public class ContactController {
 	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		LOGGER.error("incercare de acces nepermis");
+		
 		return "views/loginView";
 	}
 	

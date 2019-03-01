@@ -40,13 +40,13 @@ public class FoodControler {
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		LOGGER.error("incercare de acces nepermis");
 		return "views/loginView";
 	}
 
 	@ExceptionHandler({ WrongInputDataException.class })
 	public String inputDataError() {
-		System.out.println("date de intrare gresite");
+		LOGGER.error("date de intrare gresite");
 		return "redirect:foodView";
 	}
 
@@ -174,10 +174,4 @@ public class FoodControler {
 		}
 		return searchedList;
 	}
-
 }
-
-// 2,4,7
-//{2} {4} {7}
-//doi --> 2
-//

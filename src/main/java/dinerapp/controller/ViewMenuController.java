@@ -48,7 +48,7 @@ public class ViewMenuController {
 	
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		LOGGER.error("incercare de acces nepermis");
 		return "views/loginView";
 	}
 
@@ -146,6 +146,7 @@ public class ViewMenuController {
 			menuDTO.setDate(menu.getDate());
 			menuDTO.setState(menu.getState());
 			System.out.println("Menu State in db: " + menuDTO.getState());
+			LOGGER.info("Menu State in db: " + menuDTO.getState());
 			menuDTO.setTitle(menu.getTitle());
 			menuViewModel.setMenuDTO(menuDTO);
 			

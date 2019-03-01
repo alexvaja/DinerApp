@@ -31,7 +31,8 @@ import dinerapp.repository.FoodRepository;
 import dinerapp.repository.OrderQuantityRepository;
 import dinerapp.repository.OrderRepository;
 import dinerapp.security.utils.OrderComparer;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Controller
 public class NextDayReportController {
 
@@ -44,9 +45,11 @@ public class NextDayReportController {
 	@Autowired
 	private OrderQuantityRepository orderQuantityRepo;
 	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		LOGGER.error("incercare de acces nepermis");
 		return "views/loginView";
 	}
 	

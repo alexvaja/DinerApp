@@ -57,13 +57,13 @@ public class MenuController {
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		System.out.println("incercare de acces nepermis");
+		LOGGER.error("incercare de acces nepermis");
 		return "views/loginView";
 	}
 
 	@ExceptionHandler({ DuplicateCategoryException.class })
 	public String duplicateError() {
-		System.out.println("categorii duplicate");
+		LOGGER.error("categorii duplicate");
 		return "redirect:menuView";
 	}
 
@@ -75,9 +75,8 @@ public class MenuController {
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
-
-		System.out.println("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
-
+		LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
+		
 		if (session.getAttribute("menuViewModel") == null) {
 			session.setAttribute("errorMessage", true);
 			session.setAttribute("menuViewModel", new MenuViewModel());
@@ -106,8 +105,8 @@ public class MenuController {
 
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
-		System.out.println("MENU VIEW MODEL: " + menuViewModel);
-
+		
+		LOGGER.info("MENU VIEW MODEL: " + menuViewModel);
 		switch (reqParam) {
 
 		case "Adauga Meniu": {
@@ -164,7 +163,7 @@ public class MenuController {
 			break;
 		}
 		case "Salvare": {
-			System.out.println("Am intrat pe SAVE ALL");
+			LOGGER.info("Am intrat pe SAVE ALL");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
 
@@ -178,8 +177,7 @@ public class MenuController {
 
 				//
 				List<Category> c = getAllCategoriesFromMenu(dishes);
-				System.out.println("Lista de category: " + c);
-
+				LOGGER.info("Lista de category: " + c);
 				if (!isValid(c)) {
 					session.setAttribute("errorMessage", false);
 					throw new DuplicateCategoryException("mesaj");
@@ -202,8 +200,8 @@ public class MenuController {
 				for (DishDTO dishDTO : dishes) {
 					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
 
-					System.out.println("Lista de mancarruri: " + dishDTO.getId());
-					System.out.println(selectedFoods);
+					LOGGER.info("Lista de mancarruri: " + dishDTO.getId());
+					LOGGER.info(selectedFoods.toString());
 
 					if (!selectedFoods.isEmpty()) {
 						if (dishDTO.getId() == null) {
@@ -224,7 +222,7 @@ public class MenuController {
 						}
 					} else if (dishDTO.getId() != null) {
 						dishRepository.deleteById(dishDTO.getId());
-						;
+						
 					}
 				}
 

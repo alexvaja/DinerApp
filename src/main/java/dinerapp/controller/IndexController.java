@@ -17,12 +17,15 @@ import dinerapp.constants.MenuStates;
 import dinerapp.model.entity.Menu;
 import dinerapp.repository.MenuRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class IndexController 
 {
 	@Autowired
 	private MenuRepository menuRepository;
-	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	@GetMapping("index")
 	public String getIndex(Model model, HttpSession session) {
 		model.addAttribute("menusList", getOnlyPublishedMenu(getMenuFromTable()));
@@ -47,7 +50,7 @@ public class IndexController
 		}
 		
 		String reqParam = params.getFirst(idMenu);
-		
+		LOGGER.info(reqParam);
 		System.out.println(reqParam);
 		
 		switch(reqParam) {
@@ -59,7 +62,7 @@ public class IndexController
 			}
 			case "Vezi": {
 				
-				System.out.println(idMenu);
+				LOGGER.info(idMenu);
 				Menu searchedMenu = null;
 				
 				List<Menu> menuList = getMenuFromTable();

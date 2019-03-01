@@ -45,14 +45,14 @@ public class DinerAppController {
 		return "views/loginView";
 	}
 
-	@RequestMapping(value = { "/userAccountInfo" }, method = RequestMethod.GET)
-	public String userInfo(Model model, Principal principal) {
-		
-		String userName = principal.getName();
-		System.out.println("User Name: " + userName);
-		User loginedUser = (User) ((Authentication) principal).getPrincipal();
-		String userInfo = WebUtils.toString(loginedUser);
-		model.addAttribute("userInfo", userInfo);
-		return "index";
-	}
+//	@RequestMapping(value = { "/userAccountInfo" }, method = RequestMethod.GET)
+//	public String userInfo(Model model, Principal principal) {
+//		
+//		String userName = principal.getName();
+//		System.out.println("User Name: " + userName);
+//		User loginedUser = (User) ((Authentication) principal).getPrincipal();
+//		String userInfo = WebUtils.toString(loginedUser);
+//		model.addAttribute("userInfo", userInfo);
+//		return "index";
+//	}
 }

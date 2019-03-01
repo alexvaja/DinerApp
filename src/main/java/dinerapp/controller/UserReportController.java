@@ -50,7 +50,7 @@ public class UserReportController {
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
 		System.out.println("incercare de acces nepermis");
-		
+		LOGGER.error("incercare de acces nepermis");
         //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
 		return "views/loginView";
 	}
