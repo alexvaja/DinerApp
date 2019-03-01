@@ -91,6 +91,17 @@ public class FoodControler {
 		case "Salveaza":
 			LOGGER.info(addFoodIsAvailable.toString());
 			Food food = new Food();
+			
+			
+			try {
+				Double price = Double.parseDouble(newFoodDTO.getPrice());
+				Integer weight = Integer.parseInt(newFoodDTO.getWeight());
+				
+			} catch (NumberFormatException e) {
+				throw new WrongInputDataException();
+			}
+			
+			
 
 			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
 					|| newFoodDTO.getPrice().isEmpty() || Double.parseDouble(newFoodDTO.getPrice()) < 0 

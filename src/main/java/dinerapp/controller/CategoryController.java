@@ -102,12 +102,21 @@ public class CategoryController {
 			System.out.println("Lista de category: " + c);
 			
 			Category category = new Category();
+			
+			try {
+				Double price = Double.parseDouble(newCategoryDTO.getPrice());
+				
+			} catch (NumberFormatException e) {
+				throw new WrongInputDataException();
+			}
 
-			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() || Integer.parseInt(newCategoryDTO.getPrice()) < 0) {
+			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() || Double.parseDouble(newCategoryDTO.getPrice()) < 0) {
 				System.out.println("Datele nu sunt bune 1");
 				throw new WrongInputDataException();
 			} else {
 				try {
+					
+					
 					Boolean errorMessage = false;
 					//nu pune categorii duplicate dar nu afiseaza pe pagina mesaj
 					if (!isValid(c, newCategoryDTO.getName())) {
