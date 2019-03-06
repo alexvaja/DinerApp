@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div class="content">
+		<h2 class="texts">Statistica de comenzi plasate - comenzi
+			ridicate</h2>
+	</div>
+	<br>
+	<br>
+
+	<form action="/statisticsView" th:actions="@{/statisticsView}"
+		method="post" th:object="${session.statisticsViewModel}">
+		<div class="form-group">
+			<table>
+				<thead>
+					<tr>
+						<td>Angajat</td>
+						<td>Comenzi plasate</td>
+						<td>Comenzi ridicate</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user, iter : *{users}">
+						<th:block
+							th:if="${statisticsViewModel.placedOrders[iter.index] != 0}">
+							<td th:text="${user.name}">...</td>
+							<td th:text="${statisticsViewModel.placedOrders[iter.index]}">...</td>
+							<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}">...</td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+
+</body>
+</html>
