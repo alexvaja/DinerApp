@@ -14,11 +14,10 @@
 	<br>
 	<br>
 
-	<form action="/statisticsView" th:actions="@{/statisticsView}"
-		method="post" th:object="${session.statisticsViewModel}">
+	<form action="#" th:actions="@{/statisticsView}" th:object="${session.statisticsViewModel}" method="post" >
 		<div class="form-group">
-			<table>
-				<thead>
+			<table  class="table tcolor table-bordered">
+				<thead class="thead thead-dark">
 					<tr>
 						<td>Angajat</td>
 						<td>Comenzi plasate</td>
@@ -26,13 +25,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="user, iter : *{users}">
-						<th:block
-							th:if="${statisticsViewModel.placedOrders[iter.index] != 0}">
-							<td th:text="${user.name}">...</td>
-							<td th:text="${statisticsViewModel.placedOrders[iter.index]}">...</td>
-							<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}">...</td>
-						</th:block>
+					<tr th:each="statistic, iter : *{statistics}">
+						<td th:text="${statistic.user.name}"></td>
+ 						<td th:text="${statistic.placedOrder}"></td>
+						<td th:text="${statistic.pickedUpOrder}"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -41,3 +37,15 @@
 
 </body>
 </html>
+<!-- 
+						<th:block th:if="${#lists.isEmpty(statisticsViewModel.placedOrders)}"> 
+							<td th:text="${user.name}">...</td>
+ 							<td th:text="${statisticsViewModel.placedOrders[iter.index]}">...</td>
+							<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}">...</td> 
+						</th:block> -->
+						
+<!-- 											<tr th:each="user, iter : *{users}">
+						<td th:text="${user.name}"></td>
+ 						<td th:text="${statisticsViewModel.placedOrders[iter.index]}"></td>
+						<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}"></td>
+					</tr> -->
