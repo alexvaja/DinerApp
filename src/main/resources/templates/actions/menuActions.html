@@ -8,8 +8,10 @@
 	<div>
 		<form action="#" th:action="@{/menuView}"
 			th:object="${session.menuViewModel}" method="post">
-			<div th:if="${session.errorMessage} == False"></div>
-
+<!--  			<div th:if="${session.errorMessage} == False">
+ 			
+ 			</div> -->
+				
 			<div>
 				<h1>Adaugare meniu</h1>
 				<div th:if="${addMenuIsAvailable == True}" class=form-group>
