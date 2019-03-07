@@ -17,6 +17,10 @@ public class CustomErrorController implements ErrorController {
 	public String getErrorPath() {
 		return "/error";
 	}
+//	@Override
+//	public String getErrorPath() {
+//		return "/error";
+//	}
  
 //    @RequestMapping(value = "errors", method = RequestMethod.GET)
 //    public String renderErrorPage(Model model, HttpServletRequest httpRequest) {

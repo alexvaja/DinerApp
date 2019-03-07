@@ -10,63 +10,71 @@ import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
 
 @SessionScope
-public class OrderViewModel 
-{
+public class OrderViewModel {
+	
 	private List<Order> orders;
 	private List<Food> foods;
 	private List<Integer> quantities;
 	private List<OrderQuantity> orderQuantity;
-	private String date;	
-	
+	private String date;
+
 	public String getDate() {
 		return date;
 	}
+
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public OrderViewModel()
-	{
+
+	public OrderViewModel() {
 		super();
 		this.orders = new ArrayList<>();
 		this.foods = new ArrayList<>();
 		this.quantities = new ArrayList<>();
-		this.orderQuantity = new ArrayList<>();;
+		this.orderQuantity = new ArrayList<>();
 	}
-	public OrderViewModel(List<Order> orders)
-	{
+
+	public OrderViewModel(List<Order> orders) {
 		super();
 		this.orders = new ArrayList<>(orders);
 	}
-	
- 	public List<OrderQuantity> getOrderQuantity() {
+
+	public List<OrderQuantity> getOrderQuantity() {
 		return orderQuantity;
 	}
+
 	public void setOrderQuantity(List<OrderQuantity> orderQuantity) {
 		this.orderQuantity = orderQuantity;
 	}
+
 	public List<Order> getOrders() {
 		return orders;
 	}
+
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
+
 	public List<Food> getFoods() {
 		return foods;
 	}
+
 	public void setFoods(List<Food> foods) {
 		this.foods = foods;
 	}
+
 	public List<Integer> getQuantities() {
 		return quantities;
 	}
-	
+
 	public Integer getByIndex(int index) {
 		return quantities.get(index);
 	}
-	
+
 	public void setQuantities(List<Integer> quantities) {
 		this.quantities = quantities;
 	}
+
 	@Override
 	public String toString() {
 		return "OrderViewModel [orders=" + orders + ", foods=" + foods + ", quantities=" + quantities

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}"
+	href="../../static/css//override.css" />
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div class="content">
+		<h2 class="texts">Statistica de comenzi plasate - comenzi
+			ridicate</h2>
+	</div>
+	<br>
+	<br>
+
+	<form action="#" th:actions="@{/statisticsView}" th:object="${session.statisticsViewModel}" method="post" >
+		<div class="form-group">
+			<table  class="table tcolor table-bordered">
+				<thead class="thead thead-dark">
+					<tr>
+						<td>Angajat</td>
+						<td>Comenzi plasate</td>
+						<td>Comenzi ridicate</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="statistic, iter : *{statistics}">
+						<td th:text="${statistic.user.name}"></td>
+ 						<td th:text="${statistic.placedOrder}"></td>
+						<td th:text="${statistic.pickedUpOrder}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+
+</body>
+</html>
+<!-- 
+						<th:block th:if="${#lists.isEmpty(statisticsViewModel.placedOrders)}"> 
+							<td th:text="${user.name}">...</td>
+ 							<td th:text="${statisticsViewModel.placedOrders[iter.index]}">...</td>
+							<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}">...</td> 
+						</th:block> -->
+						
+<!-- 											<tr th:each="user, iter : *{users}">
+						<td th:text="${user.name}"></td>
+ 						<td th:text="${statisticsViewModel.placedOrders[iter.index]}"></td>
+						<td th:text="${statisticsViewModel.pickedUpOrders[iter.index]}"></td>
+					</tr> -->

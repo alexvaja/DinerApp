@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/userReportView").authenticated();
 		http.authorizeRequests().antMatchers("/reportView").authenticated();
 		http.authorizeRequests().antMatchers("/index").authenticated();
-		
+		http.authorizeRequests().antMatchers("/statisticsView").authenticated();
 		
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
