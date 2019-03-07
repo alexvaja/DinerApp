@@ -52,7 +52,7 @@
 					<tr th:each="category : ${categoryViewModel.categoryItems}">
 						<td class="text-center" th:text="${category.name}">...</td>
 						<td class="text-center" th:text="${category.price}">...</td>
-						<td><input type="checkbox" name = "delete" th:value="${category.id}"></td>
+						<td class="text-center"><input class="span2 text-center"type="checkbox" name = "delete" th:value="${category.id}"></td>
 					</tr>
 				</tbody>
 			</table>

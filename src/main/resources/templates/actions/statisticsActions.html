@@ -19,16 +19,16 @@
 			<table  class="table tcolor table-bordered">
 				<thead class="thead thead-dark">
 					<tr>
-						<td>Angajat</td>
-						<td>Comenzi plasate</td>
-						<td>Comenzi ridicate</td>
+						<th scope="col" class="span2 text-center">Angajat</th>
+						<th scope="col" class="span2 text-center">Comenzi plasate</th>
+						<th scope="col" class="span2 text-center">Comenzi ridicate</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="statistic, iter : *{statistics}">
-						<td th:text="${statistic.user.name}"></td>
- 						<td th:text="${statistic.placedOrder}"></td>
-						<td th:text="${statistic.pickedUpOrder}"></td>
+						<td scope = "col" class="span2 text-center" th:text="${statistic.user.name}"></td>
+ 						<td scope = "col" class="span2 text-center" th:text="${statistic.placedOrder}"></td>
+						<td scope = "col" class="span2 text-center" th:text="${statistic.pickedUpOrder}"></td>
 					</tr>
 				</tbody>
 			</table>

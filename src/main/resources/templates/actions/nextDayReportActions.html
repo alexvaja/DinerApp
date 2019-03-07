@@ -24,15 +24,15 @@
 			<table class="table tcolor table-bordered">
 				<thead class="thead thead-dark">
 					<tr>
-						<th scope="col">Food Name</th>
-						<th scope="col">Quantity</th>
+						<th class="span2 text-center" scope="col">Food Name</th>
+						<th class="span2 text-center" scope="col">Quantity</th>
 					</tr>
 				</thead>
 				<tbody>
 	 					<tr th:each="food, iter : *{foods}">
 						<th:block th:if = "${orderViewModel.quantities[iter.index] != 0}"> 			
-							<td th:text="${food.name}">...</td>
-							<td th:text="${orderViewModel.quantities[iter.index]}">...</td>
+							<td class="span2 text-center" th:text="${food.name}">...</td>
+							<td class="span2 text-center" th:text="${orderViewModel.quantities[iter.index]}">...</td>
 						</th:block>					
 					</tr>
 				</tbody>

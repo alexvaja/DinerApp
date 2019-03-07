@@ -17,17 +17,17 @@
 			<table class = "table tcolor table-bordered">
 				<thead class = "thead thead-dark">
 					<tr>
-						<td scope="col"> Nume </td>
-						<td scope="col"> Comanda </td>
-						<td scope="col"> Check </td>
+						<td scope="col" class="span2 text-center"> Nume </td>
+						<td scope="col" class="span2 text-center"> Comanda </td>
+						<td scope="col" class="span2 text-center"> Check </td>
 					</tr>
 				</thead>
 				<tbody>
 					<th:block th:if="*{not #lists.isEmpty(listOfFoods)}">
 						<tr th:each="itemList : *{listOfFoods}">
-							<td scope="col" th:text="${itemList.order.userDiner.name}"></td>
-							<td scope="col" th:text="${itemList.toBeDeliveredFood}"></td>
-							<td scope="col" ><input type="checkbox" th:name="checkbox_list" th:value="${itemList.order.id}" th:checke="${itemList.order.taken}" /></td>
+							<td scope="col" class="span2 text-center" th:text="${itemList.order.userDiner.name}"></td>
+							<td scope="col" class="span2 text-center" th:text="${itemList.toBeDeliveredFood}"></td>
+							<td scope="col" class="span2 text-center" ><input type="checkbox" th:name="checkbox_list" th:value="${itemList.order.id}" th:checke="${itemList.order.taken}" /></td>
 						</tr>
 					</th:block>
 					
