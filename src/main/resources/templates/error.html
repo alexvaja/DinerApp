@@ -1,8 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/errorPageCSS.css}"
+	href="../../static/css//errorPageCSS.css" />
+<head>
+</head>
 <body>
-	<h1>Something went wrong! </h1>
-	<h2>Our Engineers are on it</h2>
-	<a href="/index">Go Home</a>
+	<div class="text1">
+		<h1>Whoops!</h1>
+	</div>
+	<div class="text2">
+		<p>Something went wrong</p>
+	</div>
+	<br>
+	<br>
+	<div class="text2">
+		<a class="btn btn-primary" href="/index">Go Home</a>
+	</div>
+
 </body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
 </html>
+
+<!-- <style>
+body {
+  display: inline-block;
+  background: #00AFF9 url(https://cbwconline.com/IMG/Codepen/Unplugged.png) center/cover no-repeat;
+  height: 100vh;
+  margin: 0;
+  color: white;
+}
+
+h1 {
+  margin: .8em 3rem;
+  font: 4em Roboto;
+}
+p {
+  display: inline-block;
+  margin: .2em 3rem;
+  font: 2em Roboto;
+}
+</style> -->
