@@ -18,11 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserCantinaRepository userCantinaRepository;
+	
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
