@@ -104,6 +104,7 @@ public class NextDayReportController {
 		if (session.isNew()) {
 			throw new NewSessionException();			
 		}
+		
 		OrderViewModel orderViewModel = new OrderViewModel();
 		//model.addAttribute("orderViewModel", orderViewModel);
 		session.setAttribute("orderViewModel", orderViewModel);
