@@ -85,9 +85,7 @@ public class MenuController {
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		} else {
 			// vaja style
-			session.removeAttribute("menuViewModel");
-			session.setAttribute("menuViewModel", new MenuViewModel());
-			Boolean addMenuIsAvailable = false;
+			Boolean addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
 		}
