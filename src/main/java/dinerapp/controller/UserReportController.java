@@ -223,13 +223,14 @@ public class UserReportController {
 		for (OrderQuantity orderQuantity : list) {
 			searchedList.add(orderQuantity);
 		}
-
+		int i = 3;
 		return searchedList;
 	}
 	
 	private String getTodayDate() {
 		Calendar calendar = Calendar.getInstance();
 		return sdf.format(calendar.getTime());
+		
 	}
 
 //	private void updateDB() {
