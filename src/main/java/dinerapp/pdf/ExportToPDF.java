@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
@@ -30,7 +31,6 @@ import dinerapp.model.entity.Food;
 
 public class ExportToPDF 
 {
-
 	
 	public static void exportToPDF(String fileName, List<Food> foods, List<Integer> quantities, String reportDate) throws
 	FileNotFoundException, DocumentException {
@@ -62,13 +62,13 @@ public class ExportToPDF
 			table.setSpacingBefore(30f); // Space before table
 			table.setSpacingAfter(30f); // Space after table
 			
-			for (int index = 0; index < foods.size(); index++) {
+			for (int index = 0; index < foods.size(); index++) 
+			{
 				if(quantities.get(index) != 0) {
 					table.addCell(setCell(cellFont, foods.get(index).getName()));
 					table.addCell(setCell(cellFont, quantities.get(index).toString()));
 				}	
 			}
-			
 			table.setHeaderRows(1);
 			pdfDoc.add(table);
 		} catch (FileNotFoundException | DocumentException e) {
@@ -86,8 +86,9 @@ public class ExportToPDF
 		return cell;
 	}
 
-	public static void downloadFile(HttpServletResponse response, String fileName) throws IOException {
-			
+	public static void downloadFile(HttpServletResponse response, String fileName) 
+			throws IOException,ServletException 
+	{
 		MediaType mediaType = getMediaTypeForFileName(fileName);
 		File file = new File(fileName);
 
@@ -111,7 +112,7 @@ public class ExportToPDF
 
 	private static MediaType getMediaTypeForFileName(String fileName) {
 
-//		String mineType = servletContext.getMimeType(fileName);
+//		String mimeType = servletContext.getMimeType(fileName);
 		String mimeType = "application/pdf";
 
 		try {

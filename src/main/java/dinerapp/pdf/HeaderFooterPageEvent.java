@@ -2,6 +2,7 @@ package dinerapp.pdf;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 import com.itextpdf.text.BaseColor;
@@ -28,7 +29,8 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 	private PdfTemplate t;
 	private Image total;
 
-	public void onOpenDocument(PdfWriter writer, Document document) {
+	public void onOpenDocument(PdfWriter writer, Document document) 
+	{
 		t = writer.getDirectContent().createTemplate(30, 16);
 		try {
 			total = Image.getInstance(t);
@@ -56,15 +58,30 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			header.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
 
 			// add image
+			try {
+				Image logo = Image.getInstance(new URL("https://i.imgur.com/xfChJpW.png"));
+				logo.setAbsolutePosition(100f, 550f);
+				logo.scaleAbsolute(200, 200);
+				header.addCell(logo);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// Image logo = Image.getInstance("..\\DinerApp -
 			// new\\src\\main\\resources\\static\\images\\AtosLogo.png");
-			Image logo = Image.getInstance(".\\src\\main\\resources\\static\\images\\AtosLogo.png");
-			logo.setAbsolutePosition(100f, 550f);
+			//Image logo = Image.getInstance(".\\src\\main\\resources\\static\\images\\AtosLogo.png");
+			//logo.setAbsolutePosition(100f, 550f);
 			// Scale to new height and new width of image
-			logo.scaleAbsolute(200, 200);
-			header.addCell(logo);
+			//logo.scaleAbsolute(200, 200);
+			//header.addCell(logo);
 
 			// add text-date
+//			URL imageURL = new URL("http://www.avajava.com/images/avajavalogo.jpg");
+//			BufferedImage image = ImageIO.read(imageURL);
+//			ImageIcon im = new ImageIcon(image);
 			PdfPCell text = new PdfPCell();
 			text.addElement(new Paragraph(new Date().toString()));
 			// text.addElement(new Paragraph("Last update was made by: Vaja Alexandru"));
@@ -80,10 +97,6 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 
 		} catch (DocumentException de) {
 			throw new ExceptionConverter(de);
-		} catch (MalformedURLException e) {
-			throw new ExceptionConverter(e);
-		} catch (IOException e) {
-			throw new ExceptionConverter(e);
 		}
 	}
 

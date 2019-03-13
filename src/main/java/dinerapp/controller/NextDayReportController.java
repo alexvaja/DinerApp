@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -149,10 +150,16 @@ public class NextDayReportController {
 				orderViewModel.setFoods(foods);
 				orderViewModel.setQuantities(quantities);
 				model.addAttribute("orderViewModel", orderViewModel);
+				String pdfName = "Raport " + reportDate + ".pdf";
 				try 
 				{
-					ExportToPDF.exportToPDF("Raport.pdf", foods, quantities, reportDate);
-					ExportToPDF.downloadFile(response, "Raport.pdf");
+					ExportToPDF.exportToPDF(pdfName, foods, quantities, reportDate);
+					try {
+						ExportToPDF.downloadFile(response, pdfName);
+					} catch (ServletException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} 
 				catch (FileNotFoundException | DocumentException e) 
 				{
