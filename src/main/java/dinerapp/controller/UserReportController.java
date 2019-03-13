@@ -101,7 +101,7 @@ public class UserReportController {
 		LOGGER.info("Am intrat pe POST");
 		
 		switch (reqParam) {
-		case "Submit": {
+		case "Trimite": {
 			
 			if (selectedUsers != null) {
 

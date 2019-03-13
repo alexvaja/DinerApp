@@ -136,7 +136,7 @@ public class NextDayReportController {
 	
 		switch (reqParam) 
 		{
-			case "submit": 
+			case "Trimite": 
 			{
 				retrieveData(orderQuantity, foods, reportDate, quantities);
 				orderViewModel.setFoods(foods);
@@ -144,7 +144,7 @@ public class NextDayReportController {
 				model.addAttribute("orderViewModel", orderViewModel);
 				return "views/reportView";
 			}
-			case "download": 
+			case "Descarca": 
 			{
 				retrieveData(orderQuantity, foods, reportDate, quantities);
 				orderViewModel.setFoods(foods);
