@@ -6,11 +6,10 @@
 <body>
 <body>
 	<div>
-		<form action="#" th:action="@{/menuView}"
-			th:object="${session.menuViewModel}" method="post">
-<!--  			<div th:if="${session.errorMessage} == False">
- 			
- 			</div> -->
+		<form action="#" th:action="@{/menuView}" th:object="${session.menuViewModel}" method="post">
+			<div th:if="${session.errorMessage == True}">
+ 				<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
+ 			</div>
 				
 			<div>
 				<h1>Adaugare meniu</h1>
@@ -24,7 +23,7 @@
 					<label for="Data">Data: Luna/Zi/An</label>
 					<div class="input-group date" data-provide="datepicker">
 						<input type="date" name="menu_date" th:value="*{menuDTO.date}"
-							class="form-control" /> <label>Data trebuie trecuta obligatoriu!</label>
+							class="form-control" /> <label style="color: red;">Data trebuie trecuta obligatoriu!</label>
 					</div>
 					
 					 <script>
@@ -45,6 +44,11 @@
 											th:selected="${categoryItem.selected}" />
 									</select>
 								</div> <br />
+								
+								<div th:if="${session.errorMessage == True}">
+ 									<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
+ 			                    </div>
+								
 								<div>
 									<table class="table tcolor table-bordered">
 										<thead class="thead thead-dark">

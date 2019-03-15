@@ -77,8 +77,9 @@ public class MenuController {
 		}
 		LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
 		
+		
 		if (session.getAttribute("menuViewModel") == null) {
-			session.setAttribute("errorMessage", true);
+			session.setAttribute("errorMessage", false);
 			session.setAttribute("menuViewModel", new MenuViewModel());
 
 			Boolean addMenuIsAvailable = false;
@@ -89,6 +90,12 @@ public class MenuController {
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
 		}
+		
+/*		if (session.getAttribute("errorMessage").equals(true)) {
+			session.setAttribute("errorMessage", true);
+		} else {
+			session.setAttribute("errorMessage", false);			
+		}*/
 
 		return "views/menuView";
 	}
@@ -107,8 +114,10 @@ public class MenuController {
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		
 		LOGGER.info("MENU VIEW MODEL: " + menuViewModel);
+		
+		//session.setAttribute("errorMessage", false);
+		
 		switch (reqParam) {
-
 		case "Adauga Meniu": {
 
 	
@@ -118,13 +127,6 @@ public class MenuController {
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 			
-//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//			Date currentDate = new Date();
-//			Date parsedDate = null;
-//			parsedDate = format.parse(menuDate);
-//
-//			long diff = currentDate.getTime() - parsedDate.getTime();
-//			long dayDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
 			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
@@ -134,10 +136,6 @@ public class MenuController {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
 
-			
-//			if (dayDiff <= 0) {
-//				System.out.println(dayDiff + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
-//			}
 				dishes.add(createDefaultDishesDTO());
 
 				MenuDTO menuDTO = new MenuDTO();
@@ -148,14 +146,13 @@ public class MenuController {
 
 				menuViewModel.setDishesDTO(dishes);
 				menuViewModel.setMenuDTO(menuDTO);
-				// menuViewModel.setTitle(menuTitle);
-				// menuViewModel.setDate(menuDate);
+				//menuViewModel.setTitle(menuTitle);
+				//menuViewModel.setDate(menuDate);
 
 				break;
 			
 		}
 		case "Anuleaza": {
-//			isOlderThan30();
 			addMenuIsAvailable = false;
 
 			session.removeAttribute("menuViewModel");
@@ -179,10 +176,10 @@ public class MenuController {
 				List<Category> c = getAllCategoriesFromMenu(dishes);
 				LOGGER.info("Lista de category: " + c);
 				if (!isValid(c)) {
-					session.setAttribute("errorMessage", false);
+					session.setAttribute("errorMessage", true);
 					throw new DuplicateCategoryException("mesaj");
 				} else {
-					session.setAttribute("errorMessage", true);
+					session.setAttribute("errorMessage", false);
 				}
 				//
 
