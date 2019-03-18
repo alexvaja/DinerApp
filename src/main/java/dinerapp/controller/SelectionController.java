@@ -69,9 +69,9 @@ public class SelectionController {
 			String username = convertHexToAscii(nameFromURL);
 			// finds the user with the name from URL
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(username));
-			if(!this.isUserEmployee(user.get())) {
-				return "views/notAuthorized";
-			}
+//			if(!this.isUserEmployee(user.get())) {
+//				return "views/notAuthorized";
+//			}
 			// sets the name taken from URL into session
 			session.setAttribute("nameFromUrl", user.get());		
 			// updates the list of available menu dates for user
@@ -152,6 +152,11 @@ public class SelectionController {
 			case "Alege data":
 				// sets isMenuDatePicked to true
 				model.addAttribute("isMenuDatePicked", true);
+				List<String> allAvailableDates = this.getAllAvailableMenuDatesForUser(user);
+				if(allAvailableDates.isEmpty()) {
+					model.addAttribute("isMenuDatePicked", false);
+				}
+
 				break;
 		}
 
