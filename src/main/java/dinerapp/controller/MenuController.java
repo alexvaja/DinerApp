@@ -348,7 +348,7 @@ public class MenuController {
 		dishDTO.setFoods(listOfFoodsDTO);
 
 		return dishDTO;
-	}
+	}   
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
 		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
