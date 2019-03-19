@@ -205,7 +205,7 @@ public class MenuController {
 				//
 				List<Category> c = getAllCategoriesFromMenu(dishes);
 				LOGGER.info("Lista de category: " + c);
-				if (!isValid(c)) {
+				if (!isValid(dishes)) {
 					session.setAttribute("errorMessage", false);
 					throw new DuplicateCategoryException("mesaj");
 				} else {
@@ -356,7 +356,7 @@ public class MenuController {
 			listOfCategoriesDTO.add(new CategoryDTO(category, false));
 		}
 		return listOfCategoriesDTO;
-	}
+	}        
 
 	private List<FoodDTO> createAllFoodsDTO(List<Food> listOfFoods) {
 		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
@@ -434,43 +434,34 @@ public class MenuController {
 		}
 	}
 
-//	private void isOlderThan30() throws ParseException {
-//		Iterable<Menu> menuList = menuRepository.findAll();
-//		for (Menu menu : menuList) {
-//
-//			String string = menu.getDate();
-//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//			Date menuDate = format.parse(string);
-//			Date currentDate = new Date();
-//			
-//			long day30 = 30L * 24L * 60L * 60L * 1000L;
-//		boolean olderThan30 = currentDate.before(new Date((menuDate.getTime() + day30)));
-//			
-//			System.out.println(currentDate.getTime()+ "CURRREEEENTT " + menuDate.getTime()+ " MENUU");
-//			 long diff = currentDate.getTime() - menuDate.getTime();
-//			 
-//			 System.out.println ("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
-//			 
-//			 if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>=3) {
-//				 menuRepository.delete(menu);
-//			 }else {
-//				 continue;
-//			 }
-//		
-//			if(olderThan30) {
-//				menuRepository.delete(menu);
-//		}
-//
-//		}
-//	}
-
-	private boolean isValid(List<Category> values) {
-		for (int i = 0; i < values.size() - 1; i++) {
-			for (int j = i + 1; j < values.size(); j++) {
-				if (values.get(i).getName().equals(values.get(j).getName()))
+	private boolean isValid(List<DishDTO> dishes) {
+		
+		List<Category> categories = getAllCategoriesFromMenu(dishes);
+		List<Food> foodsForFirstCategory = new ArrayList<>();
+		List<Food> foodsForSecondCategory = new ArrayList<>();
+		
+		for (int i = 0; i < categories.size() - 1; i++) {
+			for (int j = i + 1; j < categories.size(); j++) {
+				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
+				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
+				if (categories.get(i).getName().equals(categories.get(j).getName())) {
+					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
+						return true;
+					}
 					return false;
+				}
 			}
 		}
 		return true;
 	}
+
+//	private boolean isValid(List<Category> values) {
+//		for (int i = 0; i < values.size() - 1; i++) {
+//			for (int j = i + 1; j < values.size(); j++) {
+//				if (values.get(i).getName().equals(values.get(j).getName()))
+//					return false;
+//			}
+//		}
+//		return true;
+//	}
 }
