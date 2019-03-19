@@ -24,7 +24,6 @@ import org.springframework.web.context.annotation.SessionScope;
 import dinerapp.constants.MenuStates;
 import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
-import dinerapp.exceptions.WrongMenuDateException;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
@@ -67,26 +66,19 @@ public class MenuController {
 		LOGGER.error("categorii duplicate");
 		return "redirect:menuView";
 	}
-	
-	@ExceptionHandler({ WrongMenuDateException.class })
-	public String dateError() {
-		LOGGER.error("data existenta mai exista");
-		return "redirect:menuView";
-	}
 
 	@SessionScope
 	@GetMapping("/menuView")
 	public String sessionExample(Model model, Principal principal, HttpSession session) throws NewSessionException {
 		LOGGER.info("GET MENU");
-		LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
 
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
-		
+		LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
 		
 		if (session.getAttribute("menuViewModel") == null) {
-			session.setAttribute("errorMessage", false);
+			session.setAttribute("errorMessage", true);
 			session.setAttribute("menuViewModel", new MenuViewModel());
 
 			Boolean addMenuIsAvailable = false;
@@ -96,12 +88,6 @@ public class MenuController {
 			Boolean addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
-		}
-		
-		if (session.getAttribute("errorMessage").equals(true)) {
-			session.setAttribute("errorMessage", true);
-		} else {
-			session.setAttribute("errorMessage", false);			
 		}
 
 		return "views/menuView";
@@ -115,33 +101,27 @@ public class MenuController {
 			@RequestParam(value = "menu_date", required = false) String menuDate,
 			@RequestParam(value = "dropdown_list", required = false) String selectedMenuCategories,
 			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods)
-			throws DuplicateCategoryException, ParseException, WrongMenuDateException {
+			throws DuplicateCategoryException, ParseException {
 
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		
 		LOGGER.info("MENU VIEW MODEL: " + menuViewModel);
-		
-		//session.setAttribute("errorMessage", false);
-		
 		switch (reqParam) {
-		case "Adauga Meniu": {
 
+		case "Adauga Meniu": {
 	
 			LOGGER.info("Am intrat in AddMenu case");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
-			
-
-			if (selectedMenuCategories != null) {
+			if (selectedMenuCategories != null) 
 				updateListSelectedCategory(selectedMenuCategories, dishes);
-			}
-
-			if (selectedMenuFoods != null) {
+			
+			if (selectedMenuFoods != null) 
 				updateListSelectedFoods(selectedMenuFoods, dishes);
-			}
+			
 
 				dishes.add(createDefaultDishesDTO());
 
@@ -153,25 +133,24 @@ public class MenuController {
 
 				menuViewModel.setDishesDTO(dishes);
 				menuViewModel.setMenuDTO(menuDTO);
-				//menuViewModel.setTitle(menuTitle);
-				//menuViewModel.setDate(menuDate);
-
 				break;
+			
 		}
-		case "Anuleaza": {
-			addMenuIsAvailable = false;
-
-			session.setAttribute("errorMessage", false);
-			session.removeAttribute("menuViewModel");
-			session.setAttribute("menuViewModel", new MenuViewModel());
-			break;
-		}
-		case "Salvare": {
-			LOGGER.info("Am intrat pe SAVE ALL");
+		case "Adauga Categorie Noua":
+		{
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
-			System.out.println("DISHES LIST: " + dishes);
+
+			addMenuIsAvailable = true;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 			
-			
+//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//			Date currentDate = new Date();
+//			Date parsedDate = null;
+//			parsedDate = format.parse(menuDate);
+//
+//			long diff = currentDate.getTime() - parsedDate.getTime();
+//			long dayDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
 			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
 			}
@@ -179,7 +158,40 @@ public class MenuController {
 			if (selectedMenuFoods != null) {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
+
 			
+//			if (dayDiff <= 0) {
+//				System.out.println(dayDiff + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
+//			}
+			
+				
+				dishes.add(createDefaultDishesDTO());
+
+				MenuDTO menuDTO = new MenuDTO();
+				menuDTO.setState(menuViewModel.getMenuDTO().getState());//
+				menuDTO.setId(menuViewModel.getMenuDTO().getId());
+				menuDTO.setDate(menuDate);
+				menuDTO.setTitle(menuTitle);
+
+				menuViewModel.setDishesDTO(dishes);
+				menuViewModel.setMenuDTO(menuDTO);
+				// menuViewModel.setTitle(menuTitle);
+				// menuViewModel.setDate(menuDate);
+
+				break;
+			
+		}
+		case "Anuleaza": {
+//			isOlderThan30();
+			addMenuIsAvailable = false;
+
+			session.removeAttribute("menuViewModel");
+			session.setAttribute("menuViewModel", new MenuViewModel());
+			break;
+		}
+		case "Salvare": {
+			LOGGER.info("Am intrat pe SAVE ALL");
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			if (canSave(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
 
 				if (selectedMenuCategories != null) {
@@ -188,18 +200,16 @@ public class MenuController {
 
 				if (selectedMenuFoods != null) {
 					updateListSelectedFoods(selectedMenuFoods, dishes);
-					System.out.println("Selected FOOOOOOD: " + dishes);
 				}
 
 				//
 				List<Category> c = getAllCategoriesFromMenu(dishes);
 				LOGGER.info("Lista de category: " + c);
-				
-				if (!isValid(dishes)) {
-					session.setAttribute("errorMessage", true);
+				if (!isValid(c)) {
+					session.setAttribute("errorMessage", false);
 					throw new DuplicateCategoryException("mesaj");
 				} else {
-					session.setAttribute("errorMessage", false);
+					session.setAttribute("errorMessage", true);
 				}
 				//
 
@@ -246,8 +256,6 @@ public class MenuController {
 				addMenuIsAvailable = false;
 				session.removeAttribute("menuViewModel");
 				// session.setAttribute("menuViewModel", new MenuViewModel());
-			} else {
-				throw new WrongMenuDateException("mesaj");
 			}
 
 			return "redirect:/viewMenuView";
@@ -340,7 +348,7 @@ public class MenuController {
 		dishDTO.setFoods(listOfFoodsDTO);
 
 		return dishDTO;
-	}
+	}   
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
 		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
@@ -426,63 +434,43 @@ public class MenuController {
 		}
 	}
 
-//	private boolean isValid(List<DishDTO> dishes) {
+//	private void isOlderThan30() throws ParseException {
+//		Iterable<Menu> menuList = menuRepository.findAll();
+//		for (Menu menu : menuList) {
+//
+//			String string = menu.getDate();
+//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//			Date menuDate = format.parse(string);
+//			Date currentDate = new Date();
+//			
+//			long day30 = 30L * 24L * 60L * 60L * 1000L;
+//		boolean olderThan30 = currentDate.before(new Date((menuDate.getTime() + day30)));
+//			
+//			System.out.println(currentDate.getTime()+ "CURRREEEENTT " + menuDate.getTime()+ " MENUU");
+//			 long diff = currentDate.getTime() - menuDate.getTime();
+//			 
+//			 System.out.println ("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+//			 
+//			 if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>=3) {
+//				 menuRepository.delete(menu);
+//			 }else {
+//				 continue;
+//			 }
 //		
-//		List<Category> categories = getAllCategoriesFromMenu(dishes);
-//		List<Food> foodsForFirstCategory = new ArrayList<>();
-//		List<Food> foodsForSecondCategory = new ArrayList<>();
-//		
-//		for (int i = 0; i < categories.size() - 1; i++) {
-//			for (int j = i + 1; j < categories.size(); j++) {
-//				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
-//				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());		
-//				System.out.println("Aici categorii: " + categories.get(i));
-//				System.out.println("PRIMA LISTA: " + foodsForFirstCategory);
-//				System.out.println("A DOUA LISTA: " + foodsForSecondCategory);
-//					
-//				if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
-//					return true;
-//				} 
-//				return false;
-//			}
+//			if(olderThan30) {
+//				menuRepository.delete(menu);
 //		}
-//		return true;
+//
+//		}
 //	}
-	
-	private boolean isValid(List<DishDTO> dishes) {
-		LOGGER.info("isValid function");
-		List<Category> categories = getAllCategoriesFromMenu(dishes);
-		List<Food> foodsForFirstCategory = new ArrayList<>();
-		List<Food> foodsForSecondCategory = new ArrayList<>();
-		for (int i = 0; i < categories.size() - 1; i++) {
-			for (int j = i + 1; j < categories.size(); j++) {
-				if (categories.get(i).getName().equals(categories.get(j).getName())) {
-					foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
-					foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());		
-					System.out.println("Aici categorii: " + categories.get(i));
-					System.out.println("PRIMA LISTA: " + foodsForFirstCategory);
-					System.out.println("A DOUA LISTA: " + foodsForSecondCategory);
-						
-					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
-						return true;
-					}
-					return false;					
-				}
+
+	private boolean isValid(List<Category> values) {
+		for (int i = 0; i < values.size() - 1; i++) {
+			for (int j = i + 1; j < values.size(); j++) {
+				if (values.get(i).getName().equals(values.get(j).getName()))
+					return false;
 			}
 		}
 		return true;
 	}
-		
-//	private boolean isValid(List<Category> values) {
-//		for (int i = 0; i < values.size() - 1; i++) {
-//			for (int j = i + 1; j < values.size(); j++) {
-//				if (values.get(i).getName().equals(values.get(j).getName()))
-//					return false;
-//			}
-//		}
-//		return true;
-//	}
-	
-	
-	
 }
