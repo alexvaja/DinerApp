@@ -110,9 +110,34 @@ public class MenuController {
 		switch (reqParam) {
 
 		case "Adauga Meniu": {
-
 	
 			LOGGER.info("Am intrat in AddMenu case");
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
+
+			addMenuIsAvailable = true;
+			model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
+			if (selectedMenuCategories != null) 
+				updateListSelectedCategory(selectedMenuCategories, dishes);
+			
+			if (selectedMenuFoods != null) 
+				updateListSelectedFoods(selectedMenuFoods, dishes);
+			
+
+				dishes.add(createDefaultDishesDTO());
+
+				MenuDTO menuDTO = new MenuDTO();
+				menuDTO.setState(menuViewModel.getMenuDTO().getState());//
+				menuDTO.setId(menuViewModel.getMenuDTO().getId());
+				menuDTO.setDate(menuDate);
+				menuDTO.setTitle(menuTitle);
+
+				menuViewModel.setDishesDTO(dishes);
+				menuViewModel.setMenuDTO(menuDTO);
+				break;
+			
+		}
+		case "Adauga Categorie Noua":
+		{
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
@@ -138,6 +163,8 @@ public class MenuController {
 //			if (dayDiff <= 0) {
 //				System.out.println(dayDiff + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
 //			}
+			
+				
 				dishes.add(createDefaultDishesDTO());
 
 				MenuDTO menuDTO = new MenuDTO();
