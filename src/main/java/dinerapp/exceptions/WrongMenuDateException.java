@@ -2,7 +2,7 @@ package dinerapp.exceptions;
 
 public class WrongMenuDateException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 231704697418476762L;
 
 	public WrongMenuDateException() {
 		super();
