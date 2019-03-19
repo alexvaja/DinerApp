@@ -97,7 +97,7 @@ public class ViewMenuController {
 		String reqParam = params.getFirst(idMenu);
 
 		switch (reqParam) {
-		case "Edit": {
+		case "Editeaza": {
 			LOGGER.info("ViewMenuController - Edit case");
 			
 			List<DishDTO> dishes = new ArrayList<>();
@@ -160,7 +160,7 @@ public class ViewMenuController {
 			model.addAttribute("addMenuIsAvailable", true);
 			return "views/menuView";
 		}
-		case "Publish":
+		case "Publica":
 			//List<Menu> listOfMenus = getAllMenusFromTable();
 			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
 			if (!editMenuViewModel.getMenus().isEmpty()) {
