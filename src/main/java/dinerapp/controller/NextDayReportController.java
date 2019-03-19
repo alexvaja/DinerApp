@@ -61,7 +61,6 @@ public class NextDayReportController {
 		}
 		return orderList;
 	}
-
 	private List<Food> getListOfFoods() {
 		final Iterable<Food> list = foodRepo.findAll();
 		final List<Food> foodList = new ArrayList<>();
@@ -70,7 +69,6 @@ public class NextDayReportController {
 		}
 		return foodList;
 	}
-
 	private List<OrderQuantity> geListOfOrderQuantity() {
 		final Iterable<OrderQuantity> list = orderQuantityRepo.findAll();
 		final List<OrderQuantity> orderQuantityList = new ArrayList<>();

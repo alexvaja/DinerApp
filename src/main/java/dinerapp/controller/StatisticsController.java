@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import dinerapp.model.entity.Order;
 import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
+import dinerapp.security.utils.UserComparer;
 
 @Controller
 public class StatisticsController {
@@ -52,6 +54,11 @@ public class StatisticsController {
 			userList.add(user);
 		return userList;
 	}
+	
+	private void sortUserList(List<UserDiner> users)
+	{
+		Collections.sort(users, new UserComparer());
+	}
 
 	@SessionScope
 	@GetMapping("/statisticsView")
@@ -66,6 +73,8 @@ public class StatisticsController {
 
 		List<Integer> placedOrders = new ArrayList<>(users.size());
 		List<Integer> pickedUpOrders = new ArrayList<>(users.size());
+		
+		sortUserList(users);
 
 //		for (int index = 0; index < users.size(); index++) {
 //			placedOrders.add(0);
@@ -117,7 +126,8 @@ public class StatisticsController {
 		
 		for (int index = 0; index < users.size(); index++) {
 			//StatisticDTO stat = new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index));
-			statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
+			if(users.get(index).getRoles().get(0).getName().equals("employee"))
+				statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
 		}
 		
 		statisticsViewModel.setStatistics(statistics);
