@@ -30,9 +30,6 @@
 						var today = new Date().toISOString().split('T')[0];
 						document.getElementsByName("menu_date")[0].setAttribute('min', today);
 					</script>
-			
-					<div>
-					</div>
 					
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
@@ -46,6 +43,11 @@
 											th:selected="${categoryItem.selected}" />
 									</select>
 								</div> <br />
+								
+								<div th:if="${session.errorMessage == True}">
+ 									<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
+ 								</div>
+								
 								<div>
 									<table class="table tcolor table-bordered">
 										<thead class="thead thead-dark">
