@@ -111,7 +111,7 @@ public class SelectionController {
 		UserDiner user = (UserDiner) session.getAttribute("nameFromUrl");
 		// actions to occur if Submit button is pressed
 		switch (actionType) {
-			case "Submit": {				
+			case "Comanda": {				
 				// gets date from session
 				String date = session.getAttribute("currentPickedDate").toString();
 				/* tests if any dish has been selected; dishIds is a string of ids comma separated	
@@ -140,10 +140,10 @@ public class SelectionController {
 				model.addAttribute("isMenuDatePicked", false);
 				break;
 			}
-			case "Reset":
+			case "Reseteaza":
 				// resets all inputs to default value
 				break;
-			case "Cancel":
+			case "Anuleaza":
 				// updates available menu dates for user
 				this.updateAvailableMenuDatesForUser(user, model);
 				// sets isMenuDatePicked to false
