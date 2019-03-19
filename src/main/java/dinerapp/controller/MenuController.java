@@ -77,7 +77,7 @@ public class MenuController {
 	@SessionScope
 	@GetMapping("/menuView")
 	public String sessionExample(Model model, Principal principal, HttpSession session) throws NewSessionException {
-		LOGGER.info("GET MENU");
+		LOGGER.info("Am intrat pe GetsMapping -> MenuController");
 
 		if (session.isNew()) {
 			throw new NewSessionException();
@@ -121,12 +121,14 @@ public class MenuController {
 		Boolean addMenuIsAvailable = false;
 		model.addAttribute("add MenuIsAvailable", addMenuIsAvailable);
 		
+		LOGGER.info("Am intrat pe PostMapping -> MenuController");
 		LOGGER.info("MENU VIEW MODEL: " + menuViewModel);
+		
 		switch (reqParam) {
 
 		case "Adauga Meniu": {
 	
-			LOGGER.info("Am intrat in AddMenu case");
+			LOGGER.info("Am intrat pe Adauga Meniu -> MenuController");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
@@ -152,6 +154,7 @@ public class MenuController {
 		}
 		case "Adauga Categorie Noua":
 		{
+			LOGGER.info("Am intrat pe Adauga Categorie Noua -> MenuController");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			addMenuIsAvailable = true;
@@ -182,6 +185,7 @@ public class MenuController {
 			
 		}
 		case "Anuleaza": {
+			LOGGER.info("Am intrat pe Anuleaza -> MenuController");
 			addMenuIsAvailable = false;
 			
 			session.setAttribute("errorMessage", false);
@@ -190,8 +194,10 @@ public class MenuController {
 			break;
 		}
 		case "Salvare": {
-			LOGGER.info("Am intrat pe SAVE ALL");
+			
+			LOGGER.info("Am intrat pe Salvare -> MenuController");
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
+			LOGGER.info("Lista de category: " + getAllCategoriesFromMenu(dishes));
 			
 			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
@@ -212,9 +218,6 @@ public class MenuController {
 					updateListSelectedFoods(selectedMenuFoods, dishes);
 				}
 
-				
-				//List<Category> c = getAllCategoriesFromMenu(dishes);
-				//LOGGER.info("Lista de category: " + c);
 				if (!isValid(dishes)) {
 					session.setAttribute("errorMessage", true);
 					throw new DuplicateCategoryException("mesaj");
@@ -265,7 +268,6 @@ public class MenuController {
 
 				addMenuIsAvailable = false;
 				session.removeAttribute("menuViewModel");
-				// session.setAttribute("menuViewModel", new MenuViewModel());
 			} else {
 				throw new WrongMenuDateException("mesaj");
 			}
@@ -456,9 +458,9 @@ public class MenuController {
 			for (int j = i + 1; j < categories.size(); j++) {
 				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
 				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
-				System.out.println("CATEGORIA 1: " + categories.get(i).getName());
-				System.out.println("CATEGORIA 2: " + categories.get(j).getName());
-				System.out.println("/");
+				LOGGER.info("CATEGORIA 1: " + categories.get(i).getName());
+				LOGGER.info("CATEGORIA 2: " + categories.get(j).getName());
+				LOGGER.info("<---Mereu o sa crape le meniu--->");
 				if (categories.get(i).getName().equals(categories.get(j).getName())) {
 					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
 						continue;
@@ -469,14 +471,4 @@ public class MenuController {
 		}
 		return true;
 	}
-
-//	private boolean isValid(List<Category> values) {
-//		for (int i = 0; i < values.size() - 1; i++) {
-//			for (int j = i + 1; j < values.size(); j++) {
-//				if (values.get(i).getName().equals(values.get(j).getName()))
-//					return false;
-//			}
-//		}
-//		return true;
-//	}
 }
