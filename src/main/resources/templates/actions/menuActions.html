@@ -10,7 +10,8 @@
 			<div th:if="${session.errorMessage == True}">
  				<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
  			</div>
-				
+ 			
+ 					
 			<div>
 				<h1>Adaugare meniu</h1>
 				<div th:if="${addMenuIsAvailable == True}" class=form-group>
@@ -31,6 +32,8 @@
 						document.getElementsByName("menu_date")[0].setAttribute('min', today);
 					</script>
 			
+					<div>
+					</div>
 					
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
