@@ -410,8 +410,9 @@ public class MenuController {
 	}
 
 	private void updateListSelectedCategory(String selectedMenuCategories, List<DishDTO> dishes) {
-		String[] indexCategory = selectedMenuCategories.split(",");
+		
 		int index = 0;
+		String[] indexCategory = selectedMenuCategories.split(",");
 
 		for (DishDTO dishDTO : dishes) {
 			List<CategoryDTO> listCategory = dishDTO.getCategories();
@@ -428,8 +429,9 @@ public class MenuController {
 	}
 
 	private void updateListSelectedFoods(String selectedMenuFoods, List<DishDTO> dishes) {
-		String[] indexFood = selectedMenuFoods.split(",");
+		
 		int index = 0;
+		String[] indexFood = selectedMenuFoods.split(",");
 
 		for (DishDTO dishDTO : dishes) {
 			List<FoodDTO> listFood = dishDTO.getFoods();
@@ -458,8 +460,8 @@ public class MenuController {
 			for (int j = i + 1; j < categories.size(); j++) {
 				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
 				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
-				LOGGER.info("CATEGORIA 1: " + categories.get(i).getName());
-				LOGGER.info("CATEGORIA 2: " + categories.get(j).getName());
+				LOGGER.info("Categoria 1: " + categories.get(i).getName());
+				LOGGER.info("Categoria 2: " + categories.get(j).getName());
 				LOGGER.info("<---Mereu o sa crape le meniu--->");
 				if (categories.get(i).getName().equals(categories.get(j).getName())) {
 					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
