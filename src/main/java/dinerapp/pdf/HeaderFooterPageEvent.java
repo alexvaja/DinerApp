@@ -2,6 +2,7 @@ package dinerapp.pdf;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 import com.itextpdf.text.BaseColor;
@@ -58,11 +59,20 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			// add image
 			// Image logo = Image.getInstance("..\\DinerApp -
 			// new\\src\\main\\resources\\static\\images\\AtosLogo.png");
-			Image logo = Image.getInstance(".\\src\\main\\resources\\static\\images\\AtosLogo.png");
-			logo.setAbsolutePosition(100f, 550f);
-			// Scale to new height and new width of image
-			logo.scaleAbsolute(200, 200);
-			header.addCell(logo);
+			try {
+                Image logo = Image.getInstance(new URL("https://i.imgur.com/xfChJpW.png"));
+                logo.setAbsolutePosition(100f, 550f);
+                logo.scaleAbsolute(200, 200);
+                header.addCell(logo);
+			}
+			catch(MalformedURLException e)
+			{
+				e.printStackTrace();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
 
 			// add text-date
 			PdfPCell text = new PdfPCell();
@@ -80,10 +90,6 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 
 		} catch (DocumentException de) {
 			throw new ExceptionConverter(de);
-		} catch (MalformedURLException e) {
-			throw new ExceptionConverter(e);
-		} catch (IOException e) {
-			throw new ExceptionConverter(e);
 		}
 	}
 
