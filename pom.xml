@@ -23,23 +23,23 @@
 	</parent>
 
 	<dependencies>
-	
-	    <dependency>
-        	<groupId>org.openjdk.jmh</groupId>
-        	<artifactId>jmh-core</artifactId>
-        	<version>1.1</version>
-    	</dependency>
-    	<dependency>
-        	<groupId>org.openjdk.jmh</groupId>
-        	<artifactId>jmh-generator-annprocess</artifactId>
-        	<version>1.1</version>
-    	</dependency>
-    	<dependency>
-        	<groupId>org.openjdk.jol</groupId>
-        	<artifactId>jol-core</artifactId>
-        	<version>0.1</version>
-    	</dependency>
-	
+
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-core</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-generator-annprocess</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jol</groupId>
+			<artifactId>jol-core</artifactId>
+			<version>0.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -94,7 +94,7 @@
 			<artifactId>poi-scratchpad</artifactId>
 			<version>3.15</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -106,6 +106,14 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+		<dependency>
+			<groupId>com.smattme</groupId>
+			<artifactId>mysql-backup4j</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -119,22 +127,22 @@
 			</plugin>
 
 			<plugin>
-  				<groupId>com.spotify</groupId>
-  				<artifactId>dockerfile-maven-plugin</artifactId>
-  				<version>1.4.10</version>
-  				<executions>
-    				<execution>
-      					<id>default</id>
-      						<goals>
-       							 <goal>build</goal>
-      						</goals>
-    				</execution>
-  				</executions>
-  				<configuration>
-    				<repository>dinerapp-img</repository>
-        		</configuration>
-				</plugin>
-			</plugins>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.10</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>dinerapp-img</repository>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 	<repositories>
