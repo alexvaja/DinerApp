@@ -8,22 +8,22 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class DatabaseBackupController {
 
-	private int counter = 0;
-
-	@Scheduled(fixedRate = 5000)
-	public void backupDB() {
-
-		String path = "/home/DinerappBackupDB";
-
-		Process p = null;
-
-		try {
-			Runtime runtime = Runtime.getRuntime();
-			p = runtime.exec("mysqldump -uroot -proot  --add-drop-database -B dinerapp -r " + path + "\\BackUp"
-					+ counter++ + "min.sql");
-		} catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		}
-	}
+//	private int counter = 0;
+//
+//	@Scheduled(fixedRate = 5000)
+//	public void backupDB() {
+//
+//		String path = "/home/DinerappBackupDB";
+//
+//		Process p = null;
+//
+//		try {
+//			Runtime runtime = Runtime.getRuntime();
+//			p = runtime.exec("mysqldump -uroot -proot  --add-drop-database -B dinerapp -r " + path + "\\BackUp"
+//					+ counter++ + "min.sql");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			e.getMessage();
+//		}
+//	}
 }
