@@ -6,10 +6,11 @@
 <body>
 <body>
 	<div>
-		<form action="#" th:action="@{/menuView}" th:object="${session.menuViewModel}" method="post">
-			<div th:if="${session.errorMessage == True}">
+		<form action="#" th:action="@{/menuView}"
+			th:object="${session.menuViewModel}" method="post">
+			<!-- <div th:if="${session.errorMessage == True}">
  				<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
- 			</div>
+ 			</div> -->
 
 			<div>
 				<h1>Adaugare meniu</h1>
@@ -20,17 +21,24 @@
 							class="form-control" />
 					</div>
 
-					<label for="Data">Data: Luna/Zi/An</label>
+					<!-- <label style="color: red" for="Data">Format Data: AAAA-LL-ZZ</label> -->
+					<label for="Data">Data:</label>
 					<div class="input-group date" data-provide="datepicker">
 						<input type="date" name="menu_date" th:value="*{menuDTO.date}"
-							class="form-control" /> <label>Data trebuie trecuta obligatoriu!</label>
+							placeholder="AAAA-LL-ZZ" class="form-control" /> <label
+							style="color: red">Data trebuie trecuta obligatoriu!</label>
 					</div>
-					
-					 <script>
-						var today = new Date().toISOString().split('T')[0];
-						document.getElementsByName("menu_date")[0].setAttribute('min', today);
+					<div th:if="${session.dateErrorMessage == True}">
+						<label style="color: red;">Exista un meniu pe ziua
+							respectiva!</label>
+					</div>
+
+					<script>
+						var today = new Date(new Date()+1).toISOString().split('T')[0];
+						document.getElementsByName("menu_date")[0]
+								.setAttribute('min', today);
 					</script>
-					
+
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
 							<td><br /> <label>Selecteaza Categoria: </label>
@@ -43,11 +51,12 @@
 											th:selected="${categoryItem.selected}" />
 									</select>
 								</div> <br />
-								
+
 								<div th:if="${session.errorMessage == True}">
- 									<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
- 								</div>
-								
+									<label style="color: red;">Categoriile trebuie sa fie
+										diferite!</label>
+								</div>
+
 								<div>
 									<table class="table tcolor table-bordered">
 										<thead class="thead thead-dark">
@@ -62,7 +71,8 @@
 										<tbody>
 											<tr th:each="foodItem, iter : ${dish.foods}">
 												<td class="text-center" th:text="${foodItem.food.name}"></td>
-												<td class="text-center" th:text="${foodItem.food.ingredients}"></td>
+												<td class="text-center"
+													th:text="${foodItem.food.ingredients}"></td>
 												<td class="text-center" th:text="${foodItem.food.weight}"></td>
 												<td class="text-center" th:text="${foodItem.food.price}"></td>
 												<td class="text-center"><input class="form-check-input"
@@ -77,13 +87,16 @@
 								</div>
 						</tr>
 					</div>
-					<input class="btn btn-primary" name="submit" type="submit" value="Adauga Categorie Noua" /> 
-					<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
-					<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
+					<input class="btn btn-primary" name="submit" type="submit"
+						value="Adauga Categorie Noua" /> <input class="btn btn-primary"
+						name="submit" type="submit" value="Anuleaza" /> <input
+						class="btn btn-primary" name="submit" type="submit"
+						th:value="Salvare" />
 				</div>
 
 				<div th:if="${addMenuIsAvailable == False}">
-					<input class="btn btn-primary" name="submit" type="submit" value="Adauga Meniu" />
+					<input class="btn btn-primary" name="submit" type="submit"
+						value="Adauga Meniu" />
 				</div>
 			</div>
 		</form>
