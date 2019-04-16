@@ -46,7 +46,6 @@ public class StatisticsController {
 			orderList.add(order);
 		return orderList;
 	}
-
 	private List<UserDiner> getListOfUsers() {
 		final Iterable<UserDiner> list = userDinerRepo.findAll();
 		final List<UserDiner> userList = new ArrayList<>();
@@ -62,7 +61,8 @@ public class StatisticsController {
 
 	@SessionScope
 	@GetMapping("/statisticsView")
-	public String getStatistics(Model model, HttpSession session) throws NewSessionException {
+	public String getStatistics(Model model, HttpSession session) throws NewSessionException 
+	{
 		LOGGER.info("Am intrat in getStatistics");
 		if (session.isNew())
 			throw new NewSessionException();
@@ -82,28 +82,26 @@ public class StatisticsController {
 //		}
 //		
 		for (int index = 0; index < users.size(); index++) {
-			System.out.println("PlacedOrders1 :" + placedOrders);
-			System.out.println("PickedUpOrder1" + pickedUpOrders);
+			LOGGER.info("PlacedOrders1 :" + placedOrders);
+			LOGGER.info("PickedUpOrder1" + pickedUpOrders);
 		}
 		
 
 		for (int i = 0; i < users.size(); i++) {
-			System.out.println("user " + i + ":" + users.get(i));
-			System.out.println("---------------------------------------");
+			LOGGER.info("user " + i + ":" + users.get(i));
+			LOGGER.info("---------------------------------------");
+			
 			int numberOfPlacedOrders = 0;
 			int numberOfPickedUpOrders = 0;
-			for (int index = 0; index < orders.size(); index++) {
-				System.out.println("order " + index + ":" + orders.get(index));
-				if (orders.get(index).getUserDiner().equals(users.get(i))) {
+			
+			for (int index = 0; index < orders.size(); index++) 
+			{
+				LOGGER.info("order " + index + ":" + orders.get(index));
+				if (orders.get(index).getUserDiner().equals(users.get(i))) 
+				{
 					numberOfPlacedOrders++;
-//					int value = placedOrders.get(i);
-//					value++;
-//					placedOrders.add(i, value);
 					if (orders.get(index).getTaken() == true) {
 						numberOfPickedUpOrders++;
-//						int var = pickedUpOrders.get(i);
-//						var++;
-//						pickedUpOrders.add(i, var);
 					}
 				}
 			}
@@ -126,7 +124,7 @@ public class StatisticsController {
 		
 		for (int index = 0; index < users.size(); index++) {
 			//StatisticDTO stat = new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index));
-			if(users.get(index).getRoles().get(0).getName().equals("employee"))
+			if(users.get(index).getRoles().get(1).getName().equals("employee"))
 				statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
 		}
 		
