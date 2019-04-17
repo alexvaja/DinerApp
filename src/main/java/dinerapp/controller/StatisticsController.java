@@ -75,12 +75,6 @@ public class StatisticsController {
 		List<Integer> pickedUpOrders = new ArrayList<>(users.size());
 		
 		sortUserList(users);
-
-//		for (int index = 0; index < users.size(); index++) {
-//			placedOrders.add(0);
-//			pickedUpOrders.add(0);
-//		}
-//		
 		for (int index = 0; index < users.size(); index++) {
 			LOGGER.info("PlacedOrders1 :" + placedOrders);
 			LOGGER.info("PickedUpOrder1" + pickedUpOrders);
