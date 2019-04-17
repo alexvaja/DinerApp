@@ -47,7 +47,8 @@ a.subMenuHover:hover, a.subMenuHover:active {
 }
 
 .logo {
-	height: 100px;
+	height: 106px;
+	    margin-left: 5px;
 }
 
 .leftBar {
