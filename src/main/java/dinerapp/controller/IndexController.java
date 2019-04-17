@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import dinerapp.constants.MenuStates;
 import dinerapp.model.entity.Menu;
 import dinerapp.repository.MenuRepository;
+import dinerapp.security.utils.DateComparer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +105,12 @@ public class IndexController
 			}
 		}
 		System.out.println("Lista Meniu" + publishedMenu);
+		sortMenus(publishedMenu);
 		return publishedMenu;		
+	}
+	
+	private void sortMenus(List<Menu> menus)
+	{
+		Collections.sort(menus, new DateComparer());
 	}
 }
