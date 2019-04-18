@@ -75,12 +75,6 @@ public class StatisticsController {
 		List<Integer> pickedUpOrders = new ArrayList<>(users.size());
 		
 		sortUserList(users);
-
-//		for (int index = 0; index < users.size(); index++) {
-//			placedOrders.add(0);
-//			pickedUpOrders.add(0);
-//		}
-//		
 		for (int index = 0; index < users.size(); index++) {
 			LOGGER.info("PlacedOrders1 :" + placedOrders);
 			LOGGER.info("PickedUpOrder1" + pickedUpOrders);
@@ -124,7 +118,7 @@ public class StatisticsController {
 		
 		for (int index = 0; index < users.size(); index++) {
 			//StatisticDTO stat = new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index));
-			if(users.get(index).getRoles().get(1).getName().equals("employee"))
+			if(users.get(index).getRoles().get(0).getName().equals("employee"))
 				statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
 		}
 		
