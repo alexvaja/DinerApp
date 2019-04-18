@@ -8,19 +8,18 @@ function check(divid, source) {
    
     if(checks[i].disabled){
       checks[i].value=0;
-
     }
   }
 }
 
-var div = document.getElementById('uniqueID');
-div.id = 'id_' + Math.floor(Math.random() * 9e99).toString(36);
-
-function reset() {
-	var inputs = document.getElementsByTagName('input');
-	for(i = 0; i < inputs.length; i++){
-		if(inputs[i] == "number"){
-			inputs[i].disabled = true;		
-		}    
-	}
+function createUniqueIds(){
+   var allMenus = document.getElementsByClassName('menu');
+   var index = 0;
+   for(i = 0; i < allMenus.length; i++){
+	   allMenus[i].id = 'id_'+ index++;
+   }  
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+	createUniqueIds();
+	}, false);

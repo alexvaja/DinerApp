@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 
+import dinerapp.constants.MenuStates;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
 import dinerapp.model.dto.DishDTO;
@@ -34,7 +35,6 @@ import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Menu;
 import dinerapp.model.entity.Order;
 import dinerapp.model.entity.OrderQuantity;
-import dinerapp.model.entity.Role;
 import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
@@ -42,9 +42,9 @@ import dinerapp.repository.OrderQuantityRepository;
 import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
 
-
 @Controller
-public class SelectionController {
+public class SelectionController 
+{
 	@Autowired
 	private MenuRepository menuRepository;
 	@Autowired
@@ -58,108 +58,128 @@ public class SelectionController {
 
 	@SessionScope
 	@GetMapping("/employeeOrderView")
-	public String getAllData(HttpSession session, Model model,
-			@RequestParam(value = "name", required = false) String nameFromURL) throws ParseException {	
+	public String getAllData(HttpSession session, Model model) throws ParseException 
+	{	
 		// sets menuViewModel attribute on session
 		session.setAttribute("menuViewModel", new MenuViewModel());	
 		// adds an attribute to the model that tells if a menu date has been picked or not
 		model.addAttribute("isMenuDatePicked", false);
 		// tests if the 'name' parameter is set in URL and if there is an user with that name
-		if (nameFromURL != null) {
-			String username = convertHexToAscii(nameFromURL);
+		String nameFromURL = (String) session.getAttribute("nameFromURL");
+
+		if (nameFromURL != null)
+		{
 			// finds the user with the name from URL
-			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(username));
-//			if(!this.isUserEmployee(user.get())) {
-//				return "views/notAuthorized";
-//			}
-			// sets the name taken from URL into session
-			session.setAttribute("nameFromUrl", user.get());		
+			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
-		}else {	
-			// tests if user name is set on session
-			if(session.getAttribute("nameFromUrl") != null) {
-				// gets the user from session
-				UserDiner user = (UserDiner) session.getAttribute("nameFromUrl");
-				// updates the list of available menu dates for user
-				this.updateAvailableMenuDatesForUser(user, model);
-			}		
 		}
+
 		return "views/employeeOrderView";
 	}
 
 	@SessionScope
 	@PostMapping("/employeeOrderView")
-	public String getAllData(Model model, HttpSession session, @SessionAttribute MenuViewModel menuViewModel,
+	public String getAllData(Model model, HttpSession session, @SessionAttribute(required = false) MenuViewModel menuViewModel,
 			@RequestParam(value = "pickedDate", required = false) String pickedDate,
 			@RequestParam(value = "submit", required = false) String actionType,
 			@RequestParam(value = "quantity", required = false) String foodsQuantities,
-			@RequestParam(value = "dishCheckbox", required = false) String dishIds) throws ParseException {
+			@RequestParam(value = "dishCheckbox", required = false) String dishIds,
+			@RequestParam(value = "userNameFromPortal", required = false) String nameFromURL,
+			@RequestParam(value = "date", required = false) String dateOfOrder) throws ParseException 
+	{
 		
 		// tests if there is any date picked
-		if (pickedDate != null) {
+		if (pickedDate != null) 
+		{
 			// gets the menu for picked date
 			Menu menu = getMenuByDate(pickedDate);
-			// adds current picked date on session
-			session.setAttribute("currentPickedDate", pickedDate);
 			// sets data on menuViewModel
 			menuViewModel.getMenuDTO().setDate(menu.getDate());
 			menuViewModel.getMenuDTO().setTitle(menu.getTitle());
 			menuViewModel.setDishesDTO(convertDishesToDishesDTO(menu.getDishes()));
 		}
+
 		// finds the user with name taken from URL
-		UserDiner user = (UserDiner) session.getAttribute("nameFromUrl");
-		// actions to occur if Submit button is pressed
-		switch (actionType) {
-			case "Comanda": {				
-				// gets date from session
-				String date = session.getAttribute("currentPickedDate").toString();
-				/* tests if any dish has been selected; dishIds is a string of ids comma separated	
-				 * tests if there is already an order for given date and user
-				 */
-				if(dishIds != null && !isDateAlreadyOrderedForUser(date, user)) {	
-					// adds a new order to database
-					this.addNewOrder(user, date);
-					// converts the comma separated string into a list of strings
-					List<String> dishesIds = Arrays.asList(dishIds.split(","));
-					// gets all foods ids for a dish
-					List<String> foodIds = this.getFoodsForDish(dishesIds, date);
-					// converts quantities from comma separated string to list
-					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
-					// creates a map of foods and quantities
-					Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
-					// gets an order by date
-					Order order = this.getOrderByDateAndUser(date, user);
-					// adds a new orderQuantity to database
-					this.addNewOrderQuantity(foodQuantities, order);
-					}	
-					
-				// updates available menu dates for user
-				this.updateAvailableMenuDatesForUser(user, model);
-				// sets isMenuDatePicked to false
-				model.addAttribute("isMenuDatePicked", false);
-				break;
-			}
-			case "Reseteaza":
-				// resets all inputs to default value
-				break;
-			case "Anuleaza":
-				// updates available menu dates for user
-				this.updateAvailableMenuDatesForUser(user, model);
-				// sets isMenuDatePicked to false
-				model.addAttribute("isMenuDatePicked", false);
-				break;
-			case "Alege data":
-				// sets isMenuDatePicked to true
-				model.addAttribute("isMenuDatePicked", true);
-				List<String> allAvailableDates = this.getAllAvailableMenuDatesForUser(user);
-				if(allAvailableDates.isEmpty()) {
-					model.addAttribute("isMenuDatePicked", false);
-				}
-
-				break;
+		Optional<UserDiner> user;
+		
+		if(session.getAttribute("nameFromURL") != null) {
+			user = userRepository.findById(this.getUserIdByName((String)session.getAttribute("nameFromURL")));
 		}
-
+		else {
+			user = userRepository.findById(this.getUserIdByName(nameFromURL));
+		}
+		
+		// actions to occur if Submit button is pressed
+		if(actionType != null) {
+			switch (actionType) {
+				case "Comanda mancare": {
+					session.setAttribute("nameFromURL", nameFromURL);
+					return "redirect:/employeeOrderView";
+				}
+				case "Comanda": {				
+					// tests if any dish has been selected; dishIds is a string of ids comma separated			
+					if(dishIds == null) {
+						model.addAttribute("noFoodSelected", true);
+						model.addAttribute("isMenuDatePicked", true);
+						return "views/employeeOrderView";
+					}
+					// tests if there is already an order for given date and user
+					if(isDateAlreadyOrderedForUser(dateOfOrder, user.get())){
+						model.addAttribute("alreadyOrderedForThisDate", true);
+						model.addAttribute("isMenuDatePicked", false);
+						this.updateAvailableMenuDatesForUser(user.get(), model);
+						return "views/employeeOrderView";
+					}
+								
+					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {	
+						// adds a new order to database
+						this.addNewOrder(user.get(), dateOfOrder);
+						// converts the comma separated string into a list of strings
+						List<String> dishesIds = Arrays.asList(dishIds.split(","));
+						// gets all foods ids for a dish
+						List<String> foodIds = this.getFoodsForDish(dishesIds, dateOfOrder);
+						// converts quantities from comma separated string to list
+						List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
+						// creates a map of foods and quantities
+						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
+						// gets an order by date
+						Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
+						// adds a new orderQuantity to database
+						this.addNewOrderQuantity(foodQuantities, order);					
+						model.addAttribute("orderedWithSuccess", true);
+						}	
+						
+					// updates available menu dates for user
+					this.updateAvailableMenuDatesForUser(user.get(), model);
+					// sets isMenuDatePicked to false
+					model.addAttribute("isMenuDatePicked", false);
+					break;
+				}
+				case "Reseteaza":
+					// resets all inputs to default value
+					break;
+				case "Anuleaza":
+					// updates available menu dates for user
+					this.updateAvailableMenuDatesForUser(user.get(), model);
+					// sets isMenuDatePicked to false
+					model.addAttribute("isMenuDatePicked", false);
+					break;
+				case "Alege data":	
+					// String date = dateOfOrder;
+					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()))
+					{
+						model.addAttribute("isMenuDatePicked", true);
+					}
+					else {
+						model.addAttribute("alreadyOrderedForThisDate", true);
+						model.addAttribute("isMenuDatePicked", false);
+						// updates the list of available menu dates for user
+						this.updateAvailableMenuDatesForUser(user.get(), model);
+						return "views/employeeOrderView";					
+					}
+			}
+		}
 		return "views/employeeOrderView";
 	}	
 	
@@ -206,7 +226,7 @@ public class SelectionController {
 			// gets the date for current menu
 			Date menuDate = dateFormat.parse(menu.getDate());
 			// tests if the date hasn't passed
-			if (menuDate.after(currentDate)) {
+			if (menuDate.after(currentDate) && menu.getState().trim().equals(MenuStates.PUBLISHED.toString().trim())) {
 				// adds the date to available dates
 				avaialbeMenuDates.add(menu.getDate());
 			}
@@ -245,7 +265,6 @@ public class SelectionController {
 	
 	// gets an user id based on his name
 	private Integer getUserIdByName(String name) {
-
 		// gets all users from database
 		Iterable<UserDiner> allUsersFromDB = userRepository.findAll();
 		// iterates through all users
@@ -300,7 +319,6 @@ public class SelectionController {
 				if(dish.getCategory().getId() == Integer.parseInt(dishId)) {
 					// iterates through all foods for current dish
 					for(Food food: dish.getFoods()) {
-						// adds current food to foods
 						foods.add(food.getId().toString());
 					}
 				}		
@@ -321,27 +339,6 @@ public class SelectionController {
 			}
 		}
 		return false;
-	}
-	
-	// tests if the user is employee or not
-	private boolean isUserEmployee(UserDiner user){	
-		List<Role> roles = user.getRoles();
-		for(Role role : roles) {
-			if(role.getName().equals("employee")) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	// parses the name taken from URL from hex to string
-	private String convertHexToAscii(String hexString) {
-	    StringBuilder output = new StringBuilder(""); 
-		for (int i = 0; i < hexString.length(); i += 2) {
-		     String str = hexString.substring(i, i + 2);
-		     output.append((char) Integer.parseInt(str, 16));
-		}	     
-		return output.toString();
 	}
 		
 	// converts a list of dishes to a list of dishesDTO
