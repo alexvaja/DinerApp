@@ -4,35 +4,52 @@
 <link rel="stylesheet" th:href="@{/css/mainPage.css}" href="../../static/css/mainPage.css"/>
 <head></head>
 <body>
-	<form action="#" th:action="@{/employeeOrderView}"
-		th:object="${session.menuViewModel}" method="post">
+	<form action="#" th:action="@{/employeeOrderView}" th:object="${session.menuViewModel}" method="post">
 		<br />
 		<div th:if="${isMenuDatePicked == false}">
+			<div th:if="${orderedWithSuccess == true}" class="alert alert-success text-center" role="alert">
+					<h5> Comanda plasata cu succes! </h5> 
+			</div>
+			<div th:if="${alreadyOrderedForThisDate == true}" class="alert alert-danger text-center" role="alert">
+				<h5> Ati comandat deja pentru aceasta data! </h5> 
+			</div>
+			<div th:if="${orderRemoved == true}" class="alert alert-info text-center" role="alert">
+				<h5> O comanda a fost stearsa! </h5> 
+			</div>
 			<table>
 				<tr>
-					<td><select class="btn btn-primary" name="pickedDate">
-							<option class="btn btn-primary"
-								th:each="date : ${allAvailableMenuDates}" th:text="${date}" />
-					</select></td>
-					<td><input class="btn btn-primary" type="submit" name="submit"
-						value="Alege data" /></td>
+					<td>
+						<select class="btn btn-primary" name="pickedDate">
+							<option class="btn btn-primary" th:each="date : ${allAvailableMenuDates}" th:text="${date}"/>
+						</select>
+					</td>
+					<td>
+						<input class="btn btn-primary" type="submit" name="submit" value="Alege data" />
+					</td>
 				</tr>
 			</table>
 		</div>
 		<div th:if="${isMenuDatePicked == true}">
 			<table>
-				<tr>
+				<tr style="text-align: center; font-weight: bolder; font-size: 2vw">
 					<td>
-						<h1>Alegeti mancarea pentru data:&nbsp;</h1>
+						<font color="#0072C6">Alegeti mancarea pentru data:&nbsp;</font>
 					</td>
 					<td>
-						<h1 th:text="*{menuDTO.date}" name="data"></h1>
+						<font color="#0072C6"><b th:text="*{menuDTO.date}"></b></font>
+						<input type="hidden" name="date" th:value=*{menuDTO.date}>
 					</td>
 				</tr>
 			</table>
+			<div th:if="${noFoodSelected == true}" class="alert alert-danger text-center" role="alert">
+				<h5> Nu ati selectat mancare! </h5> 
+			</div>
+			<div th:if="${alreadyOrderedForThisDate == true}" class="alert alert-danger text-center" role="alert">
+				<h5> Ati comandat deja pentru aceasta data! </h5> 
+			</div>
 			<div id="dish" th:each="dish : *{dishesDTO}">
 				<div th:each="categ : ${dish.categories}">
-					<div id="uniqueID">
+					<div id="uniqueID" class="menu">
 						<hr>
 						<div class="name" th:text="${categ.category.name}"></div>
 						<div class="price" th:text="${categ.category.price} + ' lei'"></div> 
@@ -62,7 +79,7 @@
 			</div>
 			<div>
 				<input class="btn btn-primary" name="submit" type="submit"value="Comanda"/> 
-				<input class="btn btn-primary" name="submit" type="reset" value="Reseteaza"  onClick="reset();"/> 
+				<input class="btn btn-primary" name="submit" type="reset" value="Reseteaza"/> 
 				<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza"/>
 			</div>
 		</div>
