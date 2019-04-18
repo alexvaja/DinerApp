@@ -90,7 +90,7 @@ public class MenuController {
 			throw new NewSessionException();
 		}
 
-		LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
+		//LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
 		model.addAttribute("addMenuIsAvailable", false);
 		
 		if (session.getAttribute("menuViewModel") == null) {
@@ -105,8 +105,8 @@ public class MenuController {
 			model.addAttribute("addMenuIsAvailable", false);
 		} else {
 			System.err.println("AM INTRAT PE ELSE");
-			System.err.println("ERROR MESSAGE: " + session.getAttribute("errorMessage"));
-			System.err.println("DATE ERROR MESSAGE: " + session.getAttribute("dateErrorMessage"));
+			//System.err.println("ERROR MESSAGE: " + session.getAttribute("errorMessage"));
+			//System.err.println("DATE ERROR MESSAGE: " + session.getAttribute("dateErrorMessage"));
 			
 			if(session.getAttribute("errorMessage").equals("true")) {
 				session.setAttribute("dateErrorMessage", false);
@@ -138,8 +138,8 @@ public class MenuController {
 		session.setAttribute("dateErrorMessage", false); //setez ororile pe false
 		session.setAttribute("errorMessage", false); //setez erorile pe false
 		{
-			LOGGER.info("Am intrat pe PostMapping -> MenuController");
-			LOGGER.info("MENU VIEW MODEL: " + menuViewModel);		
+			//LOGGER.info("Am intrat pe PostMapping -> MenuController");
+			//LOGGER.info("MENU VIEW MODEL: " + menuViewModel);		
 		}
 
 		//Boolean addMenuIsAvailable = false;
@@ -157,8 +157,8 @@ public class MenuController {
 				System.err.println("menuTitle: " + menuTitle);
 				System.err.println("menuDate:" + menuDate);
 				System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				System.err.println("VIEW MODEL: " + menuViewModel);
+				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
+				//System.err.println("VIEW MODEL: " + menuViewModel);
 			} // convert to LOGGER
 
 			model.addAttribute("addMenuIsAvailable", true);
@@ -182,8 +182,8 @@ public class MenuController {
 				System.err.println("reqParam: " + reqParam);
 				System.err.println("menuTitle: " + menuTitle);
 				System.err.println("menuDate:" + menuDate);
-				System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				System.err.println("selectedMenuFoods: " + selectedMenuFoods);
+				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
+				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
 			} // convert to LOGGER
 			
 			model.addAttribute("addMenuIsAvailable", true);
@@ -218,9 +218,9 @@ public class MenuController {
 				System.err.println("reqParam: " + reqParam);
 				System.err.println("menuTitle: " + menuTitle);
 				System.err.println("menuDate:" + menuDate);
-				System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				LOGGER.info("Am intrat pe Anuleaza -> MenuController");
+				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
+				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
+				//LOGGER.info("Am intrat pe Anuleaza -> MenuController");
 			}  // convert to LOGGER
 			
 			model.addAttribute("addMenuIsAvailable", false);
@@ -244,13 +244,23 @@ public class MenuController {
 				System.err.println("reqParam: " + reqParam);
 				System.err.println("menuTitle: " + menuTitle);
 				System.err.println("menuDate:" + menuDate);
-				System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				LOGGER.info("Am intrat pe Salvare -> MenuController");
-				LOGGER.info("Lista de category: " + getAllCategoriesFromMenu(menuViewModel.getDishesDTO()));
+				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
+				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
+				//LOGGER.info("Am intrat pe Salvare -> MenuController");
+				//LOGGER.info("Lista de category: " + getAllCategoriesFromMenu(menuViewModel.getDishesDTO()));
 			} // convert to LOGGER
 			
-			Menu menu = new Menu();
+			//Menu menu = new Menu();
+			//menu.setDate(menuDate);
+			//menu.setTitle(menuTitle);
+			
+			MenuDTO menuDTO = new MenuDTO();
+			menuDTO.setId(menuViewModel.getMenuDTO().getId());
+			menuDTO.setTitle(menuTitle);
+			menuDTO.setDate(menuDate);
+			menuDTO.setState(menuViewModel.getMenuDTO().getState());
+			menuViewModel.setMenuDTO(menuDTO);
+			
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			
 			if (selectedMenuCategories != null) { //fac update la categorii
@@ -301,10 +311,10 @@ public class MenuController {
 				
 				List<Dish> selectedDishList = new ArrayList<>();
 
-				//Menu menu = new Menu();
+				Menu menu = new Menu();
 				menu.setId(menuViewModel.getMenuDTO().getId());
-				menu.setDate(menuDate);
-				menu.setTitle(menuTitle);
+				menu.setDate(menuViewModel.getMenuDTO().getDate());
+				menu.setTitle(menuViewModel.getMenuDTO().getTitle());
 				menu.setState(MenuStates.SAVED.toString());
 				
 				menuRepository.save(menu);
