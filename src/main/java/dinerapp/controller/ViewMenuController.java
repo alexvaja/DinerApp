@@ -163,18 +163,29 @@ public class ViewMenuController {
 		case "Publica":
 			//List<Menu> listOfMenus = getAllMenusFromTable();
 			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
-			if (!editMenuViewModel.getMenus().isEmpty()) {
-				Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
+
+			Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
+			
+			if (!editMenuViewModel.getMenus().isEmpty() && isEmptyCategoryMenu(menu)) {
+				
 				editMenuViewModel.getMenus().remove(menu);
 				menu.setState(MenuStates.PUBLISHED.toString());
 				menuRepository.save(menu);	
-			}			
+			}	
+			
 			break;
 		}
 
 		model.addAttribute("editMenuViewModel", editMenuViewModel);
 
 		return "views/viewMenuView";
+	}
+
+	private boolean isEmptyCategoryMenu(Menu menu) {
+
+		if (menu.getDishes().isEmpty())
+			return false;
+		return true;
 	}
 
 	private List<Category> getAllCategoriesFromTable() {
