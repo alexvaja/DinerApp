@@ -5,9 +5,9 @@ import dinerapp.constants.MenuStates;
 public class MenuDTO {
 
 	private Integer id;
+	private String title;
 	private String date;
 	private String state;
-	private String title;
 	
 	public MenuDTO() {
 		super();
@@ -20,6 +20,14 @@ public class MenuDTO {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDate() {
@@ -38,16 +46,8 @@ public class MenuDTO {
 		this.state = state;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	@Override
 	public String toString() {
-		return "MeniuDTO [" + id + ", " + date + ", " + state + ", " + title + "]";
+		return "MenuDTO [" + id + ", " + title + ", " + date + ", " + state + "]";
 	}
 }
