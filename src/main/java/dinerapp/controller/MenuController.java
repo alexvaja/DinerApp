@@ -101,7 +101,6 @@ public class MenuController {
 			session.setAttribute("errorMessage", false);
 			session.setAttribute("dateErrorMessage", false);
 
-			//Boolean addMenuIsAvailable = false;
 			model.addAttribute("addMenuIsAvailable", false);
 		} else {
 			System.err.println("AM INTRAT PE ELSE");
@@ -116,7 +115,6 @@ public class MenuController {
 				session.setAttribute("errorMessage", false);
 			}
 
-			//Boolean addMenuIsAvailable = true;
 			model.addAttribute("addMenuIsAvailable", true);
 		}
 
@@ -141,9 +139,6 @@ public class MenuController {
 			//LOGGER.info("Am intrat pe PostMapping -> MenuController");
 			//LOGGER.info("MENU VIEW MODEL: " + menuViewModel);		
 		}
-
-		//Boolean addMenuIsAvailable = false;
-		//model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 
 		switch (reqParam) {
 		case "Adauga Meniu": {
@@ -226,11 +221,9 @@ public class MenuController {
 			model.addAttribute("addMenuIsAvailable", false);
 			session.setAttribute("errorMessage", false);
 			session.setAttribute("dateErrorMessage", false);
-			//session.setAttribute("dateErrorMessage", false);
 			session.removeAttribute("menuViewModel");
 			System.err.println("MENU VIEW MODEL DUPA ANULARE!!!!!!!!!!!!!!!! " + session.getAttribute("menuViewModel"));
 			session.setAttribute("menuViewModel", new MenuViewModel());
-			//System.err.println("MENU VIEW MODEL DUPA ANULARE!!!!!!!!!!!!!!!! " + session.getAttribute("menuViewModel"));
 			
 			break;
 		}
@@ -249,11 +242,7 @@ public class MenuController {
 				//LOGGER.info("Am intrat pe Salvare -> MenuController");
 				//LOGGER.info("Lista de category: " + getAllCategoriesFromMenu(menuViewModel.getDishesDTO()));
 			} // convert to LOGGER
-			
-			//Menu menu = new Menu();
-			//menu.setDate(menuDate);
-			//menu.setTitle(menuTitle);
-			
+					
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setId(menuViewModel.getMenuDTO().getId());
 			menuDTO.setTitle(menuTitle);
@@ -263,52 +252,38 @@ public class MenuController {
 			
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 			
-			if (selectedMenuCategories != null) { //fac update la categorii
+			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
 			}
 			
-			if (selectedMenuFoods != null) { //fac update la mancare
+			if (selectedMenuFoods != null) {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
 			
-			if (menuDate.isEmpty()) { //verific ca data sa nu fie nula
+			if (menuDate.isEmpty()) {
 				session.setAttribute("dateErrorMessage", true);
 				throw new WrongMenuDateException("Date does not exist!");
 			}
 
-			if (!isDateInRightFormat(menuDate)) { //verific ca data sa aiba formaul bun
+			if (!isDateInRightFormat(menuDate)) {
 				session.setAttribute("dateErrorMessage", true);
 				throw new WrongMenuDateException("Date does not have the right format!");
 			}
 			
-			if (!isDateGreaterThanToday(menuDate)) { //verific ca data sa fie mai mare ca ziua curenta
+			if (!isDateGreaterThanToday(menuDate)) {
 				session.setAttribute("dateErrorMessage", true);
 				throw new WrongMenuDateException("Date does not have the right format!");
 			}
 
-			//verific sa nu existe data venita din formular in baza de date + sa nu fie null
 			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
-
-/*				if (selectedMenuCategories != null) {
-					updateListSelectedCategory(selectedMenuCategories, dishes);
-				}
-
-				if (selectedMenuFoods != null) {
-					updateListSelectedFoods(selectedMenuFoods, dishes);
-				}*/
 
 				if (!areNotDuplicateCategories(dishes)) {
 					session.setAttribute("errorMessage", true);
-					throw new DuplicateCategoryException("mesaj");
-				} /*else {
-					session.setAttribute("errorMessage", false);
-				}*/
-				
+					throw new DuplicateCategoryException("Categorii dublicate!");
+				}
 				
 				//PARTEA UNU DE VALIDARI PROPRIU ZIS
-				
-				
-				
+
 				List<Dish> selectedDishList = new ArrayList<>();
 
 				Menu menu = new Menu();
@@ -347,8 +322,7 @@ public class MenuController {
 					}
 				}
 
-				//addMenuIsAvailable = false;
-				session.removeAttribute("menuViewModel"); // perfect!
+				session.removeAttribute("menuViewModel");
 			} else {
 				session.setAttribute("dateErrorMessage", true);
 				throw new WrongMenuDateException("There is a menu already saved on this date!");
@@ -358,8 +332,6 @@ public class MenuController {
 		}
 		}
 
-		//session.removeAttribute("menuViewModel");
-		//model.addAttribute("addMenuIsAvailable", addMenuIsAvailable);
 		return "views/menuView";
 	}
 
