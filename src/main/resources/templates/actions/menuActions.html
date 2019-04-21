@@ -6,7 +6,8 @@
 <body>
 <body>
 	<div>
-		<form action="#" th:action="@{/menuView}" th:object="${session.menuViewModel}" method="post">
+		<form action="#" th:action="@{/menuView}"
+			th:object="${session.menuViewModel}" method="post">
 
 			<div>
 				<h1>Adaugare meniu</h1>
@@ -28,8 +29,12 @@
 						<label style="color: red;">Exista un meniu pe ziua respectiva!</label>
 					</div>
 
+					<div th:if="${session.formatDateError == True}">
+						<label style="color: red;">Data nu este in formatul bun!</label>
+					</div>
+
 					<hr>
-					
+
 					<script>
 						var today = new Date(new Date() + 1).toISOString()
 								.split('T')[0];
@@ -50,7 +55,7 @@
 									</select>
 								</div> <br />
 
-								<div th:if="${session.errorMessage == True}">
+								<div th:if="${session.dublicateCategoriesError == True}">
 									<label style="color: red;">Categoriile trebuie sa fie
 										diferite!</label>
 								</div>

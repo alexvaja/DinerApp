@@ -28,6 +28,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import dinerapp.constants.MenuStates;
 import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
+import dinerapp.exceptions.WrongDataFormatException;
 import dinerapp.exceptions.WrongMenuDateException;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
@@ -62,62 +63,74 @@ public class MenuController {
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		LOGGER.error("Incercare de acces nepermis");
+		LOGGER.error("NEW SESSION ERROR");
 		return "views/loginView";
 	}
 
-	@ExceptionHandler({ DuplicateCategoryException.class })
-	public String duplicateError() {
-		LOGGER.error("Sunt doua sau mai multe categorii dublicate!");
+	@ExceptionHandler({ WrongDataFormatException.class })
+	public String dateFormatError() {
+		LOGGER.error("WRONG FORMAT ERROR");
 		return "redirect:menuView";
 	}
 
 	@ExceptionHandler({ WrongMenuDateException.class })
 	public String dateError() {
-		LOGGER.error("Data nu este potrivita");
+		LOGGER.error("WRONG DATE ERROR");
+		return "redirect:menuView";
+	}
+
+	@ExceptionHandler({ DuplicateCategoryException.class })
+	public String duplicateError() {
+		LOGGER.error("DUPLICATE CATEGORIES ERROR");
 		return "redirect:menuView";
 	}
 
 	@SessionScope
 	@GetMapping("/menuView")
-	public String getMethod(Model model, Principal principal, HttpSession session) throws NewSessionException {
-		
-		System.err.println("AM INTRAT PE GET");
-		
-		LOGGER.info("Am intrat pe GetsMapping -> MenuController");
+	public String getMethod(Model model, Principal principal, HttpSession session)
+			throws NewSessionException, WrongMenuDateException {
+
+		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- GET METHOD --");
+		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
 
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
 
-		//LOGGER.info("VM de pe sesiune: " + session.getAttribute("menuViewModel"));
-		model.addAttribute("addMenuIsAvailable", false);
-		
 		if (session.getAttribute("menuViewModel") == null) {
-			
-			System.err.println("AM INTRAT PE IF");
-			session.removeAttribute("menuViewModel"); //optional
+
+			session.removeAttribute("menuViewModel");
 			session.setAttribute("menuViewModel", new MenuViewModel());
-			session.setAttribute("errorMessage", false);
+
+			session.setAttribute("formatDateError", false);
 			session.setAttribute("dateErrorMessage", false);
+			session.setAttribute("dublicateCategoriesError", false);
 
 			model.addAttribute("addMenuIsAvailable", false);
 		} else {
-			System.err.println("AM INTRAT PE ELSE");
-			//System.err.println("ERROR MESSAGE: " + session.getAttribute("errorMessage"));
-			//System.err.println("DATE ERROR MESSAGE: " + session.getAttribute("dateErrorMessage"));
-			
-			if(session.getAttribute("errorMessage").equals("true")) {
+
+			LOGGER.info("Date format error message: " + session.getAttribute("formatDateError"));
+			LOGGER.info("Date error message: " + session.getAttribute("dateErrorMessage"));
+			LOGGER.info("Category error message: " + session.getAttribute("dublicateCategoriesError"));
+
+			if ((boolean) session.getAttribute("formatDateError")) {
 				session.setAttribute("dateErrorMessage", false);
+				session.setAttribute("dublicateCategoriesError", false);
 			}
-			
-			if(session.getAttribute("dateErrorMessage").equals("true")) {
-				session.setAttribute("errorMessage", false);
+
+			if ((boolean) session.getAttribute("dateErrorMessage")) {
+				session.setAttribute("formatDateError", false);
+				session.setAttribute("dublicateCategoriesError", false);
+			}
+
+			if ((boolean) session.getAttribute("dublicateCategoriesError")) {
+				session.setAttribute("formatDateError", false);
+				session.setAttribute("dateErrorMessage", false);
 			}
 
 			model.addAttribute("addMenuIsAvailable", true);
 		}
-
 		return "views/menuView";
 	}
 
@@ -130,58 +143,51 @@ public class MenuController {
 			@RequestParam(value = "dropdown_list", required = false) String selectedMenuCategories,
 			@RequestParam(value = "checkbox_list", required = false) String selectedMenuFoods)
 			throws DuplicateCategoryException, ParseException, WrongMenuDateException {
-		
-		System.err.println("AM INTRAT PE POST");
 
-		session.setAttribute("dateErrorMessage", false); //setez ororile pe false
-		session.setAttribute("errorMessage", false); //setez erorile pe false
-		{
-			//LOGGER.info("Am intrat pe PostMapping -> MenuController");
-			//LOGGER.info("MENU VIEW MODEL: " + menuViewModel);		
-		}
+		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- POST METHOD --");
+		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
+		LOGGER.info("Request param from the form: " + reqParam);
+		LOGGER.info("Menu title from the form: " + menuTitle);
+		LOGGER.info("Menu date from the form:" + menuDate);
+		LOGGER.info("Selected Categories from the form: " + selectedMenuCategories);
+		LOGGER.info("Selected foods from the form: " + selectedMenuFoods);
+
+		session.setAttribute("formatDateError", false);
+		session.setAttribute("dateErrorMessage", false);
+		session.setAttribute("dublicateCategoriesError", false);
 
 		switch (reqParam) {
 		case "Adauga Meniu": {
-			
-			{
-				LOGGER.info("CLASS NAME" + MenuController.class.getName());
-				LOGGER.info("METHOD NAME: " + "postMethod");
-				System.err.println("-- ADAUGARE MENIU --");
-				System.out.println("");
-				System.err.println("reqParam: " + reqParam);
-				System.err.println("menuTitle: " + menuTitle);
-				System.err.println("menuDate:" + menuDate);
-				System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				//System.err.println("VIEW MODEL: " + menuViewModel);
-			} // convert to LOGGER
 
-			model.addAttribute("addMenuIsAvailable", true);
-			List<DishDTO> dishes = menuViewModel.getDishesDTO();
-			dishes.add(createDefaultDishesDTO());
+			LOGGER.info("-- 'Adauga Meniu' CASE --");
+
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setState(menuViewModel.getMenuDTO().getState());
-			menuViewModel.setDishesDTO(dishes);
+
+			List<DishDTO> dishes = menuViewModel.getDishesDTO();
+
+			dishes.add(createDefaultDishesDTO());
+
 			menuViewModel.setMenuDTO(menuDTO);
-			session.setAttribute("menuViewModel", menuViewModel);
-			
+			menuViewModel.setDishesDTO(dishes);
+
+			// session.setAttribute("menuViewModel", menuViewModel);
+
+			model.addAttribute("addMenuIsAvailable", true);
+
 			break;
 		}
 		case "Adauga Categorie Noua": {
-			
-			{
-				LOGGER.info("CLASS NAME" + MenuController.class.getName());
-				LOGGER.info("METHOD NAME: " + "postMethod");
-				System.err.println("-- ADAUGARE CATEGORIE NOUA MENIU --");
-				System.out.println();
-				System.err.println("reqParam: " + reqParam);
-				System.err.println("menuTitle: " + menuTitle);
-				System.err.println("menuDate:" + menuDate);
-				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-			} // convert to LOGGER
-			
-			model.addAttribute("addMenuIsAvailable", true);
+
+			LOGGER.info("-- 'Adauga Categorie Noua' CASE --");
+
+			MenuDTO menuDTO = new MenuDTO();
+			menuDTO.setId(menuViewModel.getMenuDTO().getId());
+			menuDTO.setTitle(menuTitle);
+			menuDTO.setDate(menuDate);
+			menuDTO.setState(menuViewModel.getMenuDTO().getState());
+
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
 			if (selectedMenuCategories != null) {
@@ -194,95 +200,73 @@ public class MenuController {
 
 			dishes.add(createDefaultDishesDTO());
 
-			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setId(menuViewModel.getMenuDTO().getId());
-			menuDTO.setTitle(menuTitle);
-			menuDTO.setDate(menuDate);
-			menuDTO.setState(menuViewModel.getMenuDTO().getState());
-
-			menuViewModel.setDishesDTO(dishes);
 			menuViewModel.setMenuDTO(menuDTO);
-			
+			menuViewModel.setDishesDTO(dishes);
+
+			model.addAttribute("addMenuIsAvailable", true);
+
 			break;
 
 		}
 		case "Anuleaza": {
-			{
-				System.err.println("-- ANULARE MENIU --");
-				System.out.println();
-				System.err.println("reqParam: " + reqParam);
-				System.err.println("menuTitle: " + menuTitle);
-				System.err.println("menuDate:" + menuDate);
-				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				//LOGGER.info("Am intrat pe Anuleaza -> MenuController");
-			}  // convert to LOGGER
-			
-			model.addAttribute("addMenuIsAvailable", false);
-			session.setAttribute("errorMessage", false);
+
+			LOGGER.info("-- 'Anuleaza' CASE --");
+
+			session.setAttribute("formatDateError", false);
 			session.setAttribute("dateErrorMessage", false);
+			session.setAttribute("dublicateCategoriesError", false);
+
 			session.removeAttribute("menuViewModel");
-			System.err.println("MENU VIEW MODEL DUPA ANULARE!!!!!!!!!!!!!!!! " + session.getAttribute("menuViewModel"));
 			session.setAttribute("menuViewModel", new MenuViewModel());
-			
+
+			model.addAttribute("addMenuIsAvailable", false);
+
 			break;
 		}
 		case "Salvare": {
-		
-			{
-				System.err.println("-- SALVARE MENIU --");
-				System.out.println();
-				System.err.println("DATA CARE ESTE PE FORMULAR: " + menuDate);
-				System.err.println("SESIUNE: " + menuViewModel.getMenuDTO());
-				System.err.println("reqParam: " + reqParam);
-				System.err.println("menuTitle: " + menuTitle);
-				System.err.println("menuDate:" + menuDate);
-				//System.err.println("selectedMenuCategories: " + selectedMenuCategories);
-				//System.err.println("selectedMenuFoods: " + selectedMenuFoods);
-				//LOGGER.info("Am intrat pe Salvare -> MenuController");
-				//LOGGER.info("Lista de category: " + getAllCategoriesFromMenu(menuViewModel.getDishesDTO()));
-			} // convert to LOGGER
-					
+
+			LOGGER.info("-- 'Salvare' CASE --");
+
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setId(menuViewModel.getMenuDTO().getId());
 			menuDTO.setTitle(menuTitle);
 			menuDTO.setDate(menuDate);
 			menuDTO.setState(menuViewModel.getMenuDTO().getState());
 			menuViewModel.setMenuDTO(menuDTO);
-			
+			System.out.println("MENU DTO: " + menuDTO);
+
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
-			
+
 			if (selectedMenuCategories != null) {
 				updateListSelectedCategory(selectedMenuCategories, dishes);
 			}
-			
+
 			if (selectedMenuFoods != null) {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
-			
+
 			if (menuDate.isEmpty()) {
-				session.setAttribute("dateErrorMessage", true);
-				throw new WrongMenuDateException("Date does not exist!");
+				session.setAttribute("formatDateError", true);
+				throw new WrongDataFormatException("Date does not exist!");
 			}
 
 			if (!isDateInRightFormat(menuDate)) {
-				session.setAttribute("dateErrorMessage", true);
-				throw new WrongMenuDateException("Date does not have the right format!");
+				session.setAttribute("formatDateError", true);
+				throw new WrongDataFormatException("Date does not have the right format!");
 			}
-			
+
 			if (!isDateGreaterThanToday(menuDate)) {
-				session.setAttribute("dateErrorMessage", true);
+				session.setAttribute("formatDateError", false);
 				throw new WrongMenuDateException("Date does not have the right format!");
 			}
 
-			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(), menuViewModel.getMenuDTO().getDate())) {
+			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(),
+					menuViewModel.getMenuDTO().getDate())) {
 
 				if (!areNotDuplicateCategories(dishes)) {
-					session.setAttribute("errorMessage", true);
+					session.setAttribute("dublicateCategoriesError", true);
 					throw new DuplicateCategoryException("Categorii dublicate!");
 				}
-				
-				//PARTEA UNU DE VALIDARI PROPRIU ZIS
 
 				List<Dish> selectedDishList = new ArrayList<>();
 
@@ -291,14 +275,11 @@ public class MenuController {
 				menu.setDate(menuViewModel.getMenuDTO().getDate());
 				menu.setTitle(menuViewModel.getMenuDTO().getTitle());
 				menu.setState(MenuStates.SAVED.toString());
-				
+
 				menuRepository.save(menu);
 
 				for (DishDTO dishDTO : dishes) {
 					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
-
-					LOGGER.info("Lista de mancarruri: " + dishDTO.getId());
-					LOGGER.info(selectedFoods.toString());
 
 					if (!selectedFoods.isEmpty()) {
 						if (dishDTO.getId() == null) {
@@ -335,27 +316,19 @@ public class MenuController {
 		return "views/menuView";
 	}
 
-	public MenuController(CategoryRepository categoryRepository, FoodRepository foodRepository,
-			MenuRepository menuRepository, DishRepository dishRepository) {
-		super();
-		this.categoryRepository = categoryRepository;
-		this.foodRepository = foodRepository;
-		this.menuRepository = menuRepository;
-		this.dishRepository = dishRepository;
-	}
-
 	private boolean isDateInRightFormat(String date) {
 
 		String datePattern = "20\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$";
 
-		Pattern r = Pattern.compile(datePattern);
-		Matcher m = r.matcher(date);
+		Pattern pattern = Pattern.compile(datePattern);
+		Matcher matcher = pattern.matcher(date);
 
-		if (m.find()) {
-			LOGGER.info("Data are formatul bun => " + date);
+		if (matcher.find()) {
+			LOGGER.info("Date is in right format: " + date);
 			return true;
 		}
-		LOGGER.info("Data nu are formatul bun => " + date);
+
+		LOGGER.info("Date is not in right format:  " + date);
 		return false;
 	}
 
@@ -375,10 +348,6 @@ public class MenuController {
 	}
 
 	private Boolean isDateThatNotExistInDB(String menuDate, String state, String existingDate) {
-		
-/*		if (menuDate.isEmpty()) {
-			return false;
-		}*/
 
 		if (state.equals(MenuStates.NEW.toString())) {
 			if (isDateExist(menuDate)) {
@@ -400,7 +369,7 @@ public class MenuController {
 	}
 
 	private Category getSelectedCategory(List<CategoryDTO> savedCategory) {
-		
+
 		for (CategoryDTO categoryDTO : savedCategory) {
 			if (categoryDTO.getSelected()) {
 				return categoryDTO.getCategory();
@@ -410,7 +379,7 @@ public class MenuController {
 	}
 
 	private List<Food> getSelectedFoodsForCategory(List<FoodDTO> savedFoods) {
-		
+
 		List<Food> selectedFoods = new ArrayList<>();
 
 		for (FoodDTO foodDTO : savedFoods) {
@@ -422,7 +391,7 @@ public class MenuController {
 	}
 
 	private Boolean isDateExist(String menuDate) {
-		
+
 		List<Menu> menuList = getAllMenusFromTable();
 
 		for (Menu menu : menuList) {
@@ -434,7 +403,7 @@ public class MenuController {
 	}
 
 	private DishDTO createDefaultDishesDTO() {
-		
+
 		List<Category> listOfCategories = getAllCategoriesFromTable();
 		List<Food> listOfFoods = getAllFoodsFromTable();
 
@@ -449,24 +418,24 @@ public class MenuController {
 	}
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
-		
+
 		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
-		
+
 		for (Category category : listOfCategories) {
 			listOfCategoriesDTO.add(new CategoryDTO(category, false));
 		}
-		
+
 		return listOfCategoriesDTO;
 	}
 
 	private List<FoodDTO> createAllFoodsDTO(List<Food> listOfFoods) {
-		
+
 		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
-		
+
 		for (Food food : listOfFoods) {
 			listOfFoodsDTO.add(new FoodDTO(food, false));
 		}
-		
+
 		return listOfFoodsDTO;
 	}
 
@@ -474,23 +443,23 @@ public class MenuController {
 
 		Iterable<Category> list = categoryRepository.findAll();
 		List<Category> searchedList = new ArrayList<>();
-		
+
 		for (Category category : list) {
 			searchedList.add(category);
 		}
-		
+
 		return searchedList;
 	}
 
 	private List<Menu> getAllMenusFromTable() {
-		
+
 		Iterable<Menu> list = menuRepository.findAll();
 		List<Menu> searchedList = new ArrayList<>();
-		
+
 		for (Menu menu : list) {
 			searchedList.add(menu);
 		}
-		
+
 		return searchedList;
 	}
 
@@ -498,11 +467,11 @@ public class MenuController {
 
 		Iterable<Food> list = foodRepository.findAll();
 		List<Food> searchedList = new ArrayList<>();
-		
+
 		for (Food food : list) {
 			searchedList.add(food);
 		}
-		
+
 		return searchedList;
 	}
 
@@ -555,11 +524,9 @@ public class MenuController {
 
 		for (int i = 0; i < categories.size() - 1; i++) {
 			for (int j = i + 1; j < categories.size(); j++) {
+
 				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
 				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
-				LOGGER.info("Categoria 1: " + categories.get(i).getName());
-				LOGGER.info("Categoria 2: " + categories.get(j).getName());
-				LOGGER.info("<---Mereu o sa crape le meniu--->");
 				if (categories.get(i).getName().equals(categories.get(j).getName())) {
 					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
 						continue;
@@ -571,18 +538,17 @@ public class MenuController {
 		return true;
 	}
 
-	private static boolean isDateGreaterThanToday(String menuDate)
-	{
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar todayDate = Calendar.getInstance();
-		
-		String curDate = dt.format(todayDate.getTime());
-		
-		if(curDate.compareTo(menuDate) < 0) {
+	private static boolean isDateGreaterThanToday(String menuDate) {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar today = Calendar.getInstance();
+
+		String curDate = dateFormat.format(today.getTime());
+
+		if (curDate.compareTo(menuDate) < 0) {
 			return true;
 		}
-				
+
 		return false;
 	}
-
 }
