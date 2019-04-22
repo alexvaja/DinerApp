@@ -32,17 +32,14 @@ public class CustomErrorController implements ErrorController {
 	public String renderErrorPage(Model model, HttpServletRequest httpRequest, Principal principal,
 			HttpSession session) 
 	{
-		Role role = new Role();
 
-		UserDiner user = this.getUserByName(session.getAttribute("nameFromURL").toString());
+		UserDiner user = new UserDiner();
 
-		System.out.println("USER: " + user.toString());
 		Object status = httpRequest.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
 		Integer statusCode = Integer.valueOf(status.toString());
 		
-		System.out.println(principal);
-		
+		Role role = new Role();
 		if (principal != null && status != null) 	
 			{
 				role = this.getUsersByRole(principal.getName());
@@ -58,6 +55,7 @@ public class CustomErrorController implements ErrorController {
 			}
 		else if (user != null) 
 			{
+				user = this.getUserByName(session.getAttribute("nameFromURL").toString());
 				System.out.println("Am intrat in emplouyee");
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/employee/E404Error";
