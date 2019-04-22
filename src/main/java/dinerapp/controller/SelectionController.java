@@ -74,6 +74,10 @@ public class SelectionController
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
 		}
+		else
+		{
+			return "error/employee/E404Error";
+		}
 
 		return "views/employeeOrderView";
 	}
