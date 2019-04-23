@@ -25,12 +25,14 @@
 							placeholder="AAAA-LL-ZZ" class="form-control" />
 					</div>
 
-					<div th:if="${session.dateErrorMessage == True}">
-						<label style="color: red;">Exista un meniu pe ziua respectiva!</label>
+					<div th:if="${session.formatDateError == True}">
+						<label style="color: red;">Data nu a fost completata sau
+							nu este in formatul bun!</label>
 					</div>
 
-					<div th:if="${session.formatDateError == True}">
-						<label style="color: red;">Data nu este in formatul bun!</label>
+					<div th:if="${session.dateErrorMessage == True}">
+						<label style="color: red;">Exista un meniu pe ziua
+							respectiva!</label>
 					</div>
 
 					<hr>
