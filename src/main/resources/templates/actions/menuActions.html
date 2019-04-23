@@ -8,9 +8,6 @@
 	<div>
 		<form action="#" th:action="@{/menuView}"
 			th:object="${session.menuViewModel}" method="post">
-			<!-- <div th:if="${session.errorMessage == True}">
- 				<label style="color: red;">Categoriile trebuie sa fie diferite!</label>
- 			</div> -->
 
 			<div>
 				<h1>Adaugare meniu</h1>
@@ -25,16 +22,24 @@
 					<label for="Data">Data:</label>
 					<div class="input-group date" data-provide="datepicker">
 						<input type="date" name="menu_date" th:value="*{menuDTO.date}"
-							placeholder="AAAA-LL-ZZ" class="form-control" /> <label
-							style="color: red">Data trebuie trecuta obligatoriu!</label>
+							placeholder="AAAA-LL-ZZ" class="form-control" />
 					</div>
+
+					<div th:if="${session.formatDateError == True}">
+						<label style="color: red;">Data nu a fost completata sau
+							nu este in formatul bun!</label>
+					</div>
+
 					<div th:if="${session.dateErrorMessage == True}">
 						<label style="color: red;">Exista un meniu pe ziua
 							respectiva!</label>
 					</div>
 
+					<hr>
+
 					<script>
-						var today = new Date(new Date()+1).toISOString().split('T')[0];
+						var today = new Date(new Date() + 1).toISOString()
+								.split('T')[0];
 						document.getElementsByName("menu_date")[0]
 								.setAttribute('min', today);
 					</script>
@@ -52,7 +57,7 @@
 									</select>
 								</div> <br />
 
-								<div th:if="${session.errorMessage == True}">
+								<div th:if="${session.dublicateCategoriesError == True}">
 									<label style="color: red;">Categoriile trebuie sa fie
 										diferite!</label>
 								</div>
