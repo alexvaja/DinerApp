@@ -172,8 +172,6 @@ public class MenuController {
 			menuViewModel.setMenuDTO(menuDTO);
 			menuViewModel.setDishesDTO(dishes);
 
-			// session.setAttribute("menuViewModel", menuViewModel);
-
 			model.addAttribute("addMenuIsAvailable", true);
 
 			break;
@@ -227,13 +225,14 @@ public class MenuController {
 
 			LOGGER.info("-- 'Salvare' CASE --");
 
+			String date = menuViewModel.getMenuDTO().getDate();
+
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setId(menuViewModel.getMenuDTO().getId());
 			menuDTO.setTitle(menuTitle);
 			menuDTO.setDate(menuDate);
 			menuDTO.setState(menuViewModel.getMenuDTO().getState());
 			menuViewModel.setMenuDTO(menuDTO);
-			System.out.println("MENU DTO: " + menuDTO);
 
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
@@ -260,8 +259,7 @@ public class MenuController {
 				throw new WrongMenuDateException("Date does not have the right format!");
 			}
 
-			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(),
-					menuViewModel.getMenuDTO().getDate())) {
+			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(), date)) {
 
 				if (!areNotDuplicateCategories(dishes)) {
 					session.setAttribute("dublicateCategoriesError", true);
