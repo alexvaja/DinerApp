@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -32,6 +33,7 @@ import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.DishRepository;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
+import dinerapp.security.utils.DateComparer;
 
 @Controller
 public class ViewMenuController {
@@ -205,6 +207,7 @@ public class ViewMenuController {
 		for (Menu menu : list) {
 			searchedList.add(menu);
 		}
+		sortMenusByDate(searchedList);
 		return searchedList;
 	}
 
@@ -216,5 +219,10 @@ public class ViewMenuController {
 			searchedList.add(food);
 		}
 		return searchedList;
+	}
+	
+	private void sortMenusByDate(List<Menu> menus)
+	{
+		Collections.sort(menus, new DateComparer());
 	}
 }
