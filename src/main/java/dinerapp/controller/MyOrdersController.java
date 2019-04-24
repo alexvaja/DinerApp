@@ -263,6 +263,7 @@ public class MyOrdersController {
 
 		for (Order order : orderRepository.findAll()) {
 			if (order.getUserDiner().equals(user)) {
+				//the problem is here
 				ordersForUser.add(order);
 			}
 		}
@@ -343,7 +344,7 @@ public class MyOrdersController {
 				return true;
 			}
 		}
-		return false;
+		return false;		
 	}
 
 	private Map<FoodDTO, Integer> getAllOrderedQuantitiesForOrder(Order order, Menu menu) {
