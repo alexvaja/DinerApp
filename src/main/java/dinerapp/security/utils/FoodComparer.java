@@ -11,5 +11,4 @@ public class FoodComparer implements Comparator <Food>
 	{
 		return a.getName().compareTo(b.getName());
 	}
-
 }
