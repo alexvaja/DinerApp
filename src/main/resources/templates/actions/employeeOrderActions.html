@@ -5,16 +5,15 @@
 <head></head>
 <body>
 	<form action="#" th:action="@{/employeeOrderView}" th:object="${session.menuViewModel}" method="post">
-		<br />
+		<div class="alert alert-info text-center" role="alert">
+			<h3> Comanda mancare </h3> 
+		</div>
 		<div th:if="${isMenuDatePicked == false}">
 			<div th:if="${orderedWithSuccess == true}" class="alert alert-success text-center" role="alert">
-					<h5> Comanda plasata cu succes! </h5> 
+				<h4> Comanda plasata cu succes! </h4> 
 			</div>
 			<div th:if="${alreadyOrderedForThisDate == true}" class="alert alert-danger text-center" role="alert">
-				<h5> Ati comandat deja pentru aceasta data! </h5> 
-			</div>
-			<div th:if="${orderRemoved == true}" class="alert alert-info text-center" role="alert">
-				<h5> O comanda a fost stearsa! </h5> 
+				<h4> Ati comandat deja pentru aceasta data! </h4> 
 			</div>
 			<table>
 				<tr>
@@ -30,6 +29,12 @@
 			</table>
 		</div>
 		<div th:if="${isMenuDatePicked == true}">
+			<div th:if="${noFoodSelected == true}" class="alert alert-danger text-center" role="alert">
+				<h4> Selectati mancare inainte de a comanda! </h4> 
+			</div>
+			<div th:if="${alreadyOrderedForThisDate == true}" class="alert alert-danger text-center" role="alert">
+				<h4> Ati comandat deja pentru aceasta data! </h4> 
+			</div>
 			<table>
 				<tr style="text-align: center; font-weight: bolder; font-size: 2vw">
 					<td>
@@ -41,12 +46,6 @@
 					</td>
 				</tr>
 			</table>
-			<div th:if="${noFoodSelected == true}" class="alert alert-danger text-center" role="alert">
-				<h5> Nu ati selectat mancare! </h5> 
-			</div>
-			<div th:if="${alreadyOrderedForThisDate == true}" class="alert alert-danger text-center" role="alert">
-				<h5> Ati comandat deja pentru aceasta data! </h5> 
-			</div>
 			<div id="dish" th:each="dish : *{dishesDTO}">
 				<div th:each="categ : ${dish.categories}">
 					<div id="uniqueID" class="menu">

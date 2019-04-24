@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/override.css}" href="../../static/css//override.css" />
+<link rel="stylesheet" th:href="@{/css/mainPage.css}" href="../../static/css/mainPage.css"/>
+<head></head>
+<body>
+	<form action="#" th:action="@{/orders}" th:object="${myOrdersViewModel}" method="post">
+		<div th:if="${userHasNoOrders == true}" class="alert alert-danger text-center" role="alert">
+			<h4> Nu aveti comenzi plasate! </h4> 
+		</div>
+		<div th:if="${userHasNoOrders != true}">
+		<div class="alert alert-info text-center" role="alert">
+			<h3> Vizualizare comenzi </h3> 
+		</div>
+		<div th:if="${orderRemoved == true}" class="alert alert-danger text-center" role="alert">
+			<h4> O comanda a fost stearsa! </h4> 
+		</div>
+		<div th:if="${orderWasModified == true}" class="alert alert-success text-center" role="alert">
+			<h4> Comanda a fost modificata cu succes! </h4> 
+		</div>
+		<div th:if="${orderWasModified == false}" class="alert alert-danger text-center" role="alert">
+			<h4> Alegeti mancare pentru a modifica! </h4> 
+		</div>
+			<div th:if="${isDatePicked == false}">
+				<table>
+					<tr>
+						<td>
+							<select class="btn btn-primary" name="pickedDate">
+								<option class="btn btn-primary" th:each="date : ${allOrderedDates}" th:text="${date}"/>
+							</select>
+						</td>
+						<td>
+							<input class="btn btn-primary" type="submit" name="submit" value="Vizualizeaza comanda" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div th:if="${isDatePicked == true}">
+				<table style="width: 100%;">
+					<tr>
+						<td>
+							<h3 class="text-center" th:text="*{orderDTO.menuDTO.title}"></h3>
+						</td>
+						<td>
+							<h3 class="text-center" th:text="*{orderDTO.menuDTO.date}"></h3>
+							<input type="hidden" name="date" th:value=*{orderDTO.menuDTO.date}>
+							<input type="hidden" name="orderId" th:value=*{orderDTO.orderId}>
+						</td>
+						<td>
+							<input name="submit" type="submit" class="btn btn-danger" style="margin: 0 50%;" value="Sterge comanda"/>
+						</td>
+					</tr>
+				</table>
+				<div id="dish">
+						<div id="uniqueID" class="menu">
+							<hr>
+	<!-- 						<input name="dishCheckbox" onclick="check(parentNode.id, this)" type="checkbox" style="float: left;margin-left: 30%;"> -->
+	<!-- 						<div class="checkboxText">&nbsp;Selecteaza meniul</div> -->
+								<table class="table tcolor table-bordered">
+								<thead class="thead thead-dark">
+									<tr>
+										<th class="text-center" scope="col">NUME</th>
+										<th class="text-center" scope="col">INGREDIENTE</th>
+										<th class="text-center" scope="col">GRAMAJ</th>
+										<th class="text-center" scope="col">PRET</th>
+										<th class="text-center" scope="col">CANTITATE</th>
+									</tr>
+								</thead>
+								<tr th:each="foodQuantities : *{orderDTO.quantities}">
+									<th class="text-center" scope="col" th:text="${foodQuantities.key.food.name}"></th>
+									<th class="text-center" scope="col" th:text="${foodQuantities.key.food.ingredients}"></th>
+									<th class="text-center" scope="col" th:text="${foodQuantities.key.food.weight} + 'g'"></th>
+									<th class="text-center" scope="col" th:text="${foodQuantities.key.food.price} + ' lei'"></th>
+									<th scope="col"><input style="text-align: right" type="number" class="form-control" min="0" max="10" name="quantities" th:value="${foodQuantities.value}"/></th>							
+								</tr>
+							</table>
+						</div>
+				</div>
+				<div>
+					<input class="btn btn-primary" name="submit" type="submit" value="Salveaza modificarile"/> 
+					<input class="btn btn-primary" name="submit" type="submit" value="Reseteaza"/> 
+					<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza"/>
+				</div>		
+				<hr>
+			</div>
+		</div>
+	</form>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+<script src="selectAll.js"></script>
+</html>

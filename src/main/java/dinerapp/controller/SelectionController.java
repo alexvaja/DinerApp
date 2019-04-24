@@ -43,8 +43,7 @@ import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
 
 @Controller
-public class SelectionController 
-{
+public class SelectionController {
 	@Autowired
 	private MenuRepository menuRepository;
 	@Autowired
@@ -58,8 +57,7 @@ public class SelectionController
 
 	@SessionScope
 	@GetMapping("/employeeOrderView")
-	public String getAllData(HttpSession session, Model model) throws ParseException 
-	{	
+	public String getAllData(HttpSession session, Model model) throws ParseException {	
 		// sets menuViewModel attribute on session
 		session.setAttribute("menuViewModel", new MenuViewModel());	
 		// adds an attribute to the model that tells if a menu date has been picked or not
@@ -67,16 +65,11 @@ public class SelectionController
 		// tests if the 'name' parameter is set in URL and if there is an user with that name
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
 
-		if (nameFromURL != null)
-		{
+		if (nameFromURL != null) {
 			// finds the user with the name from URL
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
-		}
-		else
-		{
-			return "error/employee/E404Error";
 		}
 
 		return "views/employeeOrderView";
@@ -90,12 +83,10 @@ public class SelectionController
 			@RequestParam(value = "quantity", required = false) String foodsQuantities,
 			@RequestParam(value = "dishCheckbox", required = false) String dishIds,
 			@RequestParam(value = "userNameFromPortal", required = false) String nameFromURL,
-			@RequestParam(value = "date", required = false) String dateOfOrder) throws ParseException 
-	{
+			@RequestParam(value = "date", required = false) String dateOfOrder) throws ParseException {
 		
 		// tests if there is any date picked
-		if (pickedDate != null) 
-		{
+		if (pickedDate != null) {
 			// gets the menu for picked date
 			Menu menu = getMenuByDate(pickedDate);
 			// sets data on menuViewModel
@@ -135,6 +126,14 @@ public class SelectionController
 						this.updateAvailableMenuDatesForUser(user.get(), model);
 						return "views/employeeOrderView";
 					}
+					
+					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
+					
+					if(this.areAllQuantitiesZero(quantityIds)) {
+						model.addAttribute("noFoodSelected", true);
+						model.addAttribute("isMenuDatePicked", true);
+						return "views/employeeOrderView";
+					}
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {	
 						// adds a new order to database
@@ -144,7 +143,7 @@ public class SelectionController
 						// gets all foods ids for a dish
 						List<String> foodIds = this.getFoodsForDish(dishesIds, dateOfOrder);
 						// converts quantities from comma separated string to list
-						List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
+						//List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
 						// creates a map of foods and quantities
 						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
 						// gets an order by date
@@ -186,6 +185,15 @@ public class SelectionController
 		}
 		return "views/employeeOrderView";
 	}	
+	
+	private boolean areAllQuantitiesZero(List<String> quantities){
+		for(String quantity : quantities) {
+			if(!quantity.equals("0")) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	// adds a new order to database
 	private void addNewOrder(UserDiner user, String date) {
