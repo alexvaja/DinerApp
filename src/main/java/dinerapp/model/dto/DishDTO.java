@@ -6,9 +6,7 @@ import java.util.List;
 public class DishDTO {
 	
 	private Integer id;
-
 	private List<CategoryDTO> categories;
-	
 	private List<FoodDTO> foods;
 
 	public DishDTO() {

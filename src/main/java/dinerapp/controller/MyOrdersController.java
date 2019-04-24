@@ -40,7 +40,6 @@ import dinerapp.repository.OrderQuantityRepository;
 import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
 
-
 @Controller
 public class MyOrdersController {
 
@@ -67,18 +66,17 @@ public class MyOrdersController {
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
 		Optional<UserDiner> user = userRepository
 				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		
 		System.out.println(user.get().toString());
+		System.out.println(this.getAllOrderedDatesForUser(user.get()).toString());
 		
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
-		
-		System.out.println(this.getAllOrderedDatesForUser(user.get()));
 
 		if (this.getAllOrdersForUser(user.get()).size() == 0) {
 			model.addAttribute("userHasNoOrders", true);
 			return "views/myOrdersView";
 		}
-
 		return "views/myOrdersView";
 	}
 
@@ -202,7 +200,7 @@ public class MyOrdersController {
 		orderDTO.setMenuDTO(menuDTO);
 
 		Integer orderDTOId = this.getOrderIdByDate(menu.getDate());
-		orderDTO.setOrderID(orderDTOId);
+		orderDTO.setOrderId(orderDTOId);
 
 		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date),
 				menu);
@@ -238,6 +236,7 @@ public class MyOrdersController {
 
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
+		System.out.println("ORDERED DATES: " + orderedDates.toString());
 		for (Order order : this.getAllOrdersForUser(user)) {
 			orderedDates.add(order.getDate());
 		}
@@ -263,7 +262,7 @@ public class MyOrdersController {
 		List<Order> ordersForUser = new ArrayList<>();
 
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner() == user) {
+			if (order.getUserDiner().equals(user)) {
 				ordersForUser.add(order);
 			}
 		}

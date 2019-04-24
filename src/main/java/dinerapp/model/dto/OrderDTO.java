@@ -11,16 +11,16 @@ public class OrderDTO {
 	private Boolean taken;
 	
 	/*Bucatica lui Flaviusul*/
-	private Integer orderID;
+	private Integer orderId;
 	private MenuDTO menuDTO;
-	private Map<FoodDTO, Integer> quanTITIES;
-		
-	public Integer getOrderID() {
-		return orderID;
+	private Map<FoodDTO, Integer> quantities;
+
+	public Integer getOrderId() {
+		return orderId;
 	}
 
-	public void setOrderID(Integer orderID) {
-		this.orderID = orderID;
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
 	}
 
 	public MenuDTO getMenuDTO() {
@@ -31,12 +31,12 @@ public class OrderDTO {
 		this.menuDTO = menuDTO;
 	}
 
-	public Map<FoodDTO, Integer> getQuanTITIES() {
-		return quanTITIES;
+	public Map<FoodDTO, Integer> getQuantities() {
+		return quantities;
 	}
 
-	public void setQuantities(Map<FoodDTO, Integer> quanTITIES) {
-		this.quanTITIES = quanTITIES;
+	public void setQuantities(Map<FoodDTO, Integer> quantities) {
+		this.quantities = quantities;
 	}
 
 	/*Aici se termina bucatica lui Flaviusul*/
