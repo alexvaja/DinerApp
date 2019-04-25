@@ -11,7 +11,18 @@
 
 			<div>
 				<h1>Adaugare meniu</h1>
+				
+				<div th:if="${addMenuIsAvailable == False}">
+					<input class="btn btn-primary" name="submit" type="submit"
+						value="Adauga Meniu" />
+				</div>
+				
 				<div th:if="${addMenuIsAvailable == True}" class=form-group>
+					<input class="btn btn-primary" name="submit" type="submit" value="Adauga Categorie Noua" /> 
+					<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
+					<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
+					<br>
+					<br>
 					<label for="Titlu">Titlu:</label>
 					<div>
 						<input type="text" name="menu_title" th:value="*{menuDTO.title}"
@@ -43,9 +54,8 @@
 						document.getElementsByName("menu_date")[0]
 								.setAttribute('min', today);
 					</script>
-										<input class="btn btn-primary" name="submit" type="submit" value="Adauga Categorie Noua" /> 
-					<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
-					<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
+					
+					
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
 							<td><br /> <label>Selecteaza Categoria: </label>
@@ -95,11 +105,6 @@
 						</tr>
 					</div>
 
-				</div>
-
-				<div th:if="${addMenuIsAvailable == False}">
-					<input class="btn btn-primary" name="submit" type="submit"
-						value="Adauga Meniu" />
 				</div>
 			</div>
 		</form>
