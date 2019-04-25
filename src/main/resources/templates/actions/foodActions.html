@@ -2,14 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" th:href="@{/css/override.css}"
 	href="../../static/css//override.css" />
+	
+<link rel="stylesheet" th:href="@{/css/stickies.css}"
+	href="../../static/css//stickies.css" />
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <head></head>
-<body>
-<body>
-	<h1>Adauga Mancare</h1>
+<body>	
 	<div>
 		<form th:object="${newFoodDTO}" action="#" th:action="@{/foodView}"
 			method="post">
 			<div class="form-group">
+			<div id="sticky-anchor"></div>
+				<div id = "sticky">			
+					<h1>Adauga Mancare</h1>
+					<div th:if="${addFoodIsAvailable == false }">
+						<input class="btn btn-primary" name="submit" type="submit" th:value="Adauga" />
+						<input class="btn btn-primary" name="submit" type="submit" th:value="Sterge" />
+					</div>
+				</div>
 				<div th:if="${addFoodIsAvailable == true }">
 					<div>
 						<label for="foodName">Mancare:</label>
@@ -44,21 +55,12 @@
 					</div>
 				</div>
 			</div>
-			<br>
-
-			<div th:if="${addFoodIsAvailable == false }">
-				<input class="btn btn-primary" name="submit" type="submit" th:value="Adauga" />
-				<input class="btn btn-primary" name="submit" type="submit" th:value="Sterge" />
-			</div>
-			
-			<br>
-
 			<div>
 				<table class="table tcolor table-bordered" id="datatable">
 					<thead class="thead">
 						<tr>
 							<td class="span2 text-center">Mancare</td>
-							<td class="span2 text-center">Ingrediente</td>
+							<td cl ass="span2 text-center">Ingrediente</td>
 							<td class="span2 text-center">Gramaj</td>
 							<td class="span2 text-center">Pret</td>
 							<td class="span2 text-center">Check</td>
@@ -79,4 +81,22 @@
 	</div>
 </body>
 <th:block th:include="layout/bootstrapIncludes.html"></th:block>
+
+<script>
+
+function sticky_relocate() {
+	  var window_top = $(window).scrollTop();
+	  var div_top = $('#sticky-anchor').offset().top;
+	  if (window_top > div_top) {
+	    $('#sticky').addClass('stick');
+	  } else {
+	    $('#sticky').removeClass('stick');
+	  }
+	}
+
+	$(function() {
+	  $(window).scroll(sticky_relocate);
+	  sticky_relocate();
+	});
+</script>
 </html>
