@@ -43,7 +43,9 @@
 						document.getElementsByName("menu_date")[0]
 								.setAttribute('min', today);
 					</script>
-
+										<input class="btn btn-primary" name="submit" type="submit" value="Adauga Categorie Noua" /> 
+					<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
+					<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
 							<td><br /> <label>Selecteaza Categoria: </label>
@@ -92,11 +94,7 @@
 								</div>
 						</tr>
 					</div>
-					<input class="btn btn-primary" name="submit" type="submit"
-						value="Adauga Categorie Noua" /> <input class="btn btn-primary"
-						name="submit" type="submit" value="Anuleaza" /> <input
-						class="btn btn-primary" name="submit" type="submit"
-						th:value="Salvare" />
+
 				</div>
 
 				<div th:if="${addMenuIsAvailable == False}">
