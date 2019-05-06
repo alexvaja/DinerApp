@@ -2,16 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" th:href="@{/css/override.css}"
 	href="../../static/css//override.css" />
+
+<link rel="stylesheet" th:href="@{/css/stickies.css}"
+	href="../../static/css//stickies.css" />
+	
 <head></head>
 <body>
 <body>
 	<div>
 		<form action="#" th:action="@{/menuView}"
 			th:object="${session.menuViewModel}" method="post">
-
 			<div>
-				<h1>Adaugare meniu</h1>
+				<div th:if="${addMenuIsAvailable == False}">
+					<h1>Adaugare meniu</h1>
+					<input class="btn btn-primary" name="submit" type="submit"
+						value="Adauga Meniu" />
+				</div>
+				
 				<div th:if="${addMenuIsAvailable == True}" class=form-group>
+					<div id="sticky-anchor"></div>
+					<div id="sticky">
+						<h1>Adaugare meniu</h1>
+						<input class="btn btn-primary" name="submit" type="submit" value="Adauga Categorie Noua" /> 
+						<input class="btn btn-primary" name="submit" type="submit" value="Anuleaza" /> 
+						<input class="btn btn-primary" name="submit" type="submit" th:value="Salvare" />
+						<br>
+					</div>
 					<label for="Titlu">Titlu:</label>
 					<div>
 						<input type="text" name="menu_title" th:value="*{menuDTO.title}"
@@ -34,7 +50,7 @@
 						<label style="color: red;">Exista un meniu pe ziua
 							respectiva!</label>
 					</div>
-
+					
 					<hr>
 
 					<script>
@@ -43,7 +59,8 @@
 						document.getElementsByName("menu_date")[0]
 								.setAttribute('min', today);
 					</script>
-
+					
+					
 					<div>
 						<tr th:each="dish, dishIndex : *{dishesDTO}">
 							<td><br /> <label>Selecteaza Categoria: </label>
@@ -92,20 +109,27 @@
 								</div>
 						</tr>
 					</div>
-					<input class="btn btn-primary" name="submit" type="submit"
-						value="Adauga Categorie Noua" /> <input class="btn btn-primary"
-						name="submit" type="submit" value="Anuleaza" /> <input
-						class="btn btn-primary" name="submit" type="submit"
-						th:value="Salvare" />
-				</div>
 
-				<div th:if="${addMenuIsAvailable == False}">
-					<input class="btn btn-primary" name="submit" type="submit"
-						value="Adauga Meniu" />
 				</div>
 			</div>
 		</form>
 	</div>
 </body>
 <th:block th:include="layout/bootstrapIncludes.html"></th:block>
+<script>
+	function sticky_relocate() {
+		var window_top = $(window).scrollTop();
+		var div_top = $('#sticky-anchor').offset().top;
+		if (window_top > div_top) {
+			$('#sticky').addClass('stick');
+		} else {
+			$('#sticky').removeClass('stick');
+		}
+	}
+
+	$(function() {
+		$(window).scroll(sticky_relocate);
+		sticky_relocate();
+	});
+</script>
 </html>

@@ -2,6 +2,7 @@ package dinerapp.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,7 @@ import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Menu;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
+import dinerapp.security.utils.FoodComparer;
 
 @Controller
 public class FoodControler {
@@ -172,6 +174,12 @@ public class FoodControler {
 		for (final Food food : list) {
 			searchedList.add(food);
 		}
+		sortFoodsByName(searchedList);
 		return searchedList;
+	}
+	
+	private void sortFoodsByName(List<Food> foods)
+	{
+		Collections.sort(foods, new FoodComparer());
 	}
 }

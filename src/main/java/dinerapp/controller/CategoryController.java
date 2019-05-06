@@ -3,6 +3,7 @@ package dinerapp.controller;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -28,6 +29,8 @@ import dinerapp.model.entity.Dish;
 import dinerapp.model.entity.Menu;
 import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.MenuRepository;
+import dinerapp.security.utils.CategoryComparer;
+import dinerapp.security.utils.FoodComparer;
 
 @Controller
 public class CategoryController {
@@ -191,16 +194,23 @@ public class CategoryController {
 		return "views/categoryView";
 	}
 
-	private List<Category> getListOfCategory() {
+	private List<Category> getListOfCategory() 
+	{
 
 		final Iterable<Category> list = categoryRepository.findAll();
 		final List<Category> searchedList = new ArrayList<>();
-		for (final Category category : list) {
+		for (final Category category : list) 
+		{
 			searchedList.add(category);
 		}
+		sortCategoriesByName(searchedList);
+		
 		return searchedList;
 	}
-	
+	private void sortCategoriesByName(List<Category> categories)
+	{
+		Collections.sort(categories, new CategoryComparer());
+	}
 	private boolean isValid(List<Category> values, String name) {
 		for (Category category : values) {
 			if (category.getName().equals(name)) {
