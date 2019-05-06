@@ -73,12 +73,14 @@ public class ViewMenuController {
 		editMenuViewModel.setMenus(listOfUnpublishedMenus);
 		
 		model.addAttribute("editMenuViewModel", editMenuViewModel);
+		model.addAttribute("isEmptyMenu", false);
+		
 		return "views/viewMenuView";
 	}
 
 	@PostMapping("/viewMenuView")
 	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
-		
+		model.addAttribute("isEmptyMenu", false);
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
 		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
@@ -173,7 +175,10 @@ public class ViewMenuController {
 				editMenuViewModel.getMenus().remove(menu);
 				menu.setState(MenuStates.PUBLISHED.toString());
 				menuRepository.save(menu);	
-			}	
+			}
+			else {
+				model.addAttribute("isEmptyMenu", true);
+			}
 			
 			break;
 		}

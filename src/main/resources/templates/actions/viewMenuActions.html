@@ -6,6 +6,10 @@
 		<div>
 			<h1> Meniu </h1>
 			
+			<div th:if="${isEmptyMenu == True}">
+				<label style="color: red;">Nu se poate publica un meniu gol!</label>
+			</div>
+			
 			<table class = "table tcolor table-bordered">
 				<thead class = "thead thead-dark">
 					<tr>
