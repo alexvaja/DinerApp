@@ -99,12 +99,15 @@ public class MyOrdersController {
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 
 		String date = null;
+		LOGGER.info("PICKED DATE: " + pickedDate);
 		if (pickedDate != null) {
+			LOGGER.info("A INTRAT AICI1");
 			date = pickedDate;
 		} else {
+			LOGGER.info("A INTRAT AICI2");
 			date = dateOfOrder;
 		}
-
+		LOGGER.info("DATE LA INCEPUT :" + date);
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
 				if(this.getAllOrderedDatesForUser(user.get()).size() > 0) {
@@ -174,7 +177,7 @@ public class MyOrdersController {
 	private void loadCurrentPage(Model model, Optional<UserDiner> user, MyOrdersViewModel myOrdersViewModel, String date) {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
-
+		LOGGER.info("DATE :" + date);
 		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDate(date));
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
 	}
@@ -204,6 +207,7 @@ public class MyOrdersController {
 	private OrderDTO getOrderDTOForDate(String date) {
 		OrderDTO orderDTO = new OrderDTO();
 		Menu menu = this.getMenuByDate(date);
+		LOGGER.info("MENU2:" + menu.toString());
 
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
@@ -245,7 +249,6 @@ public class MyOrdersController {
 
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
-		System.out.println("ORDERED DATES: " + orderedDates.toString());
 		for (Order order : this.getAllOrdersForUser(user)) {
 			orderedDates.add(order.getDate());
 		}
@@ -279,10 +282,9 @@ public class MyOrdersController {
 		return ordersForUser;
 	}
 
-	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {
-		System.out.println(menu.toString());
-		
+	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {		
 		LOGGER.info("MENU :" + menu.toString());
+		
 		MenuDTO menuDTO = new MenuDTO();
 		menuDTO.setDate(menu.getDate());
 		menuDTO.setId(menu.getId());
