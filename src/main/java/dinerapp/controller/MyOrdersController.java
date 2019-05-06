@@ -16,6 +16,8 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +62,8 @@ public class MyOrdersController {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@SessionScope
 	@GetMapping("/orders")
@@ -103,7 +107,12 @@ public class MyOrdersController {
 
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
-				loadCurrentPage(model, user, myOrdersViewModel, date);
+				if(this.getAllOrderedDatesForUser(user.get()).size() > 0) {
+					loadCurrentPage(model, user, myOrdersViewModel, date);
+				}
+				else {
+					model.addAttribute("isDatePicked", false);
+				}
 				return "views/myOrdersView";
 			}
 			case "Sterge comanda": {
@@ -270,6 +279,9 @@ public class MyOrdersController {
 	}
 
 	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {
+		System.out.println(menu.toString());
+		
+		LOGGER.info("MENU :" + menu.toString());
 		MenuDTO menuDTO = new MenuDTO();
 		menuDTO.setDate(menu.getDate());
 		menuDTO.setId(menu.getId());

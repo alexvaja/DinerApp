@@ -171,17 +171,21 @@ public class SelectionController {
 					model.addAttribute("isMenuDatePicked", false);
 					break;
 				case "Alege data":	
-					// String date = dateOfOrder;
-					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()))
-					{
-						model.addAttribute("isMenuDatePicked", true);
+					if(this.getAllAvailableMenuDatesForUser(user.get()).size() > 0) {
+						if(!isDateAlreadyOrderedForUser(pickedDate, user.get()))
+						{
+							model.addAttribute("isMenuDatePicked", true);
+						}
+						else {
+							model.addAttribute("alreadyOrderedForThisDate", true);
+							model.addAttribute("isMenuDatePicked", false);
+							// updates the list of available menu dates for user
+							this.updateAvailableMenuDatesForUser(user.get(), model);
+							return "views/employeeOrderView";					
+						}
 					}
 					else {
-						model.addAttribute("alreadyOrderedForThisDate", true);
 						model.addAttribute("isMenuDatePicked", false);
-						// updates the list of available menu dates for user
-						this.updateAvailableMenuDatesForUser(user.get(), model);
-						return "views/employeeOrderView";					
 					}
 			}
 		}
