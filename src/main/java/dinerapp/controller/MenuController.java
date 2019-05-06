@@ -255,8 +255,8 @@ public class MenuController {
 			}
 
 			if (!isDateGreaterThanToday(menuDate)) {
-				session.setAttribute("formatDateError", true);
-				throw new WrongMenuDateException("Date does not have the right format!");
+				session.setAttribute("dateErrorMessage", true);
+				throw new WrongMenuDateException("Date must be greater than today!");
 			}
 
 			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(), date)) {
