@@ -102,9 +102,6 @@ public class FoodControler {
 			} catch (NumberFormatException e) {
 				throw new WrongInputDataException();
 			}
-			
-			
-
 			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
 					|| newFoodDTO.getPrice().isEmpty() || Double.parseDouble(newFoodDTO.getPrice()) < 0 
 					|| newFoodDTO.getWeight().isEmpty() || Integer.parseInt(newFoodDTO.getWeight()) < 0) {
