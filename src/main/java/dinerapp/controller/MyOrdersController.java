@@ -205,8 +205,10 @@ public class MyOrdersController {
 	private OrderDTO getOrderDTOForDate(String date) {
 		OrderDTO orderDTO = new OrderDTO();
 		Menu menu = this.getMenuByDate(date);
-		LOGGER.info("MENU2:" + menu.toString());
-
+		if(menu == null) {
+			LOGGER.info("MENIUL ESTE NULL");
+		}
+		
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
@@ -284,10 +286,7 @@ public class MyOrdersController {
 		return ordersForUser;
 	}
 
-	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {	
-		String menuString = menu.toString();
-		LOGGER.info("MENU :" + menuString);
-		
+	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {			
 		MenuDTO menuDTO = new MenuDTO();
 		menuDTO.setDate(menu.getDate());
 		menuDTO.setId(menu.getId());
@@ -300,7 +299,9 @@ public class MyOrdersController {
 	private Menu getMenuByDate(String date) {
 		// finds the menu with the given date
 		for (Menu menu : menuRepository.findAll()) {
+			LOGGER.info("VERIFICARE: " + menu.getDate() + " = " + date);
 			if (menu.getDate().equals(date)) {
+				LOGGER.info("E OK IN GET MENU BY DATE");;
 				return menu;
 			}
 		}
