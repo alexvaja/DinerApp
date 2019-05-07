@@ -71,9 +71,6 @@ public class MyOrdersController {
 		Optional<UserDiner> user = userRepository
 				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		
-		System.out.println(user.get().toString());
-		System.out.println(this.getAllOrderedDatesForUser(user.get()).toString());
-		
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
 
@@ -130,14 +127,16 @@ public class MyOrdersController {
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					this.removeOrder(selectedOrder.getId());
 					
+					// de refactorizat
 					Order order = new Order();
 					order.setDate(selectedOrder.getDate());
 					order.setTaken(false);
 					order.setUserDiner(user.get());				
 					orderRepository.save(order);
 					
+					// de refactorizat
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
-					List<Food> foodsForOrder = this.convertFromFoodaDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
+					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
 			
 					for (Map.Entry<Food, Integer> entry : foodQuantities.entrySet()) {
@@ -149,8 +148,7 @@ public class MyOrdersController {
 				else {
 					model.addAttribute("orderWasModified", false);
 					loadCurrentPage(model, user, myOrdersViewModel, date);
-				}
-				
+				}		
 				return "views/myOrdersView";				
 			}
 			case "Reseteaza": {
@@ -214,7 +212,11 @@ public class MyOrdersController {
 
 		Integer orderDTOId = this.getOrderIdByDate(menu.getDate());
 		orderDTO.setOrderId(orderDTOId);
-
+		
+		// mai jos e alternativa daca se sterge metoda getOrderIdByDate si se inlocuieste cu getOrderByDate
+//		Order orderDTOId2 = this.getOrderByDate(menu.getDate());
+//		orderDTO.setOrderId(orderDTOId2.getId());
+		
 		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date),
 				menu);
 		Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
@@ -282,8 +284,9 @@ public class MyOrdersController {
 		return ordersForUser;
 	}
 
-	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {		
-		LOGGER.info("MENU :" + menu.toString());
+	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {	
+		String menuString = menu.toString();
+		LOGGER.info("MENU :" + menuString);
 		
 		MenuDTO menuDTO = new MenuDTO();
 		menuDTO.setDate(menu.getDate());
@@ -323,7 +326,7 @@ public class MyOrdersController {
 		return foodDTO;
 	}
 
-	private List<Food> convertFromFoodaDTOToFoods(List<FoodDTO> foodsDTO) {
+	private List<Food> convertFromFoodsDTOToFoods(List<FoodDTO> foodsDTO) {
 		List<Food> foods = new ArrayList<>();
 		for (FoodDTO foodDTO : foodsDTO) {
 			foods.add(foodDTO.getFood());
