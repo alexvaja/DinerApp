@@ -124,19 +124,6 @@ public class StatisticsController {
 		}
 		
 		statisticsViewModel.setStatistics(statistics);
-		
-//		statisticsViewModel.setPickedUpOrders(pickedUpOrders);
-//		statisticsViewModel.setPlacedOrders(placedOrders);
-//		statisticsViewModel.setUsers(users);
-//		statisticsViewModel.setX(x);
-		
-//		System.out.println("Aici afisez");
-//		
-//		System.out.println("usersss :" + users);
-//			
-//
-//		System.out.println();
-//		System.out.println(statisticsViewModel);
 		session.setAttribute("statisticsViewModel", statisticsViewModel);
 
 		return "views/statisticsView";
