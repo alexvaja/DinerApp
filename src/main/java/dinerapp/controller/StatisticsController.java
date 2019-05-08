@@ -119,23 +119,11 @@ public class StatisticsController {
 		for (int index = 0; index < users.size(); index++) {
 			//StatisticDTO stat = new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index));
 			if(users.get(index).getRoles().get(0).getName().equals("employee"))
-				statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
+				if(placedOrders.get(index) != 0)
+					statistics.add(new StatisticDTO(users.get(index), placedOrders.get(index), pickedUpOrders.get(index)));
 		}
 		
 		statisticsViewModel.setStatistics(statistics);
-		
-//		statisticsViewModel.setPickedUpOrders(pickedUpOrders);
-//		statisticsViewModel.setPlacedOrders(placedOrders);
-//		statisticsViewModel.setUsers(users);
-//		statisticsViewModel.setX(x);
-		
-//		System.out.println("Aici afisez");
-//		
-//		System.out.println("usersss :" + users);
-//			
-//
-//		System.out.println();
-//		System.out.println(statisticsViewModel);
 		session.setAttribute("statisticsViewModel", statisticsViewModel);
 
 		return "views/statisticsView";
