@@ -13,7 +13,7 @@ public class MenuDTO {
 		super();
 		this.state = MenuStates.NEW.toString();
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}

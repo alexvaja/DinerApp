@@ -1,5 +1,6 @@
 package dinerapp.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -98,13 +99,10 @@ public class MyOrdersController {
 		String date = null;
 		LOGGER.info("PICKED DATE: " + pickedDate);
 		if (pickedDate != null) {
-			LOGGER.info("A INTRAT AICI1");
 			date = pickedDate;
 		} else {
-			LOGGER.info("A INTRAT AICI2");
 			date = dateOfOrder;
 		}
-		LOGGER.info("DATE LA INCEPUT :" + date);
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
 				if(this.getAllOrderedDatesForUser(user.get()).size() > 0) {
@@ -127,12 +125,7 @@ public class MyOrdersController {
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					this.removeOrder(selectedOrder.getId());
 					
-					// de refactorizat
-					Order order = new Order();
-					order.setDate(selectedOrder.getDate());
-					order.setTaken(false);
-					order.setUserDiner(user.get());				
-					orderRepository.save(order);
+					Order editedOder = this.saveEditedOrderForUser(selectedOrder, user.get());
 					
 					// de refactorizat
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
@@ -140,8 +133,9 @@ public class MyOrdersController {
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
 			
 					for (Map.Entry<Food, Integer> entry : foodQuantities.entrySet()) {
-						orderQuantityRepository.save(new OrderQuantity(order, entry.getKey(), entry.getValue()));				
+						orderQuantityRepository.save(new OrderQuantity(editedOder, entry.getKey(), entry.getValue()));				
 					}
+					
 					model.addAttribute("orderWasModified", true);
 					loadCurrentPage(model, user, myOrdersViewModel, date);
 				}
@@ -162,6 +156,15 @@ public class MyOrdersController {
 		return "redirect:/employeeOrderView";
 	}
 	
+	private Order saveEditedOrderForUser(Order selectedOrder, UserDiner user) {
+		Order order = new Order();
+		order.setDate(selectedOrder.getDate());
+		order.setTaken(false);
+		order.setUserDiner(user);				
+		orderRepository.save(order);
+		return order;
+	}
+	
 	private boolean areAllQuantitiesZero(String quantity){
 		List<String> quantities = new ArrayList<>(Arrays.asList(quantity.split(",")));
 		for(String quantityObj : quantities) {
@@ -175,9 +178,8 @@ public class MyOrdersController {
 	private void loadCurrentPage(Model model, Optional<UserDiner> user, MyOrdersViewModel myOrdersViewModel, String date) {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
-		LOGGER.info("DATE :" + date);
-		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDate(date));
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
+		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDate(date));
 	}
 
 	// creates a map from two lists
@@ -205,22 +207,14 @@ public class MyOrdersController {
 	private OrderDTO getOrderDTOForDate(String date) {
 		OrderDTO orderDTO = new OrderDTO();
 		Menu menu = this.getMenuByDate(date);
-		if(menu == null) {
-			LOGGER.info("MENIUL ESTE NULL");
-		}
-		
+
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
-		Integer orderDTOId = this.getOrderIdByDate(menu.getDate());
-		orderDTO.setOrderId(orderDTOId);
+		Order orderByDate = this.getOrderByDate(menu.getDate());
+		orderDTO.setOrderId(orderByDate.getId());
 		
-		// mai jos e alternativa daca se sterge metoda getOrderIdByDate si se inlocuieste cu getOrderByDate
-//		Order orderDTOId2 = this.getOrderByDate(menu.getDate());
-//		orderDTO.setOrderId(orderDTOId2.getId());
-		
-		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date),
-				menu);
+		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date), menu);
 		Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
 				.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -259,15 +253,6 @@ public class MyOrdersController {
 		return orderedDates;
 	}
 
-	private Integer getOrderIdByDate(String date) {
-		for (Order order : orderRepository.findAll()) {
-			if (order.getDate().equals(date)) {
-				return order.getId();
-			}
-		}
-		return null;
-	}
-
 	@Transactional
 	private void removeOrder(Integer orderId) {
 		Order order = entityManager.find(Order.class, orderId);
@@ -278,7 +263,7 @@ public class MyOrdersController {
 		List<Order> ordersForUser = new ArrayList<>();
 
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner().equals(user)) {
+			if (order.getUserDiner().equals(user) && LocalDate.parse(order.getDate()).isAfter(LocalDate.now())) {
 				//the problem is here
 				ordersForUser.add(order);
 			}
@@ -299,9 +284,7 @@ public class MyOrdersController {
 	private Menu getMenuByDate(String date) {
 		// finds the menu with the given date
 		for (Menu menu : menuRepository.findAll()) {
-			LOGGER.info("VERIFICARE: " + menu.getDate() + " = " + date);
 			if (menu.getDate().equals(date)) {
-				LOGGER.info("E OK IN GET MENU BY DATE");;
 				return menu;
 			}
 		}
@@ -369,9 +352,9 @@ public class MyOrdersController {
 		Map<FoodDTO, Integer> quantitiesMap = new HashMap<FoodDTO, Integer>();
 
 		for (OrderQuantity orderQuantity : orderQuantityRepository.findAll()) {
-			if (orderQuantity.getOrder() == order) {
+			if (orderQuantity.getOrder().getId() == order.getId()) {
 				quantitiesMap.put(this.getFoodDTOFromFoodId(orderQuantity.getFoodd().getId()),
-						orderQuantity.getQuantity());
+					orderQuantity.getQuantity());
 			}
 		}
 
