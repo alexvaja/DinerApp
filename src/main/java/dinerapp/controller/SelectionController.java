@@ -13,7 +13,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
+
 import dinerapp.constants.MenuStates;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
@@ -41,6 +46,8 @@ import dinerapp.repository.UserCantinaRepository;
 
 @Controller
 public class SelectionController {
+	
+	Logger LOGGER = LoggerFactory.getLogger(SelectionController.class);
 	@Autowired
 	private MenuRepository menuRepository;
 	@Autowired
@@ -131,7 +138,8 @@ public class SelectionController {
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {	
 						// adds a new order to database
-						this.addNewOrder(user.get(), dateOfOrder);
+						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
+						LOGGER.info("ORDER ID TO ADD: " + orderToAdd.getId().toString());
 						// converts the comma separated string into a list of strings
 						List<String> dishesIds = Arrays.asList(dishIds.split(","));
 						// gets all foods ids for a dish
@@ -139,9 +147,9 @@ public class SelectionController {
 						// creates a map of foods and quantities
 						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
 						// gets an order by date
-						Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
+						//Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
 						// adds a new orderQuantity to database
-						this.addNewOrderQuantity(foodQuantities, order);					
+						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);
 						}	
 					return "redirect:/employeeOrderView";
@@ -181,7 +189,7 @@ public class SelectionController {
 	}
 	
 	// adds a new order to database
-	private void addNewOrder(UserDiner user, String date) {
+	private Order addNewOrder(UserDiner user, String date) {
 		// creates a new order
 		Order order = new Order();
 		// set the order user with the given user
@@ -191,7 +199,9 @@ public class SelectionController {
 		// set taken attribute to false
 		order.setTaken(false);
 		// inserts the order into database
+		LOGGER.info("ORDER IN ADD NEW ORDER: " + order.toString());
 		orderRepository.save(order);
+		return order;
 	}
 	
 	// adds a new orderQuantity into database
@@ -202,8 +212,12 @@ public class SelectionController {
 			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
 			// gets the quantity for food
 			Integer quantity = Integer.parseInt(foodQuantity.getValue());
+			//test
+			LOGGER.info("ORDER IN OREDER Q: " + order.toString());
+			
 			// adds a new OrderQuantity to database
 			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
+			
 		}	
 	}
 	
