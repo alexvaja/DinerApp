@@ -170,10 +170,14 @@ public class SelectionController {
 					// sets isMenuDatePicked to false
 					model.addAttribute("isMenuDatePicked", false);
 					break;
-				case "Alege data":	
+				case "Alege data":
+					
+					if(this.getAllAvailableMenuDatesForUser(user.get()).size() == 0) {
+						model.addAttribute("isMenuDatePicked", false);
+						break;
+					}
 					// String date = dateOfOrder;
-					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()))
-					{
+					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()) ){
 						model.addAttribute("isMenuDatePicked", true);
 					}
 					else {

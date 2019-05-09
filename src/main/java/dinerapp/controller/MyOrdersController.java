@@ -67,9 +67,6 @@ public class MyOrdersController {
 		Optional<UserDiner> user = userRepository
 				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		
-		System.out.println(user.get().toString());
-		System.out.println(this.getAllOrderedDatesForUser(user.get()).toString());
-		
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
 
@@ -90,8 +87,7 @@ public class MyOrdersController {
 			@RequestParam(value = "date", required = false) String dateOfOrder,
 			@RequestParam(value = "quantities", required = false) String quantities) {
 
-		Optional<UserDiner> user = userRepository
-				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 
 		String date = null;
@@ -103,6 +99,10 @@ public class MyOrdersController {
 
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
+				if(this.getAllOrderedDatesForUser(user.get()).size() == 0) {
+					model.addAttribute("isDatePicked", false);
+					break;
+				}
 				loadCurrentPage(model, user, myOrdersViewModel, date);
 				return "views/myOrdersView";
 			}
@@ -236,7 +236,6 @@ public class MyOrdersController {
 
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
-		System.out.println("ORDERED DATES: " + orderedDates.toString());
 		for (Order order : this.getAllOrdersForUser(user)) {
 			orderedDates.add(order.getDate());
 		}
