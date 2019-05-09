@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +46,8 @@ import dinerapp.repository.UserCantinaRepository;
 
 @Controller
 public class SelectionController {
+	
+	Logger LOGGER = LoggerFactory.getLogger(SelectionController.class);
 	@Autowired
 	private MenuRepository menuRepository;
 	@Autowired
@@ -58,7 +62,6 @@ public class SelectionController {
 	@SessionScope
 	@GetMapping("/employeeOrderView")
 	public String getAllData(HttpSession session, Model model) throws ParseException {	
-		// sets menuViewModel attribute on session
 		session.setAttribute("menuViewModel", new MenuViewModel());	
 		// adds an attribute to the model that tells if a menu date has been picked or not
 		model.addAttribute("isMenuDatePicked", false);
@@ -71,7 +74,6 @@ public class SelectionController {
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
 		}
-
 		return "views/employeeOrderView";
 	}
 
@@ -94,7 +96,6 @@ public class SelectionController {
 			menuViewModel.getMenuDTO().setTitle(menu.getTitle());
 			menuViewModel.setDishesDTO(convertDishesToDishesDTO(menu.getDishes()));
 		}
-
 		// finds the user with name taken from URL
 		Optional<UserDiner> user;
 		
@@ -105,10 +106,11 @@ public class SelectionController {
 			user = userRepository.findById(this.getUserIdByName(nameFromURL));
 		}
 		
-		// actions to occur if Submit button is pressed
+		// actions to occur if a submit button is pressed
 		if(actionType != null) {
 			switch (actionType) {
 				case "Comanda mancare": {
+					// this button is on atos portal
 					session.setAttribute("nameFromURL", nameFromURL);
 					return "redirect:/employeeOrderView";
 				}
@@ -123,8 +125,7 @@ public class SelectionController {
 					if(isDateAlreadyOrderedForUser(dateOfOrder, user.get())){
 						model.addAttribute("alreadyOrderedForThisDate", true);
 						model.addAttribute("isMenuDatePicked", false);
-						this.updateAvailableMenuDatesForUser(user.get(), model);
-						return "views/employeeOrderView";
+						return "redirect:/employeeOrderView";
 					}
 					
 					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
@@ -137,53 +138,41 @@ public class SelectionController {
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {	
 						// adds a new order to database
-						this.addNewOrder(user.get(), dateOfOrder);
+						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
+						LOGGER.info("ORDER ID TO ADD: " + orderToAdd.getId().toString());
 						// converts the comma separated string into a list of strings
 						List<String> dishesIds = Arrays.asList(dishIds.split(","));
 						// gets all foods ids for a dish
 						List<String> foodIds = this.getFoodsForDish(dishesIds, dateOfOrder);
-						// converts quantities from comma separated string to list
-						//List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
 						// creates a map of foods and quantities
 						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
 						// gets an order by date
-						Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
+						//Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
 						// adds a new orderQuantity to database
-						this.addNewOrderQuantity(foodQuantities, order);					
+						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);
 						}	
-						
-					// updates available menu dates for user
-					this.updateAvailableMenuDatesForUser(user.get(), model);
-					// sets isMenuDatePicked to false
-					model.addAttribute("isMenuDatePicked", false);
-					break;
+					return "redirect:/employeeOrderView";
 				}
 				case "Reseteaza":
 					// resets all inputs to default value
 					break;
 				case "Anuleaza":
-					// updates available menu dates for user
-					this.updateAvailableMenuDatesForUser(user.get(), model);
-					// sets isMenuDatePicked to false
-					model.addAttribute("isMenuDatePicked", false);
-					break;
-				case "Alege data":	
-					if(this.getAllAvailableMenuDatesForUser(user.get()).size() > 0) {
-						if(!isDateAlreadyOrderedForUser(pickedDate, user.get()))
-						{
-							model.addAttribute("isMenuDatePicked", true);
-						}
-						else {
-							model.addAttribute("alreadyOrderedForThisDate", true);
-							model.addAttribute("isMenuDatePicked", false);
-							// updates the list of available menu dates for user
-							this.updateAvailableMenuDatesForUser(user.get(), model);
-							return "views/employeeOrderView";					
-						}
+					return "redirect:/employeeOrderView";
+				case "Alege data":
+					// if there is no date to select and alege data is pressed no action will be taken
+					if(this.getAllAvailableMenuDatesForUser(user.get()).size() == 0) {
+						model.addAttribute("isMenuDatePicked", false);
+						break;
+					}
+					
+					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()) ){
+						model.addAttribute("isMenuDatePicked", true);
 					}
 					else {
-						model.addAttribute("isMenuDatePicked", false);
+						model.addAttribute("alreadyOrderedForThisDate", true);
+						model.addAttribute("isMenuDatePicked", false);	
+						return "redirect:/employeeOrderView";
 					}
 			}
 		}
@@ -200,7 +189,7 @@ public class SelectionController {
 	}
 	
 	// adds a new order to database
-	private void addNewOrder(UserDiner user, String date) {
+	private Order addNewOrder(UserDiner user, String date) {
 		// creates a new order
 		Order order = new Order();
 		// set the order user with the given user
@@ -210,7 +199,9 @@ public class SelectionController {
 		// set taken attribute to false
 		order.setTaken(false);
 		// inserts the order into database
+		LOGGER.info("ORDER IN ADD NEW ORDER: " + order.toString());
 		orderRepository.save(order);
+		return order;
 	}
 	
 	// adds a new orderQuantity into database
@@ -221,8 +212,12 @@ public class SelectionController {
 			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
 			// gets the quantity for food
 			Integer quantity = Integer.parseInt(foodQuantity.getValue());
+			//test
+			LOGGER.info("ORDER IN OREDER Q: " + order.toString());
+			
 			// adds a new OrderQuantity to database
 			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
+			
 		}	
 	}
 	
@@ -252,14 +247,11 @@ public class SelectionController {
 	
 	// gets the list of all dates in which the user didn't order
 	private List<String> getAllAvailableMenuDatesForUser(UserDiner user) throws ParseException {
-
 		// gets a list of all available menus
 		List<String> allMenuDates = this.getAllAvailbleMenuDates();
 		List<String> alreadyOrderedDates = new ArrayList<>();
-		// gets all orders from database
-		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
 		// iterates through all orders
-		for (Order order : allOrdersFromDB) {
+		for (Order order : orderRepository.findAll()) {
 			// tests if the current order is associated with the given user
 			if (order.getUserDiner().getId() == user.getId()) {
 				// add the date of the order to the list of already ordered dates
@@ -268,7 +260,6 @@ public class SelectionController {
 		}
 		// iterates through all already ordered dates
 		for (String orderedDate : alreadyOrderedDates) {
-			// tests if the ordered date can be found in allMenuDates
 			if (allMenuDates.contains(orderedDate)) {
 				// removes the ordered date from allMenuDates
 				allMenuDates.remove(orderedDate);
@@ -281,10 +272,8 @@ public class SelectionController {
 	
 	// gets an user id based on his name
 	private Integer getUserIdByName(String name) {
-		// gets all users from database
-		Iterable<UserDiner> allUsersFromDB = userRepository.findAll();
 		// iterates through all users
-		for (UserDiner user : allUsersFromDB) {
+		for (UserDiner user : userRepository.findAll()) {
 			// tests if there is an user with the given name
 			if (user.getName().toUpperCase().trim().equals(name.toUpperCase().trim())) {
 				// returns the id of that user
@@ -296,10 +285,8 @@ public class SelectionController {
 	
 	// gets an order by date
 	private Order getOrderByDateAndUser(String date, UserDiner user) {
-		// gets all orders from database
-		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
 		// iterates through all orders
-		for(Order order : allOrdersFromDB) {
+		for(Order order : orderRepository.findAll()) {
 			// tests if current order has the same date as given date
 			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
 				return order;
@@ -310,10 +297,8 @@ public class SelectionController {
 	
 	// gets from database the menu with given date
 	private Menu getMenuByDate(String date) {
-		// gets all menus from DB
-		Iterable<Menu> allMenus = menuRepository.findAll();
 		// finds the menu with the given date
-		for (Menu menu : allMenus) {
+		for (Menu menu : menuRepository.findAll()) {
 			if (menu.getDate().equals(date)) {
 				return menu;
 			}
@@ -345,10 +330,8 @@ public class SelectionController {
 	
 	// tests if a certain order already exists in database
 	private boolean isDateAlreadyOrderedForUser(String date, UserDiner user) {
-		// gets all orders from database
-		Iterable<Order> allOrdersFromDB = orderRepository.findAll();
 		// iterates through all orders
-		for(Order order : allOrdersFromDB) {
+		for(Order order : orderRepository.findAll()) {
 			// tests if current oder already exists
 			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
 				return true;

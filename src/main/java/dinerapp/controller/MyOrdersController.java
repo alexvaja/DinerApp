@@ -69,16 +69,9 @@ public class MyOrdersController {
 	@SessionScope
 	@GetMapping("/orders")
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
-		Optional<UserDiner> user = userRepository
-				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
-		
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
-
-		if (this.getAllOrdersForUser(user.get()).size() == 0) {
-			model.addAttribute("userHasNoOrders", true);
-			return "views/myOrdersView";
-		}
 		return "views/myOrdersView";
 	}
 
@@ -92,8 +85,7 @@ public class MyOrdersController {
 			@RequestParam(value = "date", required = false) String dateOfOrder,
 			@RequestParam(value = "quantities", required = false) String quantities) {
 
-		Optional<UserDiner> user = userRepository
-				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 
 		String date = null;
@@ -105,12 +97,11 @@ public class MyOrdersController {
 		}
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
-				if(this.getAllOrderedDatesForUser(user.get()).size() > 0) {
-					loadCurrentPage(model, user, myOrdersViewModel, date);
-				}
-				else {
+				if(this.getAllOrderedDatesForUser(user.get()).size() == 0) {
 					model.addAttribute("isDatePicked", false);
+					break;
 				}
+				loadCurrentPage(model, user, myOrdersViewModel, date);
 				return "views/myOrdersView";
 			}
 			case "Sterge comanda": {
@@ -124,16 +115,14 @@ public class MyOrdersController {
 				if(!this.areAllQuantitiesZero(quantities)) {
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					this.removeOrder(selectedOrder.getId());
-					
-					Order editedOder = this.saveEditedOrderForUser(selectedOrder, user.get());
-					
+					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
 					// de refactorizat
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
 					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
 			
 					for (Map.Entry<Food, Integer> entry : foodQuantities.entrySet()) {
-						orderQuantityRepository.save(new OrderQuantity(editedOder, entry.getKey(), entry.getValue()));				
+						orderQuantityRepository.save(new OrderQuantity(editedOrder, entry.getKey(), entry.getValue()));				
 					}
 					
 					model.addAttribute("orderWasModified", true);
@@ -155,8 +144,7 @@ public class MyOrdersController {
 		}
 		return "redirect:/employeeOrderView";
 	}
-	
-	private Order saveEditedOrderForUser(Order selectedOrder, UserDiner user) {
+	private Order saveEditedOrder(Order selectedOrder, UserDiner user) {
 		Order order = new Order();
 		order.setDate(selectedOrder.getDate());
 		order.setTaken(false);
@@ -263,8 +251,9 @@ public class MyOrdersController {
 		List<Order> ordersForUser = new ArrayList<>();
 
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner().equals(user) && LocalDate.parse(order.getDate()).isAfter(LocalDate.now())) {
-				//the problem is here
+
+			if (order.getUserDiner().equals(user)) {
+
 				ordersForUser.add(order);
 			}
 		}
