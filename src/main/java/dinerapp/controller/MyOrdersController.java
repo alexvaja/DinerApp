@@ -64,16 +64,9 @@ public class MyOrdersController {
 	@SessionScope
 	@GetMapping("/orders")
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
-		Optional<UserDiner> user = userRepository
-				.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
-		
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
-
-		if (this.getAllOrdersForUser(user.get()).size() == 0) {
-			model.addAttribute("userHasNoOrders", true);
-			return "views/myOrdersView";
-		}
 		return "views/myOrdersView";
 	}
 
@@ -118,18 +111,14 @@ public class MyOrdersController {
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					this.removeOrder(selectedOrder.getId());
 					
-					Order order = new Order();
-					order.setDate(selectedOrder.getDate());
-					order.setTaken(false);
-					order.setUserDiner(user.get());				
-					orderRepository.save(order);
+					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
 					
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
 					List<Food> foodsForOrder = this.convertFromFoodaDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
 			
 					for (Map.Entry<Food, Integer> entry : foodQuantities.entrySet()) {
-						orderQuantityRepository.save(new OrderQuantity(order, entry.getKey(), entry.getValue()));				
+						orderQuantityRepository.save(new OrderQuantity(editedOrder, entry.getKey(), entry.getValue()));				
 					}
 					model.addAttribute("orderWasModified", true);
 					loadCurrentPage(model, user, myOrdersViewModel, date);
@@ -150,6 +139,15 @@ public class MyOrdersController {
 			}
 		}
 		return "redirect:/employeeOrderView";
+	}
+	
+	private Order saveEditedOrder(Order selectedOrder, UserDiner user) {
+		Order order = new Order();
+		order.setDate(selectedOrder.getDate());
+		order.setTaken(false);
+		order.setUserDiner(user);				
+		orderRepository.save(order);
+		return order;
 	}
 	
 	private boolean areAllQuantitiesZero(String quantity){
@@ -262,7 +260,6 @@ public class MyOrdersController {
 
 		for (Order order : orderRepository.findAll()) {
 			if (order.getUserDiner().equals(user)) {
-				//the problem is here
 				ordersForUser.add(order);
 			}
 		}
