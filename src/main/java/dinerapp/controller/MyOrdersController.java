@@ -98,7 +98,7 @@ public class MyOrdersController {
 			case "Vizualizeaza comanda": {
 				if(this.getAllOrderedDatesForUser(user.get()).size() == 0) {
 					model.addAttribute("isDatePicked", false);
-					break;
+					return "redirect:/orders";
 				}
 				loadCurrentPage(model, user, myOrdersViewModel, date);
 				return "views/myOrdersView";
@@ -235,7 +235,7 @@ public class MyOrdersController {
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
 		for (Order order : this.getAllOrdersForUser(user)) {
-			if(LocalDate.parse(order.getDate()).isAfter(LocalDate.now()) && !order.getTaken()) {
+			if((LocalDate.parse(order.getDate()).isAfter(LocalDate.now()) || LocalDate.parse(order.getDate()).isEqual(LocalDate.now()))  && !order.getTaken()) {
 				orderedDates.add(order.getDate());
 			}
 		}

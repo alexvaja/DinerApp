@@ -8,6 +8,11 @@
 		<div class="alert alert-info text-center" role="alert">
 			<h3> Comanda mancare </h3> 
 		</div>
+		<div th:if="${insecureOrder == true}">
+			<div class="alert alert-danger text-center" role="alert">
+				<h3> Este posibil ca aceasta comanda sa nu fie procesata! </h3> 
+			</div>
+		</div>
 		<div th:if="${isMenuDatePicked == false}">
 			<div th:if="${orderedWithSuccess == true}" class="alert alert-success text-center" role="alert">
 				<h4> Comanda plasata cu succes! </h4> 

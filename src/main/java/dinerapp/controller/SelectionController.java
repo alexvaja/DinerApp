@@ -1,17 +1,14 @@
 package dinerapp.controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -146,8 +143,6 @@ public class SelectionController {
 						List<String> foodIds = this.getFoodsForDish(dishesIds, dateOfOrder);
 						// creates a map of foods and quantities
 						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
-						// gets an order by date
-						//Order order = this.getOrderByDateAndUser(dateOfOrder, user.get());
 						// adds a new orderQuantity to database
 						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);
@@ -166,7 +161,12 @@ public class SelectionController {
 						break;
 					}
 					
-					if(!isDateAlreadyOrderedForUser(pickedDate, user.get()) ){
+					if(!isDateAlreadyOrderedForUser(pickedDate, user.get())){
+						if((LocalDate.now().isEqual(LocalDate.parse(pickedDate).minus(Period.ofDays(1))) 
+								&& LocalTime.now().getHour() >= 16)
+								|| LocalDate.now().isEqual(LocalDate.parse(pickedDate))) {
+							model.addAttribute("insecureOrder", true);
+						}
 						model.addAttribute("isMenuDatePicked", true);
 					}
 					else {
@@ -225,11 +225,9 @@ public class SelectionController {
 		// iterates through all menus from database
 		for (Menu menu : allMenusFromDB) {
 			// gets the date for current menu
-//			Date menuDate = dateFormat.parse(menu.getDate());
 			LocalDate menuDate = LocalDate.parse(menu.getDate());
 			// tests if the date hasn't passed
-			LOGGER.info("TEST DATA: " + menu.getState().trim() + " = " + MenuStates.PUBLISHED.toString().trim());
-			if (menuDate.isAfter(LocalDate.now()) && menu.getState().trim().equals(MenuStates.PUBLISHED.toString().trim())) {
+			if ((menuDate.isAfter(LocalDate.now()) || menuDate.isEqual(LocalDate.now())) && menu.getState().trim().equals(MenuStates.PUBLISHED.toString().trim())) {
 				// adds the date to available dates
 				avaialbeMenuDates.add(menu.getDate());
 			}
@@ -245,12 +243,6 @@ public class SelectionController {
 		// iterates through all orders
 		for (Order order : orderRepository.findAll()) {
 			// tests if the current order is associated with the given user
-			// nu intra aici
-			if (order.getUserDiner().getId() == user.getId()) {
-				// add the date of the order to the list of already ordered dates
-				alreadyOrderedDates.add(order.getDate());
-			}
-			// test
 			if (order.getUserDiner().equals(user)) {
 				// add the date of the order to the list of already ordered dates
 				alreadyOrderedDates.add(order.getDate());
