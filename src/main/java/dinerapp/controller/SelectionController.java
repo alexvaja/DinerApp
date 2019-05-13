@@ -157,8 +157,6 @@ public class SelectionController {
 						// adds a new orderQuantity to database
 						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);
-						// adaugat dupa
-						this.updateAvailableMenuDatesForUser(user.get(), model);
 						}	
 					return "redirect:/employeeOrderView";
 				}
@@ -263,13 +261,16 @@ public class SelectionController {
 				alreadyOrderedDates.add(order.getDate());
 			}
 		}
+		LOGGER.info("ALREADY ORDERED DATES: " + alreadyOrderedDates.size());
 		// iterates through all already ordered dates
 		for (String orderedDate : alreadyOrderedDates) {
 			if (allMenuDates.contains(orderedDate)) {
+				LOGGER.info("A ELIMINAT DATA DIN CELE DE COMANDA");
 				// removes the ordered date from allMenuDates
 				allMenuDates.remove(orderedDate);
 			}
 		}
+		LOGGER.info("ALREADY MENU DATES AVAILBALE: " + allMenuDates.size());
 		// sorts all dates  
 		Collections.sort(allMenuDates);	
 		return allMenuDates;
