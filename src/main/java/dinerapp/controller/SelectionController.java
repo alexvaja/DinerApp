@@ -114,17 +114,20 @@ public class SelectionController {
 					session.setAttribute("nameFromURL", nameFromURL);
 					return "redirect:/employeeOrderView";
 				}
-				case "Comanda": {				
+				case "Comanda": {	
+					LOGGER.info("A INTRAT PE COMANDA");
 					// tests if any dish has been selected; dishIds is a string of ids comma separated			
 					if(dishIds == null) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
+						LOGGER.info("A INTRAT PE DISH == NULL");
 						return "views/employeeOrderView";
 					}
 					// tests if there is already an order for given date and user
 					if(isDateAlreadyOrderedForUser(dateOfOrder, user.get())){
 						model.addAttribute("alreadyOrderedForThisDate", true);
 						model.addAttribute("isMenuDatePicked", false);
+						LOGGER.info("A INTRAT PE IS DATE ALREADY ORDERED FOR USER");
 						return "redirect:/employeeOrderView";
 					}
 					
@@ -133,10 +136,13 @@ public class SelectionController {
 					if(this.areAllQuantitiesZero(quantityIds)) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
+						LOGGER.info("A INTRAT PE ALL QUANT ARE 0");
 						return "views/employeeOrderView";
 					}
 								
-					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {	
+					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {
+						LOGGER.info("A INTRAT PE ADAUGARE");
+
 						// adds a new order to database
 						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
 						LOGGER.info("ORDER ID TO ADD: " + orderToAdd.getId().toString());
@@ -199,8 +205,8 @@ public class SelectionController {
 		// set taken attribute to false
 		order.setTaken(false);
 		// inserts the order into database
-		LOGGER.info("ORDER IN ADD NEW ORDER: " + order.toString());
 		orderRepository.save(order);
+		LOGGER.info("A ADAUGAT NEW ORDER");
 		return order;
 	}
 	
@@ -211,13 +217,10 @@ public class SelectionController {
 			// gets the food with the id from map 
 			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
 			// gets the quantity for food
-			Integer quantity = Integer.parseInt(foodQuantity.getValue());
-			//test
-			LOGGER.info("ORDER IN OREDER Q: " + order.toString());
-			
+			Integer quantity = Integer.parseInt(foodQuantity.getValue());		
 			// adds a new OrderQuantity to database
 			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
-			
+			LOGGER.info("A ADAUGAT NEW QUANT");
 		}	
 	}
 	
