@@ -3,6 +3,7 @@ package dinerapp.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -230,17 +231,19 @@ public class SelectionController {
 		Iterable<Menu> allMenusFromDB = menuRepository.findAll();
 		List<String> avaialbeMenuDates = new ArrayList<>();
 		// defines the format of the date
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+//		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 		// gets the current date as string
-		String currentDateAsString = dateFormat.format(Calendar.getInstance().getTime());
+//		String currentDateAsString = dateFormat.format(Calendar.getInstance().getTime());
 		// converts the current date from string to date
-		Date currentDate = dateFormat.parse(currentDateAsString);
+//		Date currentDate = dateFormat.parse(currentDateAsString);
 		// iterates through all menus from database
 		for (Menu menu : allMenusFromDB) {
 			// gets the date for current menu
-			Date menuDate = dateFormat.parse(menu.getDate());
+//			Date menuDate = dateFormat.parse(menu.getDate());
+			LocalDate menuDate = LocalDate.parse(menu.getDate());
 			// tests if the date hasn't passed
-			if (menuDate.after(currentDate) && menu.getState().trim().equals(MenuStates.PUBLISHED.toString().trim())) {
+			LOGGER.info("TEST DATA: " + menu.getState().trim() + " = " + MenuStates.PUBLISHED.toString().trim());
+			if (menuDate.isAfter(LocalDate.now()) && menu.getState().trim().equals(MenuStates.PUBLISHED.toString().trim())) {
 				// adds the date to available dates
 				avaialbeMenuDates.add(menu.getDate());
 			}
@@ -264,13 +267,15 @@ public class SelectionController {
 		LOGGER.info("ALREADY ORDERED DATES: " + alreadyOrderedDates.size());
 		// iterates through all already ordered dates
 		for (String orderedDate : alreadyOrderedDates) {
+			LOGGER.info("ALL: " + allMenuDates.toString());
+			LOGGER.info("      " + orderedDate);
 			if (allMenuDates.contains(orderedDate)) {
 				LOGGER.info("A ELIMINAT DATA DIN CELE DE COMANDA");
 				// removes the ordered date from allMenuDates
 				allMenuDates.remove(orderedDate);
 			}
 		}
-		LOGGER.info("ALREADY MENU DATES AVAILBALE: " + allMenuDates.size());
+		LOGGER.info("MENU DATES AVAILBALE: " + allMenuDates.size());
 		// sorts all dates  
 		Collections.sort(allMenuDates);	
 		return allMenuDates;
@@ -339,7 +344,7 @@ public class SelectionController {
 		// iterates through all orders
 		for(Order order : orderRepository.findAll()) {
 			// tests if current oder already exists
-			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
+			if(order.getDate().trim().equals(date.trim()) && order.getUserDiner().getId() == user.getId()) {
 				return true;
 			}
 		}
