@@ -254,7 +254,7 @@ public class MyOrdersController {
 		List<Order> ordersForUser = new ArrayList<>();
 
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner().getId() == user.getId()) {
+			if (order.getUserDiner().equals(user)) {
 				ordersForUser.add(order);
 			}
 		}
