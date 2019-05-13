@@ -235,9 +235,11 @@ public class MyOrdersController {
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
 		for (Order order : this.getAllOrdersForUser(user)) {
-			if(LocalDate.parse(order.getDate()).isAfter(LocalDate.now())) {
-				orderedDates.add(order.getDate());
-			}
+//			if(LocalDate.parse(order.getDate()).isAfter(LocalDate.now())) {
+				if(!order.getTaken()) {
+					orderedDates.add(order.getDate());
+				}
+//			}
 		}
 		return orderedDates;
 	}

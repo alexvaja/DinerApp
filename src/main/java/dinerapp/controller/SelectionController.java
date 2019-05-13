@@ -73,6 +73,7 @@ public class SelectionController {
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
+			LOGGER.info("A UPDATAT DATELE PE GET");
 		}
 		return "views/employeeOrderView";
 	}
@@ -142,7 +143,6 @@ public class SelectionController {
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {
 						LOGGER.info("A INTRAT PE ADAUGARE");
-
 						// adds a new order to database
 						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
 						LOGGER.info("ORDER ID TO ADD: " + orderToAdd.getId().toString());
@@ -157,6 +157,8 @@ public class SelectionController {
 						// adds a new orderQuantity to database
 						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);
+						// adaugat dupa
+						this.updateAvailableMenuDatesForUser(user.get(), model);
 						}	
 					return "redirect:/employeeOrderView";
 				}
