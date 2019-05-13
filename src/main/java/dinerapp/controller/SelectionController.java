@@ -74,7 +74,6 @@ public class SelectionController {
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 			// updates the list of available menu dates for user
 			this.updateAvailableMenuDatesForUser(user.get(), model);
-			LOGGER.info("A UPDATAT DATELE PE GET");
 		}
 		return "views/employeeOrderView";
 	}
@@ -117,19 +116,16 @@ public class SelectionController {
 					return "redirect:/employeeOrderView";
 				}
 				case "Comanda": {	
-					LOGGER.info("A INTRAT PE COMANDA");
 					// tests if any dish has been selected; dishIds is a string of ids comma separated			
 					if(dishIds == null) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
-						LOGGER.info("A INTRAT PE DISH == NULL");
 						return "views/employeeOrderView";
 					}
 					// tests if there is already an order for given date and user
 					if(isDateAlreadyOrderedForUser(dateOfOrder, user.get())){
 						model.addAttribute("alreadyOrderedForThisDate", true);
 						model.addAttribute("isMenuDatePicked", false);
-						LOGGER.info("A INTRAT PE IS DATE ALREADY ORDERED FOR USER");
 						return "redirect:/employeeOrderView";
 					}
 					
@@ -138,15 +134,12 @@ public class SelectionController {
 					if(this.areAllQuantitiesZero(quantityIds)) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
-						LOGGER.info("A INTRAT PE ALL QUANT ARE 0");
 						return "views/employeeOrderView";
 					}
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {
-						LOGGER.info("A INTRAT PE ADAUGARE");
 						// adds a new order to database
 						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
-						LOGGER.info("ORDER ID TO ADD: " + orderToAdd.getId().toString());
 						// converts the comma separated string into a list of strings
 						List<String> dishesIds = Arrays.asList(dishIds.split(","));
 						// gets all foods ids for a dish
@@ -221,7 +214,6 @@ public class SelectionController {
 			Integer quantity = Integer.parseInt(foodQuantity.getValue());		
 			// adds a new OrderQuantity to database
 			orderQuantityRepository.save(new OrderQuantity(order, food.get(), quantity));
-			LOGGER.info("A ADAUGAT NEW QUANT");
 		}	
 	}
 	
@@ -253,34 +245,24 @@ public class SelectionController {
 		// iterates through all orders
 		for (Order order : orderRepository.findAll()) {
 			// tests if the current order is associated with the given user
-			LOGGER.info("=========================================================");
-			LOGGER.info(order.getUserDiner().getId() + " = " + user.getId());
-			LOGGER.info("=========================================================");
 			// nu intra aici
 			if (order.getUserDiner().getId() == user.getId()) {
 				// add the date of the order to the list of already ordered dates
-				LOGGER.info("ORDER A FOST ADAUGAT CU ==");
 				alreadyOrderedDates.add(order.getDate());
 			}
 			// test
 			if (order.getUserDiner().equals(user)) {
 				// add the date of the order to the list of already ordered dates
-				LOGGER.info("ORDER A FOST ADAUGAT CU EQUALS");
 				alreadyOrderedDates.add(order.getDate());
 			}
 		}
-		LOGGER.info("ALREADY ORDERED DATES: " + alreadyOrderedDates.size());
 		// iterates through all already ordered dates
 		for (String orderedDate : alreadyOrderedDates) {
-			LOGGER.info("ALL: " + allMenuDates.toString());
-			LOGGER.info("      " + orderedDate);
 			if (allMenuDates.contains(orderedDate)) {
-				LOGGER.info("A ELIMINAT DATA DIN CELE DE COMANDA");
 				// removes the ordered date from allMenuDates
 				allMenuDates.remove(orderedDate);
 			}
 		}
-		LOGGER.info("MENU DATES AVAILBALE: " + allMenuDates.size());
 		// sorts all dates  
 		Collections.sort(allMenuDates);	
 		return allMenuDates;
@@ -300,16 +282,16 @@ public class SelectionController {
 	}
 	
 	// gets an order by date
-	private Order getOrderByDateAndUser(String date, UserDiner user) {
-		// iterates through all orders
-		for(Order order : orderRepository.findAll()) {
-			// tests if current order has the same date as given date
-			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
-				return order;
-			}
-		}
-		return null;
-	}
+//	private Order getOrderByDateAndUser(String date, UserDiner user) {
+//		// iterates through all orders
+//		for(Order order : orderRepository.findAll()) {
+//			// tests if current order has the same date as given date
+//			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
+//				return order;
+//			}
+//		}
+//		return null;
+//	}
 	
 	// gets from database the menu with given date
 	private Menu getMenuByDate(String date) {
