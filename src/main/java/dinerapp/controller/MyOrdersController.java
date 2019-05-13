@@ -89,7 +89,6 @@ public class MyOrdersController {
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 
 		String date = null;
-		LOGGER.info("PICKED DATE: " + pickedDate);
 		if (pickedDate != null) {
 			date = pickedDate;
 		} else {
@@ -185,7 +184,7 @@ public class MyOrdersController {
 
 	private Order getOrderByUserAndDate(UserDiner user, String date) {
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner().equals(user) && order.getDate().equals(date)) {
+			if (order.getUserDiner().getId() == user.getId() && order.getDate().equals(date)) {
 				return order;
 			}
 		}
@@ -236,7 +235,9 @@ public class MyOrdersController {
 	private List<String> getAllOrderedDatesForUser(UserDiner user) {
 		List<String> orderedDates = new ArrayList<>();
 		for (Order order : this.getAllOrdersForUser(user)) {
-			orderedDates.add(order.getDate());
+			if(LocalDate.parse(order.getDate()).isAfter(LocalDate.now())) {
+				orderedDates.add(order.getDate());
+			}
 		}
 		return orderedDates;
 	}
@@ -251,9 +252,7 @@ public class MyOrdersController {
 		List<Order> ordersForUser = new ArrayList<>();
 
 		for (Order order : orderRepository.findAll()) {
-
-			if (order.getUserDiner().equals(user)) {
-
+			if (order.getUserDiner().getId() == user.getId()) {
 				ordersForUser.add(order);
 			}
 		}
