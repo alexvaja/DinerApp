@@ -256,9 +256,16 @@ public class SelectionController {
 			LOGGER.info("=========================================================");
 			LOGGER.info(order.getUserDiner().getId() + " = " + user.getId());
 			LOGGER.info("=========================================================");
+			// nu intra aici
 			if (order.getUserDiner().getId() == user.getId()) {
 				// add the date of the order to the list of already ordered dates
-				LOGGER.info("ORDER A FOST ADAUGAT");
+				LOGGER.info("ORDER A FOST ADAUGAT CU ==");
+				alreadyOrderedDates.add(order.getDate());
+			}
+			// test
+			if (order.getUserDiner().equals(user)) {
+				// add the date of the order to the list of already ordered dates
+				LOGGER.info("ORDER A FOST ADAUGAT CU EQUALS");
 				alreadyOrderedDates.add(order.getDate());
 			}
 		}
