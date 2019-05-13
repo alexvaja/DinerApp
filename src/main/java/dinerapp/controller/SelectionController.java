@@ -230,12 +230,6 @@ public class SelectionController {
 		// gets all menus from database
 		Iterable<Menu> allMenusFromDB = menuRepository.findAll();
 		List<String> avaialbeMenuDates = new ArrayList<>();
-		// defines the format of the date
-//		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		// gets the current date as string
-//		String currentDateAsString = dateFormat.format(Calendar.getInstance().getTime());
-		// converts the current date from string to date
-//		Date currentDate = dateFormat.parse(currentDateAsString);
 		// iterates through all menus from database
 		for (Menu menu : allMenusFromDB) {
 			// gets the date for current menu
@@ -259,8 +253,12 @@ public class SelectionController {
 		// iterates through all orders
 		for (Order order : orderRepository.findAll()) {
 			// tests if the current order is associated with the given user
+			LOGGER.info("=========================================================");
+			LOGGER.info(order.getUserDiner().getId() + " = " + user.getId());
+			LOGGER.info("=========================================================");
 			if (order.getUserDiner().getId() == user.getId()) {
 				// add the date of the order to the list of already ordered dates
+				LOGGER.info("ORDER A FOST ADAUGAT");
 				alreadyOrderedDates.add(order.getDate());
 			}
 		}
