@@ -198,9 +198,19 @@ public class SelectionController {
 		order.setDate(date);
 		// set taken attribute to false
 		order.setTaken(false);
-		// inserts the order into database
+		// set hour
+		order.setHour("00:00");	
+		if((LocalDate.now().isEqual(LocalDate.parse(date).minus(Period.ofDays(1))) 
+				&& LocalTime.now().getHour() >= 16)
+				|| LocalDate.now().isEqual(LocalDate.parse(date))) {
+			
+			String minutes = Integer.toString(LocalTime.now().getMinute());
+			if(minutes.length() == 1) {			
+				minutes = "0" + minutes;
+			}
+			order.setHour(LocalTime.now().getHour() + ":" + minutes);
+		}
 		orderRepository.save(order);
-		LOGGER.info("A ADAUGAT NEW ORDER");
 		return order;
 	}
 	

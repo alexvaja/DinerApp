@@ -35,18 +35,22 @@ public class Order {
 	@Column(name = "date", nullable = false)
 	private String date;
 	
+	@Column(name = "hour")
+	private String hour;
+	
 	public Order() {
 		super();
 	}
 
-	public Order(Integer id, UserDiner userDiner, Boolean taken, String date) {
+	public Order(Integer id, UserDiner userDiner, Boolean taken, String date, String hour) {
 		super();
 		this.id = id;
 		this.userDiner = userDiner;
 		this.taken = taken;
 		this.date = date;
+		this.hour = hour;
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -87,6 +91,14 @@ public class Order {
 		this.date = date;
 	}
 
+	public String getHour() {
+		return hour;
+	}
+
+	public void setHour(String hour) {
+		this.hour = hour;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,6 +126,6 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [" + id + ", " + userDiner + ", " + taken + ", " + date + "]";
+		return "Order [id=" + id + ", taken=" + taken + ", date=" + date + ", hour=" + hour + "]";
 	}
 }
