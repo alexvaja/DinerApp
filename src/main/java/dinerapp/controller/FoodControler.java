@@ -94,7 +94,6 @@ public class FoodControler {
 			LOGGER.info(addFoodIsAvailable.toString());
 			Food food = new Food();
 			
-			
 			try {
 				Double price = Double.parseDouble(newFoodDTO.getPrice());
 				Integer weight = Integer.parseInt(newFoodDTO.getWeight());
@@ -168,7 +167,17 @@ public class FoodControler {
 	private List<Food> getListOfFood() {
 		final Iterable<Food> list = foodRepo.findAll();
 		final List<Food> searchedList = new ArrayList<>();
-		for (final Food food : list) {
+		for (final Food food : list) 
+		{		
+			String lowerFoodName = (food.getName().toLowerCase());
+			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
+			
+			String lowerFoodIngr = (food.getIngredients().toLowerCase());
+			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
+			
+			food.setName(foodName);
+			food.setIngredients(foodIngr);
+			
 			searchedList.add(food);
 		}
 		sortFoodsByName(searchedList);

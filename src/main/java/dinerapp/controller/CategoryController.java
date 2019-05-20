@@ -201,6 +201,9 @@ public class CategoryController {
 		final List<Category> searchedList = new ArrayList<>();
 		for (final Category category : list) 
 		{
+			String lowerCategoryName = (category.getName().toLowerCase());
+			String categoryName = lowerCategoryName.substring(0,1).toUpperCase() + lowerCategoryName.substring(1);					
+			category.setName(categoryName);
 			searchedList.add(category);
 		}
 		sortCategoriesByName(searchedList);
