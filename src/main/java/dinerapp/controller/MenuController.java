@@ -442,6 +442,9 @@ public class MenuController {
 		List<Category> searchedList = new ArrayList<>();
 
 		for (Category category : list) {
+			String lowerCategoryName = (category.getName().toLowerCase());
+			String categoryName = lowerCategoryName.substring(0,1).toUpperCase() + lowerCategoryName.substring(1);					
+			category.setName(categoryName);
 			searchedList.add(category);
 		}
 
@@ -466,6 +469,16 @@ public class MenuController {
 		List<Food> searchedList = new ArrayList<>();
 
 		for (Food food : list) {
+			
+			String lowerFoodName = (food.getName().toLowerCase());
+			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
+			
+			String lowerFoodIngr = (food.getIngredients().toLowerCase());
+			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
+			
+			food.setName(foodName);
+			food.setIngredients(foodIngr);
+			
 			searchedList.add(food);
 		}
 
