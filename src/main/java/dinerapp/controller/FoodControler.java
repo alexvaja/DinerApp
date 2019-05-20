@@ -169,10 +169,15 @@ public class FoodControler {
 		final List<Food> searchedList = new ArrayList<>();
 		for (final Food food : list) 
 		{		
-			String foodName = (food.getName().toLowerCase()).substring(0,1).toUpperCase() + food.getName().substring(1);					
-			String foodIngr = (food.getIngredients().toLowerCase()).substring(0,1).toUpperCase() + food.getIngredients().substring(1);
+			String lowerFoodName = (food.getName().toLowerCase());
+			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
+			
+			String lowerFoodIngr = (food.getIngredients().toLowerCase());
+			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
+			
 			food.setName(foodName);
-			food.setIngredients(foodIngr);	
+			food.setIngredients(foodIngr);
+			
 			searchedList.add(food);
 		}
 		sortFoodsByName(searchedList);
