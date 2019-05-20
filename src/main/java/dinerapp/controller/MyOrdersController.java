@@ -11,14 +11,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
-
 import dinerapp.model.MyOrdersViewModel;
 import dinerapp.model.dto.FoodDTO;
 import dinerapp.model.dto.MenuDTO;
@@ -64,11 +59,10 @@ public class MyOrdersController {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-
 	@SessionScope
 	@GetMapping("/orders")
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
+		// gets user form session
 		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
@@ -85,17 +79,21 @@ public class MyOrdersController {
 			@RequestParam(value = "date", required = false) String dateOfOrder,
 			@RequestParam(value = "quantities", required = false) String quantities) {
 
+		// gets user from session
 		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 
 		String date = null;
+		// pickedDate is used when isDatePicked = false
 		if (pickedDate != null) {
 			date = pickedDate;
 		} else {
+			// dateOfOrded is used when isDatePicked = true
 			date = dateOfOrder;
 		}
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
+				// if there is no date to select and 'vizualizeaza comanda' is pressed no action will be taken
 				if(this.getAllOrderedDatesForUser(user.get()).size() == 0) {
 					model.addAttribute("isDatePicked", false);
 					return "redirect:/orders";
@@ -115,7 +113,6 @@ public class MyOrdersController {
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					this.removeOrder(selectedOrder.getId());
 					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
-					// de refactorizat
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
 					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
@@ -143,6 +140,7 @@ public class MyOrdersController {
 		}
 		return "redirect:/employeeOrderView";
 	}
+	
 	private Order saveEditedOrder(Order selectedOrder, UserDiner user) {
 		Order order = new Order();
 		order.setDate(selectedOrder.getDate());

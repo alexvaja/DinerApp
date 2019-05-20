@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hslf.record.Sound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class SelectionController {
 		if (nameFromURL != null) {
 			// finds the user with the name from URL
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
-			// updates the list of available menu dates for user
+			// updates the list of available menu dates for user to pick from
 			this.updateAvailableMenuDatesForUser(user.get(), model);
 		}
 		return "views/employeeOrderView";
@@ -94,13 +95,14 @@ public class SelectionController {
 			menuViewModel.getMenuDTO().setTitle(menu.getTitle());
 			menuViewModel.setDishesDTO(convertDishesToDishesDTO(menu.getDishes()));
 		}
-		// finds the user with name taken from URL
 		Optional<UserDiner> user;
-		
+		// tests if username has been added to session
 		if(session.getAttribute("nameFromURL") != null) {
+			// gets user by username from session
 			user = userRepository.findById(this.getUserIdByName((String)session.getAttribute("nameFromURL")));
 		}
 		else {
+			// gets user by username from atos portal
 			user = userRepository.findById(this.getUserIdByName(nameFromURL));
 		}
 		
@@ -109,6 +111,7 @@ public class SelectionController {
 			switch (actionType) {
 				case "Comanda mancare": {
 					// this button is on atos portal
+					// sets on session username from atos portal
 					session.setAttribute("nameFromURL", nameFromURL);
 					return "redirect:/employeeOrderView";
 				}
@@ -119,6 +122,7 @@ public class SelectionController {
 						model.addAttribute("isMenuDatePicked", true);
 						return "views/employeeOrderView";
 					}
+
 					// tests if there is already an order for given date and user
 					if(isDateAlreadyOrderedForUser(dateOfOrder, user.get())){
 						model.addAttribute("alreadyOrderedForThisDate", true);
@@ -135,6 +139,7 @@ public class SelectionController {
 					}
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {
+						System.out.println("a intrat pe adaugari");
 						// adds a new order to database
 						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
 						// converts the comma separated string into a list of strings
@@ -155,10 +160,14 @@ public class SelectionController {
 				case "Anuleaza":
 					return "redirect:/employeeOrderView";
 				case "Alege data":
-					// if there is no date to select and alege data is pressed no action will be taken
+					// if there is no date to select and 'alege data' is pressed no action will be taken
 					if(this.getAllAvailableMenuDatesForUser(user.get()).size() == 0) {
 						model.addAttribute("isMenuDatePicked", false);
 						break;
+					}
+					
+					if(pickedDate == null) {
+						return "redirect:/employeeOrderView";
 					}
 					
 					if(!isDateAlreadyOrderedForUser(pickedDate, user.get())){
@@ -199,12 +208,13 @@ public class SelectionController {
 		// set taken attribute to false
 		order.setTaken(false);
 		// set hour
-		order.setHour("00:00");	
+		order.setHour("00:00");
 		if((LocalDate.now().isEqual(LocalDate.parse(date).minus(Period.ofDays(1))) 
 				&& LocalTime.now().getHour() >= 16)
 				|| LocalDate.now().isEqual(LocalDate.parse(date))) {
 			
 			String minutes = Integer.toString(LocalTime.now().getMinute());
+			// if hour is 5 it will be 05
 			if(minutes.length() == 1) {			
 				minutes = "0" + minutes;
 			}
@@ -283,18 +293,6 @@ public class SelectionController {
 		return null;
 	}
 	
-	// gets an order by date
-//	private Order getOrderByDateAndUser(String date, UserDiner user) {
-//		// iterates through all orders
-//		for(Order order : orderRepository.findAll()) {
-//			// tests if current order has the same date as given date
-//			if(order.getDate().equals(date) && order.getUserDiner().getId() == user.getId()) {
-//				return order;
-//			}
-//		}
-//		return null;
-//	}
-	
 	// gets from database the menu with given date
 	private Menu getMenuByDate(String date) {
 		// finds the menu with the given date
@@ -332,8 +330,9 @@ public class SelectionController {
 	private boolean isDateAlreadyOrderedForUser(String date, UserDiner user) {
 		// iterates through all orders
 		for(Order order : orderRepository.findAll()) {
-			// tests if current oder already exists
-			if(order.getDate().trim().equals(date.trim()) && order.getUserDiner().getId() == user.getId()) {
+			// tests if current order already exists
+			if(order.getDate().trim().equals(date.trim()) && order.getUserDiner().equals(user)) {
+				System.out.println("este TRUE");
 				return true;
 			}
 		}
