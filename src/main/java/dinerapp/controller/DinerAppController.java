@@ -2,6 +2,8 @@ package dinerapp.controller;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -41,7 +43,8 @@ public class DinerAppController {
 	}
 
 	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
-	public String logoutSuccessfulPage(Model model) {
+	public String logoutSuccessfulPage(Model model, HttpSession session) {
+		session.invalidate();
 		return "views/loginView";
 	}
 
