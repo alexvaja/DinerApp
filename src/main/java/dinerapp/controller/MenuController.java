@@ -96,12 +96,7 @@ public class MenuController {
 
 		if (session.isNew()) {
 			throw new NewSessionException();
-		}
-		
-/*		if (session.getAttribute("menuViewModel") != null) {
-			session.removeAttribute("menuViewModel");
-		}	*/
-		
+		}	
 		
 		if (session.getAttribute("menuViewModel") != null) {
 			System.err.println("Am intrat in IF");
