@@ -208,7 +208,7 @@ public class MyOrdersController {
 		LOGGER.info("ORDER BY DATE: " + orderByDate);
 		orderDTO.setOrderId(orderByDate.getId());
 		
-		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date), menu);
+		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByUserAndDate(user, date), menu);
 		Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
 				.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
