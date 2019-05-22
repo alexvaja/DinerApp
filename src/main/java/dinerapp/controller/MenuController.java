@@ -98,10 +98,9 @@ public class MenuController {
 			throw new NewSessionException();
 		}
 		
-		if (session.getAttribute("menuViewModel") != null) {
+/*		if (session.getAttribute("menuViewModel") != null) {
 			session.removeAttribute("menuViewModel");
-		}
-		
+		}	*/
 		
 		
 		if (session.getAttribute("menuViewModel") != null) {
