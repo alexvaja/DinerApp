@@ -11,10 +11,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
+
 import dinerapp.model.MyOrdersViewModel;
 import dinerapp.model.dto.FoodDTO;
 import dinerapp.model.dto.MenuDTO;
@@ -52,6 +57,8 @@ public class MyOrdersController {
 	private OrderQuantityRepository orderQuantityRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	@SessionScope
 	@GetMapping("/orders")
@@ -106,6 +113,7 @@ public class MyOrdersController {
 				if(!this.areAllQuantitiesZero(quantities)) {
 					//gets selected order
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
+					LOGGER.info("SELECTED ORDER IN SALVEAZA MODIFICARILE: " + selectedOrder.toString());
 					// removes seleted order
 					this.removeOrder(selectedOrder.getId());
 					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
@@ -161,6 +169,8 @@ public class MyOrdersController {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
+		LOGGER.info("DATE IN LOAD: " + date);
+		LOGGER.info("USER IN LOAD: " + user.get().toString());
 		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDateAndUser(date, user.get()));
 	}
 
@@ -178,6 +188,8 @@ public class MyOrdersController {
 	// modificat equals la user
 	private Order getOrderByUserAndDate(UserDiner user, String date) {
 		for (Order order : orderRepository.findAll()) {
+			LOGGER.info("DATE IN getOrderByUserAndDate: " + date);
+			LOGGER.info("USER IN getOrderByUserAndDate: " + user);
 			if (order.getUserDiner().equals(user) && order.getDate().equals(date)) {
 				return order;
 			}
@@ -192,7 +204,8 @@ public class MyOrdersController {
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
-		Order orderByDate = this.getOrderByUserAndDate(user, menu.getDate());
+		Order orderByDate = this.getOrderByUserAndDate(user, date);
+		LOGGER.info("ORDER BY DATE: " + orderByDate);
 		orderDTO.setOrderId(orderByDate.getId());
 		
 		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date), menu);
@@ -201,6 +214,8 @@ public class MyOrdersController {
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
 		orderDTO.setQuantities(sortedMap);
+		LOGGER.info("ORDER DTO: " + orderDTO);
+
 		return orderDTO;
 	}
 
