@@ -84,7 +84,7 @@ public class MenuController {
 		LOGGER.error("DUPLICATE CATEGORIES ERROR");
 		return "redirect:menuView";
 	}
-
+	
 	@SessionScope
 	@GetMapping("/menuView")
 	public String getMethod(Model model, Principal principal, HttpSession session)
@@ -96,6 +96,39 @@ public class MenuController {
 
 		if (session.isNew()) {
 			throw new NewSessionException();
+		}
+		
+		if (session.getAttribute("menuViewModel") != null) {
+			session.removeAttribute("menuViewModel");
+		}
+		
+		
+		
+		if (session.getAttribute("menuViewModel") != null) {
+			System.err.println("Am intrat in IF");
+			MenuViewModel menuViewModel = (MenuViewModel) session.getAttribute("menuViewModel");
+			
+			if (session.getAttribute("formatDateError") == null) {
+				session.setAttribute("formatDateError", false);
+			}
+			
+			if (session.getAttribute("dateErrorMessage") == null) {
+				session.setAttribute("dateErrorMessage", false);
+			}
+			
+			if (session.getAttribute("dublicateCategoriesError") == null) {
+				session.setAttribute("dublicateCategoriesError", false);
+			}
+			
+			if (menuViewModel.getMenuDTO().getId() == null) {
+				System.err.println("PRIMUL IF");
+				session.removeAttribute("menuViewModel");
+			}
+			
+			if (menuViewModel.getDishesDTO().isEmpty()) {
+				System.err.println("AL DOILEA IF");
+				session.removeAttribute("menuViewModel");
+			}
 		}
 
 		if (session.getAttribute("menuViewModel") == null) {
@@ -131,6 +164,9 @@ public class MenuController {
 
 			model.addAttribute("addMenuIsAvailable", true);
 		}
+		
+		LOGGER.info("-- EXIST GET METHOD --");
+		
 		return "views/menuView";
 	}
 
@@ -310,6 +346,8 @@ public class MenuController {
 		}
 		}
 
+		LOGGER.info("-- EXIST POST METHOD --");
+		
 		return "views/menuView";
 	}
 
