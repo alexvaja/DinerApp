@@ -161,7 +161,7 @@ public class MyOrdersController {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
-		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDate(date));
+		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDateAndUser(date, user.get()));
 	}
 
 	// creates a map from two lists
@@ -185,14 +185,14 @@ public class MyOrdersController {
 		return null;
 	}
 
-	private OrderDTO getOrderDTOForDate(String date) {
+	private OrderDTO getOrderDTOForDateAndUser(String date, UserDiner user) {
 		OrderDTO orderDTO = new OrderDTO();
 		Menu menu = this.getMenuByDate(date);
 
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
-		Order orderByDate = this.getOrderByDate(menu.getDate());
+		Order orderByDate = this.getOrderByUserAndDate(user, menu.getDate());
 		orderDTO.setOrderId(orderByDate.getId());
 		
 		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByDate(date), menu);
