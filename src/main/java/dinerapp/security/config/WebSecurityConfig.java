@@ -1,5 +1,11 @@
 package dinerapp.security.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +13,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 
 @Configuration
@@ -64,6 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// But access a page that requires role YY,
 		// AccessDeniedException will be thrown.
 		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
+		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/400");//
 
 		// Config for Login Form
 		http.authorizeRequests().and().formLogin()//
@@ -75,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("username")//
 				.passwordParameter("password")
 				// Config for Logout Page
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
-
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful")
+				.deleteCookies("JSESSIONID", "JWT").clearAuthentication(true).invalidateHttpSession(true);
+				/*.deleteCookies("auth_code", "JSESSIONID").clearAuthentication(true).invalidateHttpSession(true);*/
 	}
 }
