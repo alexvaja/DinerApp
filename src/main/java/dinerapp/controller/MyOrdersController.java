@@ -40,22 +40,16 @@ import dinerapp.repository.UserCantinaRepository;
 
 @Controller
 public class MyOrdersController {
-
 	@Autowired
 	private OrderRepository orderRepository;
-
 	@Autowired
 	private UserCantinaRepository userRepository;
-
 	@Autowired
 	private MenuRepository menuRepository;
-
 	@Autowired
 	private FoodRepository foodRepository;
-
 	@Autowired
 	private OrderQuantityRepository orderQuantityRepository;
-
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -110,9 +104,12 @@ public class MyOrdersController {
 			}
 			case "Salveaza modificarile": {
 				if(!this.areAllQuantitiesZero(quantities)) {
+					//gets selected order
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
+					// removes seleted order
 					this.removeOrder(selectedOrder.getId());
 					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
+					
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
 					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
 					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
@@ -169,7 +166,6 @@ public class MyOrdersController {
 
 	// creates a map from two lists
 	private Map<Food, Integer> mergeTwoListsIntoMap(List<Food> foods, List<String> quantities) {
-		// creates and empty map
 		Map<Food, Integer> foodQuantities = new HashMap<Food, Integer>();
 		// iterates through foodQuantities map
 		for (int i = 0; i < foods.size(); i++) {
@@ -179,10 +175,10 @@ public class MyOrdersController {
 		}
 		return foodQuantities;
 	}
-
+	// modificat equals la user
 	private Order getOrderByUserAndDate(UserDiner user, String date) {
 		for (Order order : orderRepository.findAll()) {
-			if (order.getUserDiner().getId() == user.getId() && order.getDate().equals(date)) {
+			if (order.getUserDiner().equals(user) && order.getDate().equals(date)) {
 				return order;
 			}
 		}

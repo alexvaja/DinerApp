@@ -11,12 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
-
-import org.apache.poi.hslf.record.Sound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
-
 import dinerapp.constants.MenuStates;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
@@ -44,9 +38,7 @@ import dinerapp.repository.OrderRepository;
 import dinerapp.repository.UserCantinaRepository;
 
 @Controller
-public class SelectionController {
-	
-	Logger LOGGER = LoggerFactory.getLogger(SelectionController.class);
+public class SelectionController {	
 	@Autowired
 	private MenuRepository menuRepository;
 	@Autowired
@@ -83,12 +75,11 @@ public class SelectionController {
 			@RequestParam(value = "submit", required = false) String actionType,
 			@RequestParam(value = "quantity", required = false) String foodsQuantities,
 			@RequestParam(value = "dishCheckbox", required = false) String dishIds,
-			@RequestParam(value = "userNameFromPortal", required = false) String nameFromURL,
+			@RequestParam(value = "userNameFromPortal", required = false) String userNameFromPortal,
 			@RequestParam(value = "date", required = false) String dateOfOrder) throws ParseException {
 		
 		// tests if there is any date picked
 		if (pickedDate != null) {
-			// gets the menu for picked date
 			Menu menu = getMenuByDate(pickedDate);
 			// sets data on menuViewModel
 			menuViewModel.getMenuDTO().setDate(menu.getDate());
@@ -103,7 +94,7 @@ public class SelectionController {
 		}
 		else {
 			// gets user by username from atos portal
-			user = userRepository.findById(this.getUserIdByName(nameFromURL));
+			user = userRepository.findById(this.getUserIdByName(userNameFromPortal));
 		}
 		
 		// actions to occur if a submit button is pressed
@@ -112,12 +103,13 @@ public class SelectionController {
 				case "Comanda mancare": {
 					// this button is on atos portal
 					// sets on session username from atos portal
-					session.setAttribute("nameFromURL", nameFromURL);
+					session.setAttribute("nameFromURL", userNameFromPortal);
 					return "redirect:/employeeOrderView";
 				}
-				case "Comanda": {	
+				case "Comanda": {
+					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
 					// tests if any dish has been selected; dishIds is a string of ids comma separated			
-					if(dishIds == null) {
+					if(dishIds == null || this.areAllQuantitiesZero(quantityIds)) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
 						return "views/employeeOrderView";
@@ -129,17 +121,8 @@ public class SelectionController {
 						model.addAttribute("isMenuDatePicked", false);
 						return "redirect:/employeeOrderView";
 					}
-					
-					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
-					
-					if(this.areAllQuantitiesZero(quantityIds)) {
-						model.addAttribute("noFoodSelected", true);
-						model.addAttribute("isMenuDatePicked", true);
-						return "views/employeeOrderView";
-					}
 								
 					if(dishIds != null && !isDateAlreadyOrderedForUser(dateOfOrder, user.get())) {
-						System.out.println("a intrat pe adaugari");
 						// adds a new order to database
 						Order orderToAdd = this.addNewOrder(user.get(), dateOfOrder);
 						// converts the comma separated string into a list of strings
@@ -199,15 +182,10 @@ public class SelectionController {
 	
 	// adds a new order to database
 	private Order addNewOrder(UserDiner user, String date) {
-		// creates a new order
 		Order order = new Order();
-		// set the order user with the given user
 		order.setUserDiner(user);
-		// set the order date with the given date
 		order.setDate(date);
-		// set taken attribute to false
 		order.setTaken(false);
-		// set hour
 		order.setHour("00:00");
 		if((LocalDate.now().isEqual(LocalDate.parse(date).minus(Period.ofDays(1))) 
 				&& LocalTime.now().getHour() >= 16)
@@ -226,7 +204,6 @@ public class SelectionController {
 	
 	// adds a new orderQuantity into database
 	private void addNewOrderQuantity(Map<String, String> foodQuantities, Order order) {
-		// iterates through the map of foods and quantities
 		for(Map.Entry<String, String> foodQuantity : foodQuantities.entrySet()) {
 			// gets the food with the id from map 
 			Optional<Food> food = foodRepository.findById(Integer.parseInt(foodQuantity.getKey()));
@@ -239,10 +216,8 @@ public class SelectionController {
 	
 	// gets a list of all menu's dates that are after the current date
 	private List<String> getAllAvailbleMenuDates() throws ParseException {
-		// gets all menus from database
 		Iterable<Menu> allMenusFromDB = menuRepository.findAll();
 		List<String> avaialbeMenuDates = new ArrayList<>();
-		// iterates through all menus from database
 		for (Menu menu : allMenusFromDB) {
 			// gets the date for current menu
 			LocalDate menuDate = LocalDate.parse(menu.getDate());
@@ -260,7 +235,6 @@ public class SelectionController {
 		// gets a list of all available menus
 		List<String> allMenuDates = this.getAllAvailbleMenuDates();
 		List<String> alreadyOrderedDates = new ArrayList<>();
-		// iterates through all orders
 		for (Order order : orderRepository.findAll()) {
 			// tests if the current order is associated with the given user
 			if (order.getUserDiner().equals(user)) {
@@ -282,11 +256,9 @@ public class SelectionController {
 	
 	// gets an user id based on his name
 	private Integer getUserIdByName(String name) {
-		// iterates through all users
 		for (UserDiner user : userRepository.findAll()) {
 			// tests if there is an user with the given name
 			if (user.getName().toUpperCase().trim().equals(name.toUpperCase().trim())) {
-				// returns the id of that user
 				return user.getId();
 			}
 		}
@@ -306,9 +278,7 @@ public class SelectionController {
 	
 	// gets all foods for a dish
 	private List<String> getFoodsForDish(List<String> dishesIds, String date){
-		// creates an empty list of strings
 		List<String> foods = new ArrayList<>();
-		// iterates through all dishes ids
 		for(String dishId : dishesIds) {
 			// gets the selected menu
 			Menu menu = getMenuByDate(date);
@@ -328,11 +298,9 @@ public class SelectionController {
 	
 	// tests if a certain order already exists in database
 	private boolean isDateAlreadyOrderedForUser(String date, UserDiner user) {
-		// iterates through all orders
 		for(Order order : orderRepository.findAll()) {
 			// tests if current order already exists
 			if(order.getDate().trim().equals(date.trim()) && order.getUserDiner().equals(user)) {
-				System.out.println("este TRUE");
 				return true;
 			}
 		}
@@ -342,7 +310,6 @@ public class SelectionController {
 	// converts a list of dishes to a list of dishesDTO
 	private List<DishDTO> convertDishesToDishesDTO(List<Dish> dishes) {
 		List<DishDTO> dishesDTO = new ArrayList<>();
-		// iterates through the list of dishes
 		for (Dish dish : dishes) {
 			DishDTO dishDTO = new DishDTO();
 			List<CategoryDTO> categoriesDTO = new ArrayList<>();
@@ -378,7 +345,6 @@ public class SelectionController {
 	
 	// creates a map from two lists
 	private Map<String, String> mergeTwoListsIntoMap(List<String> foods, List<String> quantities){
-		// creates and empty map
 		Map<String, String> foodQuantities = new HashMap<String, String>();
 		// iterates through foodQuantities map
 		for (int i = 0; i < foods.size(); i++) {
