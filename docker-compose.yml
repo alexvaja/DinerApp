@@ -6,6 +6,8 @@ services:
     container_name: dinerapp-prod
     ports:
       - 3307:3306
+    expose:
+      - 3307 
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=dinerapp
