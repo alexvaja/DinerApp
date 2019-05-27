@@ -3,7 +3,9 @@ package dinerapp.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -107,10 +109,12 @@ public class FoodControler {
 				throw new WrongInputDataException();
 			} else {
 				try {
-					food.setName(newFoodDTO.getName());
-					food.setIngredients(newFoodDTO.getIngredients());				
+
+					food.setName(normalizeText(newFoodDTO.getName()));					
+					food.setIngredients(normalizeText(newFoodDTO.getIngredients()));				
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
+					
 				} catch (NumberFormatException e) {
 					throw new WrongInputDataException();
 				}
@@ -169,14 +173,17 @@ public class FoodControler {
 		final List<Food> searchedList = new ArrayList<>();
 		for (final Food food : list) 
 		{		
-			String lowerFoodName = (food.getName().toLowerCase());
-			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
-			
-			String lowerFoodIngr = (food.getIngredients().toLowerCase());
-			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
-			
-			food.setName(foodName);
-			food.setIngredients(foodIngr);
+//			String lowerFoodName = (food.getName().toLowerCase());
+//			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
+//			
+//			String lowerFoodIngr = (food.getIngredients().toLowerCase());
+//			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
+//			
+//			food.setName(foodName);
+//			food.setIngredients(foodIngr);
+//			
+			food.setName(normalizeText(food.getName()));
+			food.setIngredients(normalizeText(food.getIngredients()));
 			
 			searchedList.add(food);
 		}
@@ -187,5 +194,12 @@ public class FoodControler {
 	private void sortFoodsByName(List<Food> foods)
 	{
 		Collections.sort(foods, new FoodComparer());
+	}
+	
+	private String normalizeText(String food)
+	{		
+		String lowerFoodName = (food.toLowerCase());
+		String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);	
+		return foodName;
 	}
 }
