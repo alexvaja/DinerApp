@@ -107,12 +107,20 @@ public class SelectionController {
 					return "redirect:/employeeOrderView";
 				}
 				case "Comanda": {
-					List<String> quantityIds = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
-					// tests if any dish has been selected; dishIds is a string of ids comma separated			
-					if(dishIds == null || this.areAllQuantitiesZero(quantityIds)) {
+					List<String> foodQuantitiesAsList = new ArrayList<>();
+					if(foodsQuantities == null) {
 						model.addAttribute("noFoodSelected", true);
 						model.addAttribute("isMenuDatePicked", true);
 						return "views/employeeOrderView";
+					}
+					else {
+						foodQuantitiesAsList = new ArrayList<>(Arrays.asList(foodsQuantities.split(",")));
+						// tests if any dish has been selected; dishIds is a string of ids comma separated			
+						if(this.areAllQuantitiesZero(foodQuantitiesAsList)) {
+							model.addAttribute("noFoodSelected", true);
+							model.addAttribute("isMenuDatePicked", true);
+							return "views/employeeOrderView";
+						}
 					}
 
 					// tests if there is already an order for given date and user
@@ -130,7 +138,7 @@ public class SelectionController {
 						// gets all foods ids for a dish
 						List<String> foodIds = this.getFoodsForDish(dishesIds, dateOfOrder);
 						// creates a map of foods and quantities
-						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, quantityIds);
+						Map<String, String> foodQuantities = this.mergeTwoListsIntoMap(foodIds, foodQuantitiesAsList);
 						// adds a new orderQuantity to database
 						this.addNewOrderQuantity(foodQuantities, orderToAdd);					
 						model.addAttribute("orderedWithSuccess", true);

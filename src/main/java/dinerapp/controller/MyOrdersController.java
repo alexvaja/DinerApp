@@ -113,7 +113,6 @@ public class MyOrdersController {
 				if(!this.areAllQuantitiesZero(quantities)) {
 					//gets selected order
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
-					LOGGER.info("SELECTED ORDER IN SALVEAZA MODIFICARILE: " + selectedOrder.toString());
 					// removes seleted order
 					this.removeOrder(selectedOrder.getId());
 					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
@@ -169,8 +168,6 @@ public class MyOrdersController {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
-		LOGGER.info("DATE IN LOAD: " + date);
-		LOGGER.info("USER IN LOAD: " + user.get().toString());
 		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDateAndUser(date, user.get()));
 	}
 
@@ -185,11 +182,9 @@ public class MyOrdersController {
 		}
 		return foodQuantities;
 	}
-	// modificat equals la user
+
 	private Order getOrderByUserAndDate(UserDiner user, String date) {
 		for (Order order : orderRepository.findAll()) {
-			LOGGER.info("DATE IN getOrderByUserAndDate: " + date);
-			LOGGER.info("USER IN getOrderByUserAndDate: " + user);
 			if (order.getUserDiner().equals(user) && order.getDate().equals(date)) {
 				return order;
 			}
@@ -205,7 +200,6 @@ public class MyOrdersController {
 		orderDTO.setMenuDTO(menuDTO);
 
 		Order orderByDate = this.getOrderByUserAndDate(user, date);
-		LOGGER.info("ORDER BY DATE: " + orderByDate);
 		orderDTO.setOrderId(orderByDate.getId());
 		
 		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByUserAndDate(user, date), menu);
@@ -217,15 +211,6 @@ public class MyOrdersController {
 		LOGGER.info("ORDER DTO: " + orderDTO);
 
 		return orderDTO;
-	}
-
-	private Order getOrderByDate(String date) {
-		for (Order order : orderRepository.findAll()) {
-			if (order.getDate().equals(date)) {
-				return order;
-			}
-		}
-		return null;
 	}
 
 	private List<FoodDTO> getAllFoodsForMenu(Menu menu) {
