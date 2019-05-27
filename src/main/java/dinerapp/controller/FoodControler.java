@@ -30,6 +30,7 @@ import dinerapp.model.entity.Menu;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.security.utils.FoodComparer;
+import dinerapp.security.utils.NormalizeText;
 
 @Controller
 public class FoodControler {
@@ -110,8 +111,8 @@ public class FoodControler {
 			} else {
 				try {
 
-					food.setName(normalizeText(newFoodDTO.getName()));					
-					food.setIngredients(normalizeText(newFoodDTO.getIngredients()));				
+					food.setName(NormalizeText.normalizeString((newFoodDTO.getName())));					
+					food.setIngredients(NormalizeText.normalizeString((newFoodDTO.getIngredients())));				
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
 					
@@ -173,18 +174,8 @@ public class FoodControler {
 		final List<Food> searchedList = new ArrayList<>();
 		for (final Food food : list) 
 		{		
-//			String lowerFoodName = (food.getName().toLowerCase());
-//			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
-//			
-//			String lowerFoodIngr = (food.getIngredients().toLowerCase());
-//			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
-//			
-//			food.setName(foodName);
-//			food.setIngredients(foodIngr);
-//			
-			food.setName(normalizeText(food.getName()));
-			food.setIngredients(normalizeText(food.getIngredients()));
-			
+			food.setName(NormalizeText.normalizeString(food.getName()));
+			food.setIngredients(NormalizeText.normalizeString(food.getIngredients()));			
 			searchedList.add(food);
 		}
 		sortFoodsByName(searchedList);
@@ -194,12 +185,5 @@ public class FoodControler {
 	private void sortFoodsByName(List<Food> foods)
 	{
 		Collections.sort(foods, new FoodComparer());
-	}
-	
-	private String normalizeText(String food)
-	{		
-		String lowerFoodName = (food.toLowerCase());
-		String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);	
-		return foodName;
 	}
 }

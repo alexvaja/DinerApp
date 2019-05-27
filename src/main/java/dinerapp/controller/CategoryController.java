@@ -31,6 +31,7 @@ import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.security.utils.CategoryComparer;
 import dinerapp.security.utils.FoodComparer;
+import dinerapp.security.utils.NormalizeText;
 
 @Controller
 public class CategoryController {
@@ -130,9 +131,7 @@ public class CategoryController {
 				throw new WrongInputDataException();
 				
 			} else {
-				try {
-					
-					
+				try {							
 					Boolean errorMessage = false;
 					//nu pune categorii duplicate dar nu afiseaza pe pagina mesaj
 					if (!isValid(c, newCategoryDTO.getName())) {
@@ -144,7 +143,7 @@ public class CategoryController {
 						model.addAttribute("errorMessage", errorMessage);
 					}
 					
-					category.setName(newCategoryDTO.getName());
+					category.setName(NormalizeText.normalizeString(newCategoryDTO.getName()));
 					category.setPrice(Double.parseDouble(newCategoryDTO.getPrice()));
 					LOGGER.error("Datele sunt bune ");
 				} catch (NumberFormatException e) {
@@ -201,9 +200,7 @@ public class CategoryController {
 		final List<Category> searchedList = new ArrayList<>();
 		for (final Category category : list) 
 		{
-			String lowerCategoryName = (category.getName().toLowerCase());
-			String categoryName = lowerCategoryName.substring(0,1).toUpperCase() + lowerCategoryName.substring(1);					
-			category.setName(categoryName);
+			category.setName(NormalizeText.normalizeString(category.getName()));
 			searchedList.add(category);
 		}
 		sortCategoriesByName(searchedList);
