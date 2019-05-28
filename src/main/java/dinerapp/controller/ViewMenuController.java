@@ -57,6 +57,10 @@ public class ViewMenuController {
 	@GetMapping("/viewMenuView")
 	public String getAllMenus(Model model, HttpSession session) throws NewSessionException {
 
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- GET METHOD --");
+		
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
@@ -80,6 +84,12 @@ public class ViewMenuController {
 
 	@PostMapping("/viewMenuView")
 	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
+		
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("-- CLASS NAME: " + MenuController.class.getName() + " --");
+		LOGGER.info("-- POST METHOD --");
+		
+		
 		model.addAttribute("isEmptyMenu", false);
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
