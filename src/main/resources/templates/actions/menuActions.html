@@ -40,8 +40,12 @@
 						<input type="date" name="menu_date" th:value="*{menuDTO.date}"
 							placeholder="AAAA-LL-ZZ" class="form-control" />
 					</div>
+					
+					<div th:if="${dateError != null}">
+						<label style="color: red;" th:text="${dateError}"></label>
+					</div>
 
-					<div th:if="${session.formatDateError == True}">
+<!-- 					<div th:if="${session.formatDateError == True}">
 						<label style="color: red;">Data nu a fost completata sau
 							nu este in formatul bun!</label>
 					</div>
@@ -49,7 +53,7 @@
 					<div th:if="${session.dateErrorMessage == True}">
 						<label style="color: red;">Exista un meniu pe ziua
 							respectiva!</label>
-					</div>
+					</div> -->
 					
 					<hr>
 
@@ -74,10 +78,14 @@
 									</select>
 								</div> <br />
 
-								<div th:if="${session.dublicateCategoriesError == True}">
+								<div th:if="${categoryError != null}">
+									<label style="color: red;" th:text="${categoryError}"></label>
+								</div>
+
+<!-- 								<div th:if="${session.dublicateCategoriesError == True}">
 									<label style="color: red;">Categoriile trebuie sa fie
 										diferite!</label>
-								</div>
+								</div> -->
 
 								<div>
 									<table class="table tcolor table-bordered">
