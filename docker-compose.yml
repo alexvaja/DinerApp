@@ -12,7 +12,9 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=dinerapp
     networks:
-      - bridge
+        default:
+          external:
+            name: bridge
   spring-boot-jpa-docker-webapp:
     image: dinerapp-img:latest
     depends_on:
@@ -25,3 +27,5 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
     volumes:
       - /home/centos/aplicatie-cantina/logs:/var/log/Application/
+      
+   
