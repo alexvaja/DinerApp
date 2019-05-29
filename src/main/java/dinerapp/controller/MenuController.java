@@ -81,7 +81,7 @@ public class MenuController {
 			throw new NewSessionException();
 		}
 
-		session.removeAttribute("menuViewModel");
+		//session.removeAttribute("menuViewModel");
 		session.setAttribute("menuViewModel", new MenuViewModel());
 
 		model.addAttribute("addMenuIsAvailable", false);
@@ -109,6 +109,8 @@ public class MenuController {
 		LOGGER.info("Menu date from the form:" + menuDate);
 		LOGGER.info("Selected Categories from the form: " + selectedMenuCategories);
 		LOGGER.info("Selected foods from the form: " + selectedMenuFoods);
+		
+		model.addAttribute("addMenuIsAvailable", true);
 
 		switch (reqParam) {
 		case "Adauga Meniu": {
@@ -125,7 +127,7 @@ public class MenuController {
 			menuViewModel.setMenuDTO(menuDTO);
 			menuViewModel.setDishesDTO(dishes);
 
-			model.addAttribute("addMenuIsAvailable", true);
+			//model.addAttribute("addMenuIsAvailable", true);
 
 			break;
 		}
@@ -154,7 +156,7 @@ public class MenuController {
 			menuViewModel.setMenuDTO(menuDTO);
 			menuViewModel.setDishesDTO(dishes);
 
-			model.addAttribute("addMenuIsAvailable", true);
+			//model.addAttribute("addMenuIsAvailable", true);
 
 			break;
 
@@ -164,11 +166,11 @@ public class MenuController {
 			LOGGER.info("-- 'Anuleaza' CASE --");
 
 			session.removeAttribute("menuViewModel");
-			session.setAttribute("menuViewModel", new MenuViewModel());
+			//session.setAttribute("menuViewModel", new MenuViewModel());
 
 			model.addAttribute("addMenuIsAvailable", false);
 
-			break;
+			return "redirect:/viewMenuView";
 		}
 		case "Salvare": {
 
@@ -195,30 +197,30 @@ public class MenuController {
 
 			if (menuDate.isEmpty()) {
 				session.setAttribute("menuViewModel", menuViewModel);
-				model.addAttribute("addMenuIsAvailable", true);
+				//model.addAttribute("addMenuIsAvailable", true);
 				model.addAttribute("dateError", "Data trebuie completata!");
 				return "views/menuView";
 			}
 
 			if (!isDateInRightFormat(menuDate)) {
 				session.setAttribute("menuViewModel", menuViewModel);
-				model.addAttribute("addMenuIsAvailable", true);
+				//model.addAttribute("addMenuIsAvailable", true);
 				model.addAttribute("dateError", "Data nu este in formatul potrivit!");
 				return "views/menuView";
 			}
 
 			if (!isDateGreaterThanToday(menuDate)) {
 				session.setAttribute("menuViewModel", menuViewModel);
-				model.addAttribute("addMenuIsAvailable", true);
+				//model.addAttribute("addMenuIsAvailable", true);
 				model.addAttribute("dateError", "Nu se poate adauga meniu pe ziua curenta!");
 				return "views/menuView";
 			}
 
-			if (isDateThatNotExistInDB(menuDate, menuViewModel.getMenuDTO().getState(), date)) {
+			if (dateIsOK(menuViewModel)) {
 
 				if (!areNotDuplicateCategories(dishes)) {
 					session.setAttribute("menuViewModel", menuViewModel);
-					model.addAttribute("addMenuIsAvailable", true);
+					//model.addAttribute("addMenuIsAvailable", true);
 					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
 					return "views/menuView";
 				}
@@ -228,7 +230,7 @@ public class MenuController {
 
 				if (!x) {///////////////////////////// TODO eroare aici
 					session.setAttribute("menuViewModel", menuViewModel);
-					model.addAttribute("addMenuIsAvailable", true);
+					//model.addAttribute("addMenuIsAvailable", true);
 					model.addAttribute("dateError", "Eroare de server!!!");
 					return "views/menuView";
 				}
@@ -271,7 +273,7 @@ public class MenuController {
 				session.removeAttribute("menuViewModel");
 			} else {
 				session.setAttribute("menuViewModel", menuViewModel);
-				model.addAttribute("addMenuIsAvailable", true);
+				//model.addAttribute("addMenuIsAvailable", true);
 				model.addAttribute("dateError", "Exista un meniu deja pe acesta data!");
 				return "views/menuView";
 			}
@@ -344,31 +346,28 @@ public class MenuController {
 		return categoriesFromMenu;
 	}
 
-	private Boolean isDateThatNotExistInDB(String menuDate, String state, String existingDate) {
-
-		System.out.println("AM INTRAT IN FUNCTIE");
-		System.out.println("menu date: " + menuDate);
-		System.out.println("existing date: " + existingDate);
-		System.out.println("state: " + state);
+	private Boolean dateIsOK(MenuViewModel menuViewModel) {
 		
-		if (state.equals(MenuStates.NEW.toString())) {
-			if (isDateExist(menuDate)) {
+		MenuDTO menuDTO = menuViewModel.getMenuDTO();
+		
+		if (menuDTO.getState().equals(MenuStates.NEW.toString())) {
+			if (isDateExist(menuDTO.getDate())) {
 				return false;
 			}
 		}
-
-		if (state.equals(MenuStates.SAVED.toString())) {
-			if (existingDate.equals(menuDate)) {
-				return true;
-			} else {
-				if (isDateExist(menuDate)) {
+		
+		if (menuDTO.getState().equals(MenuStates.SAVED.toString())) {
+			Optional<Menu> menu = menuRepository.findById(menuDTO.getId());
+			if (!menuDTO.getDate().equals(menu.get().getDate())) {
+				if (isDateExist(menuDTO.getDate())) {
 					return false;
 				}
 			}
 		}
-
+		
 		return true;
 	}
+	
 
 	private Category getSelectedCategory(List<CategoryDTO> savedCategory) {
 
