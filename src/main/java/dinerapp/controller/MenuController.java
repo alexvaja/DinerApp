@@ -67,97 +67,25 @@ public class MenuController {
 		return "views/loginView";
 	}
 
-//	@ExceptionHandler({ WrongDataFormatException.class })
-//	public String dateFormatError() {
-//		LOGGER.error("WRONG FORMAT ERROR");
-//		return "redirect:menuView";
-//	}
-//
-//	@ExceptionHandler({ WrongMenuDateException.class })
-//	public String dateError() {
-//		LOGGER.error("WRONG DATE ERROR");
-//		return "redirect:menuView";
-//	}
-//
-//	@ExceptionHandler({ DuplicateCategoryException.class })
-//	public String duplicateError() {
-//		LOGGER.error("DUPLICATE CATEGORIES ERROR");
-//		return "redirect:menuView";
-//	}
-
 	@SessionScope
 	@GetMapping("/menuView")
 	public String getMethod(Model model, Principal principal, HttpSession session)
 			throws NewSessionException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");
-		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
-		LOGGER.info("-- GET METHOD --");
+		//LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- MenuController -> GET METHOD --");
 		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
 
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
-		// ----------------------------------------------------
+
 		session.removeAttribute("menuViewModel");
 		session.setAttribute("menuViewModel", new MenuViewModel());
 
 		model.addAttribute("addMenuIsAvailable", false);
-		model.addAttribute("err", null);
-
-		// ----------------------------------------------------
-		/*
-		 * if (session.getAttribute("menuViewModel") != null) {
-		 * System.err.println("Am intrat in IF"); MenuViewModel menuViewModel =
-		 * (MenuViewModel) session.getAttribute("menuViewModel");
-		 * 
-		 * if (session.getAttribute("formatDateError") == null) {
-		 * session.setAttribute("formatDateError", false); }
-		 * 
-		 * if (session.getAttribute("dateErrorMessage") == null) {
-		 * session.setAttribute("dateErrorMessage", false); }
-		 * 
-		 * if (session.getAttribute("dublicateCategoriesError") == null) {
-		 * session.setAttribute("dublicateCategoriesError", false); }
-		 * 
-		 * if (menuViewModel.getMenuDTO().getId() == null) {
-		 * System.err.println("PRIMUL IF"); session.removeAttribute("menuViewModel"); }
-		 * 
-		 * if (menuViewModel.getDishesDTO().isEmpty()) {
-		 * System.err.println("AL DOILEA IF"); session.removeAttribute("menuViewModel");
-		 * } }
-		 * 
-		 * if (session.getAttribute("menuViewModel") == null) {
-		 * 
-		 * session.removeAttribute("menuViewModel");
-		 * session.setAttribute("menuViewModel", new MenuViewModel());
-		 * 
-		 * session.setAttribute("formatDateError", false);
-		 * session.setAttribute("dateErrorMessage", false);
-		 * session.setAttribute("dublicateCategoriesError", false);
-		 * 
-		 * model.addAttribute("addMenuIsAvailable", false); } else {
-		 * 
-		 * LOGGER.info("Date format error message: " +
-		 * session.getAttribute("formatDateError")); LOGGER.info("Date error message: "
-		 * + session.getAttribute("dateErrorMessage"));
-		 * LOGGER.info("Category error message: " +
-		 * session.getAttribute("dublicateCategoriesError"));
-		 * 
-		 * if ((boolean) session.getAttribute("formatDateError")) {
-		 * session.setAttribute("dateErrorMessage", false);
-		 * session.setAttribute("dublicateCategoriesError", false); }
-		 * 
-		 * if ((boolean) session.getAttribute("dateErrorMessage")) {
-		 * session.setAttribute("formatDateError", false);
-		 * session.setAttribute("dublicateCategoriesError", false); }
-		 * 
-		 * if ((boolean) session.getAttribute("dublicateCategoriesError")) {
-		 * session.setAttribute("formatDateError", false);
-		 * session.setAttribute("dateErrorMessage", false); }
-		 * 
-		 * model.addAttribute("addMenuIsAvailable", true); }
-		 */
+		//model.addAttribute("err", null);
 
 		return "views/menuView";
 	}
@@ -173,8 +101,8 @@ public class MenuController {
 			throws DuplicateCategoryException, ParseException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");
-		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
-		LOGGER.info("-- POST METHOD --");
+		//LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- MenuController -> POST METHOD --");
 		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
 		LOGGER.info("Request param from the form: " + reqParam);
 		LOGGER.info("Menu title from the form: " + menuTitle);
@@ -234,10 +162,6 @@ public class MenuController {
 		case "Anuleaza": {
 
 			LOGGER.info("-- 'Anuleaza' CASE --");
-
-			session.setAttribute("formatDateError", false);
-			session.setAttribute("dateErrorMessage", false);
-			session.setAttribute("dublicateCategoriesError", false);
 
 			session.removeAttribute("menuViewModel");
 			session.setAttribute("menuViewModel", new MenuViewModel());
@@ -422,6 +346,11 @@ public class MenuController {
 
 	private Boolean isDateThatNotExistInDB(String menuDate, String state, String existingDate) {
 
+		System.out.println("AM INTRAT IN FUNCTIE");
+		System.out.println("menu date: " + menuDate);
+		System.out.println("existing date: " + existingDate);
+		System.out.println("state: " + state);
+		
 		if (state.equals(MenuStates.NEW.toString())) {
 			if (isDateExist(menuDate)) {
 				return false;
