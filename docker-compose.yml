@@ -26,6 +26,6 @@ services:
     volumes:
       - /home/centos/aplicatie-cantina/logs:/var/log/Application/
       
-  networks:
-    bridge:
-      driver: bridge 
+networks:
+  bridge:
+    driver: bridge 
