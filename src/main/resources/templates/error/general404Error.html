@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/errorPageCSS.css}"
+	href="../../static/css//errorPageCSS.css" />
+<head>
+</head>
+<body>
+	<div class="text1">
+		<h1>GWhoops!</h1>
+	</div>
+	<div class="text2">
+		<p>We couldn't find the page you were looking for</p>
+	</div>
+	<br>
+	<br>
+	<div class="text2">
+		<p> Select option: </p>
+		<a class="btn btn-primary" 
+		href="https://cvc007.sharepoint.com/sites/DJ00001/SitePages/Cantina.aspx">
+		Back to Atos SharePoint</a>		
+		<a class = "btn btn-primary" href="/index">Back to DinerApp</a>
+	</div>
+</body>
+<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+</html>

@@ -25,11 +25,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private UserCantinaRepository userCantinaRepository;
 	
-	
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException 
+	{
 		UserDiner userDiner = getUserByName(userName);
 
 		if (userDiner == null) {

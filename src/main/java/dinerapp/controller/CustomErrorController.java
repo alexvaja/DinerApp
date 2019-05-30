@@ -31,57 +31,53 @@ public class CustomErrorController implements ErrorController {
 	@RequestMapping("/error")
 	public String renderErrorPage(Model model, HttpServletRequest httpRequest, Principal principal,
 			HttpSession session) 
-	{
+	{		
+		UserDiner employeeUser = null;
 
-		UserDiner user = new UserDiner();
+		if (session.getAttribute("nameFromURL") != null) {
+			employeeUser = this.getUserByName(session.getAttribute("nameFromURL").toString());
+			System.out.println("Userul de pe sesiune este " + employeeUser.getName());
+		}
 
 		Object status = httpRequest.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
 		Integer statusCode = Integer.valueOf(status.toString());
 		
-		Role role = new Role();
-		if (principal != null && status != null) 	
-			{
-				role = this.getUsersByRole(principal.getName());
-
-				if (role.getName().equals("admin"))
-				{
-					System.out.println("Am intrat in admin");
-					if (statusCode == HttpStatus.NOT_FOUND.value())
-						return "error/admin/A404Error";
-					if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
-						return "error/admin/A500Error";
-				}
+		if(status != null)
+		{
+			if(principal != null && employeeUser == null)
+			{				
+				System.out.println("Am intrat in admin");
+				if (statusCode == HttpStatus.NOT_FOUND.value())
+					return "error/admin/A404Error";
+				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
+					return "error/admin/A500Error";
 			}
-		else if (user != null) 
+			else if(principal == null && employeeUser != null)
 			{
-				user = this.getUserByName(session.getAttribute("nameFromURL").toString());
-				System.out.println("Am intrat in emplouyee");
+				System.out.println("Am intrat in employee");
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/employee/E404Error";
 				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
 					return "error/employee/E500Error";
-			}	
+			}
+			else if(principal != null && employeeUser != null)
+			{
+				System.out.println("Sunt logat si ca admin si ca angajat");
+				if(statusCode == HttpStatus.NOT_FOUND.value())
+					return "error/general404Error";
+				if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
+					return "error/general500Error";					
+			}
+		}
 		return "error/adminError";
 	}
-
-	private Role getUsersByRole(String name) {
-		Iterable<UserDiner> users = userRepo.findAll();
-		for (UserDiner user : users)
-			if (user.getName().equals(name))
-				return user.getRoles().get(0);
-		return null;
-	}
-
 	private UserDiner getUserByName(String name) {
 		Iterable<UserDiner> users = userRepo.findAll();
-
 		for (UserDiner user : users) {
 			if (user.getName().equals(name)) {
 				return user;
 			}
 		}
 		return null;
-
 	}
 }
