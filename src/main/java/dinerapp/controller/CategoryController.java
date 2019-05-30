@@ -104,30 +104,25 @@ public class CategoryController {
 		LOGGER.info(newCategoryDTO.toString());
 		LOGGER.info(reqParam);
 
-		switch (reqParam) {
+		switch (reqParam) 
+		{
 		case "Adauga":
 			addCategoryIsAvailable = true;
 			model.addAttribute("addCategoryIsAvailable", addCategoryIsAvailable);
 			break;
 		case "Salveaza":
-
 			List<Category> c = getListOfCategory();
-			LOGGER.info("Lista de category: " + c);
-			
-			Category category = new Category();
-			
+			LOGGER.info("Lista de category: " + c);			
+			Category category = new Category();			
 			try {
 				Double price = Double.parseDouble(newCategoryDTO.getPrice());				
 			} catch (NumberFormatException e) {
 				throw new WrongInputDataException();
 			}
-
 			if (newCategoryDTO.getName().isEmpty() || newCategoryDTO.getPrice().isEmpty() 
-					|| Double.parseDouble(newCategoryDTO.getPrice()) < 0) {
-				
+					|| Double.parseDouble(newCategoryDTO.getPrice()) < 0) {				
 				LOGGER.error("Datele nu sunt bune 1");
-				throw new WrongInputDataException();
-				
+				throw new WrongInputDataException();				
 			} else {
 				try {							
 					Boolean errorMessage = false;
@@ -139,8 +134,7 @@ public class CategoryController {
 					} else {
 						errorMessage = false;
 						model.addAttribute("errorMessage", errorMessage);
-					}
-					
+					}					
 					category.setName(NormalizeText.normalizeString(newCategoryDTO.getName()));
 					category.setPrice(Double.parseDouble(newCategoryDTO.getPrice()));
 					LOGGER.error("Datele sunt bune ");
