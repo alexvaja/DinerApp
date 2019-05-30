@@ -6,6 +6,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -13,13 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import dinerapp.model.entity.Role;
 import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.UserCantinaRepository;
 
 @Controller
-public class CustomErrorController implements ErrorController {
-
+public class CustomErrorController implements ErrorController 
+{
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private UserCantinaRepository userRepo;
 
@@ -36,7 +39,8 @@ public class CustomErrorController implements ErrorController {
 
 		if (session.getAttribute("nameFromURL") != null) {
 			employeeUser = this.getUserByName(session.getAttribute("nameFromURL").toString());
-			System.out.println("Userul de pe sesiune este " + employeeUser.getName());
+			String msg = "Userul de pe sesiune este " + employeeUser.getName();
+			LOGGER.info(msg);			
 		}
 
 		Object status = httpRequest.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -61,8 +65,10 @@ public class CustomErrorController implements ErrorController {
 					return "error/employee/E500Error";
 			}
 			else if(principal != null && employeeUser != null)
-			{
-				System.out.println("Sunt logat si ca admin si ca angajat");
+			{				
+				String msg = "Sunt logat si ca admin si ca angajat";
+				LOGGER.info(msg);	
+				
 				if(statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/general404Error";
 				if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())

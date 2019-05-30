@@ -30,7 +30,6 @@ import dinerapp.model.entity.Menu;
 import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.security.utils.CategoryComparer;
-import dinerapp.security.utils.FoodComparer;
 import dinerapp.security.utils.NormalizeText;
 
 @Controller
@@ -118,8 +117,7 @@ public class CategoryController {
 			Category category = new Category();
 			
 			try {
-				Double price = Double.parseDouble(newCategoryDTO.getPrice());
-				
+				Double price = Double.parseDouble(newCategoryDTO.getPrice());				
 			} catch (NumberFormatException e) {
 				throw new WrongInputDataException();
 			}
