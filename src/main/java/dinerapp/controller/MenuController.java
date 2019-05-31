@@ -351,13 +351,16 @@ public class MenuController {
 		MenuDTO menuDTO = menuViewModel.getMenuDTO();
 		
 		if (menuDTO.getState().equals(MenuStates.NEW.toString())) {
+			System.out.println("Stare => NEW");
 			if (isDateExist(menuDTO.getDate())) {
 				return false;
 			}
 		}
 		
 		if (menuDTO.getState().equals(MenuStates.SAVED.toString())) {
+			System.out.println("Stare => SAVED");
 			Optional<Menu> menu = menuRepository.findById(menuDTO.getId());
+			System.out.println("Meniul din DB: " + menu.get());
 			if (!menuDTO.getDate().equals(menu.get().getDate())) {
 				if (isDateExist(menuDTO.getDate())) {
 					return false;
