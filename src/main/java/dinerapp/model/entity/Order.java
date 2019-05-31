@@ -51,6 +51,14 @@ public class Order {
 		this.hour = hour;
 	}
 	
+	public Order(UserDiner userDiner, Boolean taken, String date, String hour) {
+		super();
+		this.userDiner = userDiner;
+		this.taken = taken;
+		this.date = date;
+		this.hour = hour;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

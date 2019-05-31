@@ -14,6 +14,14 @@ public class MenuDTO {
 		this.state = MenuStates.NEW.toString();
 	}
 	
+	public MenuDTO(Integer id, String title, String date, String state) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.date = date;
+		this.state = state;
+	}
+
 	public Integer getId() {
 		return id;
 	}

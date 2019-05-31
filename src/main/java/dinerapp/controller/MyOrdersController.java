@@ -57,9 +57,7 @@ public class MyOrdersController {
 	private OrderQuantityRepository orderQuantityRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-	
+		
 	@SessionScope
 	@GetMapping("/orders")
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
@@ -83,15 +81,8 @@ public class MyOrdersController {
 		// gets user from session
 		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
-
-		String date = null;
-		// pickedDate is used when isDatePicked = false
-		if (pickedDate != null) {
-			date = pickedDate;
-		} else {
-			// dateOfOrded is used when isDatePicked = true
-			date = dateOfOrder;
-		}
+		String date = findCorrectDate(pickedDate, dateOfOrder);
+		
 		switch (actionType) {
 			case "Vizualizeaza comanda": {
 				// if there is no date to select and 'vizualizeaza comanda' is pressed no action will be taken
@@ -103,14 +94,14 @@ public class MyOrdersController {
 				return "views/myOrdersView";
 			}
 			case "Sterge comanda": {
-				this.removeOrder(Integer.parseInt(orderId));
+				removeOrder(Integer.parseInt(orderId));
 				model.addAttribute("orderRemoved", true);
 				model.addAttribute("isDatePicked", false);
 				model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 				return "views/myOrdersView";
 			}
 			case "Salveaza modificarile": {
-				if(!this.areAllQuantitiesZero(quantities)) {
+				if(!this.areAllQuantitiesZero(quantities) && isOrderInDatabase(getOrderByUserAndDate(user.get(), date))) {
 					//gets selected order
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					// removes seleted order
@@ -129,8 +120,7 @@ public class MyOrdersController {
 					loadCurrentPage(model, user, myOrdersViewModel, date);
 				}
 				else {
-					model.addAttribute("orderWasModified", false);
-					loadCurrentPage(model, user, myOrdersViewModel, date);
+					return "redirect:/orders";
 				}		
 				return "views/myOrdersView";				
 			}
@@ -145,11 +135,18 @@ public class MyOrdersController {
 		return "redirect:/employeeOrderView";
 	}
 	
+	private String findCorrectDate(String pickedDate, String dateOfOrder) {
+		// dateOfOrded is used when isDatePicked = true
+		String date = dateOfOrder;
+		// pickedDate is used when isDatePicked = false
+		if (pickedDate != null) {
+			date = pickedDate;
+		}
+		return date;
+	}
+
 	private Order saveEditedOrder(Order selectedOrder, UserDiner user) {
-		Order order = new Order();
-		order.setDate(selectedOrder.getDate());
-		order.setTaken(false);
-		order.setUserDiner(user);				
+		Order order = new Order(user, false, selectedOrder.getDate(), selectedOrder.getHour());			
 		orderRepository.save(order);
 		return order;
 	}
@@ -195,21 +192,21 @@ public class MyOrdersController {
 	private OrderDTO getOrderDTOForDateAndUser(String date, UserDiner user) {
 		OrderDTO orderDTO = new OrderDTO();
 		Menu menu = this.getMenuByDate(date);
-
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
 		Order orderByDate = this.getOrderByUserAndDate(user, date);
-		orderDTO.setOrderId(orderByDate.getId());
+		if(isOrderInDatabase(orderByDate)) {
+			orderDTO.setOrderId(orderByDate.getId());
+			
+			Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByUserAndDate(user, date), menu);
+			Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
+					.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+					.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+			orderDTO.setQuantities(sortedMap);
+		}
 		
-		Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByUserAndDate(user, date), menu);
-		Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
-				.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-		orderDTO.setQuantities(sortedMap);
-		LOGGER.info("ORDER DTO: " + orderDTO);
-
 		return orderDTO;
 	}
 
@@ -239,7 +236,18 @@ public class MyOrdersController {
 	@Transactional
 	private void removeOrder(Integer orderId) {
 		Order order = entityManager.find(Order.class, orderId);
-		entityManager.remove(order);
+		if(isOrderInDatabase(order)) {
+			entityManager.remove(order);
+		}
+	}
+
+	private boolean isOrderInDatabase(Order order) {
+		for(Order orderObject : orderRepository.findAll()) {
+			if(orderObject.equals(order)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<Order> getAllOrdersForUser(UserDiner user) {
@@ -254,11 +262,7 @@ public class MyOrdersController {
 	}
 
 	private MenuDTO convertFromMenuToMenuDTO(Menu menu) {			
-		MenuDTO menuDTO = new MenuDTO();
-		menuDTO.setDate(menu.getDate());
-		menuDTO.setId(menu.getId());
-		menuDTO.setState(menu.getState());
-		menuDTO.setTitle(menu.getTitle());
+		MenuDTO menuDTO = new MenuDTO(menu.getId(), menu.getTitle(), menu.getDate(), menu.getState());
 		return menuDTO;
 	}
 
