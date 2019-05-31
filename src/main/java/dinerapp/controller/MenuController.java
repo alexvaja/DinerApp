@@ -2,13 +2,9 @@ package dinerapp.controller;
 
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -62,7 +58,7 @@ public class MenuController {
 
 	@Autowired
 	private DishRepository dishRepository;
-	
+
 	@Autowired
 	private MenuValidator validator;
 
@@ -109,7 +105,7 @@ public class MenuController {
 		LOGGER.info("Menu date from the form:" + menuDate);
 		LOGGER.info("Selected Categories from the form: " + selectedMenuCategories);
 		LOGGER.info("Selected foods from the form: " + selectedMenuFoods);
-		
+
 		model.addAttribute("addMenuIsAvailable", true);
 
 		switch (reqParam) {
@@ -126,8 +122,6 @@ public class MenuController {
 
 			menuViewModel.setMenuDTO(menuDTO);
 			menuViewModel.setDishesDTO(dishes);
-
-			//model.addAttribute("addMenuIsAvailable", true);
 
 			break;
 		}
@@ -163,8 +157,6 @@ public class MenuController {
 			LOGGER.info("-- 'Anuleaza' CASE --");
 
 			session.removeAttribute("menuViewModel");
-			//session.setAttribute("menuViewModel", new MenuViewModel());
-
 			model.addAttribute("addMenuIsAvailable", false);
 
 			return "redirect:/viewMenuView";
@@ -172,8 +164,6 @@ public class MenuController {
 		case "Salvare": {
 
 			LOGGER.info("-- 'Salvare' CASE --");
-
-			String date = menuViewModel.getMenuDTO().getDate();
 
 			MenuDTO menuDTO = new MenuDTO();
 			menuDTO.setId(menuViewModel.getMenuDTO().getId());
@@ -191,22 +181,22 @@ public class MenuController {
 			if (selectedMenuFoods != null) {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
-			
+
 			String errorMessage = validator.dateValidator(menuViewModel);
 			LOGGER.info("MARE MARE MESSAGE: " + errorMessage);
 
 			if (errorMessage == null) {
-				
+
 				if (!areNotDuplicateCategories(dishes)) {
 					session.setAttribute("menuViewModel", menuViewModel);
 					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
 					return "views/menuView";
 				}
-
+//TODO eroare aici
 				boolean x = fffff(dishes);
 				System.err.println("FUNCTIE: " + x);
 
-				if (!x) {///////////////////////////// TODO eroare aici
+				if (!x) {
 					session.setAttribute("menuViewModel", menuViewModel);
 					model.addAttribute("dateError", "Eroare de server!!!");
 					return "views/menuView";
@@ -253,89 +243,6 @@ public class MenuController {
 				model.addAttribute("dateError", errorMessage);
 				return "views/menuView";
 			}
-			
-//			if (menuDate.isEmpty()) {
-//				session.setAttribute("menuViewModel", menuViewModel);
-//				//model.addAttribute("addMenuIsAvailable", true);
-//				model.addAttribute("dateError", "Data trebuie completata!");
-//				return "views/menuView";
-//			}
-//
-//			if (!isDateInRightFormat(menuDate)) {
-//				session.setAttribute("menuViewModel", menuViewModel);
-//				//model.addAttribute("addMenuIsAvailable", true);
-//				model.addAttribute("dateError", "Data nu este in formatul potrivit!");
-//				return "views/menuView";
-//			}
-//
-//			if (!isDateGreaterThanToday(menuDate)) {
-//				session.setAttribute("menuViewModel", menuViewModel);
-//				//model.addAttribute("addMenuIsAvailable", true);
-//				model.addAttribute("dateError", "Nu se poate adauga meniu pe ziua curenta!");
-//				return "views/menuView";
-//			}
-//
-//			if (dateIsOK(menuViewModel)) {
-//
-//				if (!areNotDuplicateCategories(dishes)) {
-//					session.setAttribute("menuViewModel", menuViewModel);
-//					//model.addAttribute("addMenuIsAvailable", true);
-//					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
-//					return "views/menuView";
-//				}
-//
-//				boolean x = fffff(dishes);
-//				System.err.println("FUNCTIE: " + x);
-//
-//				if (!x) {///////////////////////////// TODO eroare aici
-//					session.setAttribute("menuViewModel", menuViewModel);
-//					//model.addAttribute("addMenuIsAvailable", true);
-//					model.addAttribute("dateError", "Eroare de server!!!");
-//					return "views/menuView";
-//				}
-//
-//				List<Dish> selectedDishList = new ArrayList<>();
-//
-//				Menu menu = new Menu();
-//				menu.setId(menuViewModel.getMenuDTO().getId());
-//				menu.setDate(menuViewModel.getMenuDTO().getDate());
-//				menu.setTitle(menuViewModel.getMenuDTO().getTitle());
-//				menu.setState(MenuStates.SAVED.toString());
-//
-//				menuRepository.save(menu);
-//
-//				for (DishDTO dishDTO : dishes) {
-//					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
-//
-//					if (!selectedFoods.isEmpty()) {
-//						if (dishDTO.getId() == null) {
-//							Dish dish = new Dish();
-//							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-//							dish.setFoods(selectedFoods);
-//							dish.setMenu(menu);
-//							dishRepository.save(dish);
-//							selectedDishList.add(dish);
-//						} else {
-//							Optional<Dish> d = dishRepository.findById(dishDTO.getId());
-//							Dish dish = d.get();
-//							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-//							dish.setFoods(selectedFoods);
-//							dish.setMenu(menu);
-//							dishRepository.save(dish);
-//							selectedDishList.add(dish);
-//						}
-//					} else if (dishDTO.getId() != null) {
-//						dishRepository.deleteById(dishDTO.getId());
-//					}
-//				}
-//
-//				session.removeAttribute("menuViewModel");
-//			} else {
-//				session.setAttribute("menuViewModel", menuViewModel);
-//				//model.addAttribute("addMenuIsAvailable", true);
-//				model.addAttribute("dateError", "Exista un meniu deja pe acesta data!");
-//				return "views/menuView";
-//			}
 
 			return "redirect:/viewMenuView";
 		}
@@ -374,22 +281,6 @@ public class MenuController {
 		return true;
 	}
 
-	private boolean isDateInRightFormat(String date) {
-
-		String datePattern = "20\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$";
-
-		Pattern pattern = Pattern.compile(datePattern);
-		Matcher matcher = pattern.matcher(date);
-
-		if (matcher.find()) {
-			LOGGER.info("Date is in right format: " + date);
-			return true;
-		}
-
-		LOGGER.info("Date is not in right format:  " + date);
-		return false;
-	}
-
 	private List<Category> getAllCategoriesFromMenu(List<DishDTO> dishesDTO) {
 
 		List<Category> categoriesFromMenu = new ArrayList<>();
@@ -404,32 +295,6 @@ public class MenuController {
 
 		return categoriesFromMenu;
 	}
-
-	private Boolean dateIsOK(MenuViewModel menuViewModel) {
-		
-		MenuDTO menuDTO = menuViewModel.getMenuDTO();
-		
-		if (menuDTO.getState().equals(MenuStates.NEW.toString())) {
-			System.out.println("Stare => NEW");
-			if (isDateExist(menuDTO.getDate())) {
-				return false;
-			}
-		}
-		
-		if (menuDTO.getState().equals(MenuStates.SAVED.toString())) {
-			System.out.println("Stare => SAVED");
-			Optional<Menu> menu = menuRepository.findById(menuDTO.getId());
-			System.out.println("Meniul din DB: " + menu.get());
-			if (!menuDTO.getDate().equals(menu.get().getDate())) {
-				if (isDateExist(menuDTO.getDate())) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
 
 	private Category getSelectedCategory(List<CategoryDTO> savedCategory) {
 
@@ -451,18 +316,6 @@ public class MenuController {
 			}
 		}
 		return selectedFoods;
-	}
-
-	private Boolean isDateExist(String menuDate) {
-
-		List<Menu> menuList = getAllMenusFromTable();
-
-		for (Menu menu : menuList) {
-			if (menu.getDate().equals(menuDate)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private DishDTO createDefaultDishesDTO() {
@@ -509,18 +362,6 @@ public class MenuController {
 
 		for (Category category : list) {
 			searchedList.add(category);
-		}
-
-		return searchedList;
-	}
-
-	private List<Menu> getAllMenusFromTable() {
-
-		Iterable<Menu> list = menuRepository.findAll();
-		List<Menu> searchedList = new ArrayList<>();
-
-		for (Menu menu : list) {
-			searchedList.add(menu);
 		}
 
 		return searchedList;
@@ -599,19 +440,5 @@ public class MenuController {
 			}
 		}
 		return true;
-	}
-
-	private static boolean isDateGreaterThanToday(String menuDate) {
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar today = Calendar.getInstance();
-
-		String curDate = dateFormat.format(today.getTime());
-
-		if (curDate.compareTo(menuDate) < 0) {
-			return true;
-		}
-
-		return false;
 	}
 }
