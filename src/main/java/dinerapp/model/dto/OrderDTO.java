@@ -70,6 +70,7 @@ public class OrderDTO {
 
 	@Override
 	public String toString() {
-		return "OrderDTO [" + order + ", " + toBeDeliveredFood + ", " + taken + "]";
+		return "OrderDTO [toBeDeliveredFood=" + toBeDeliveredFood + ", taken=" + taken + ", orderId=" + orderId
+				+ ", menuDTO=" + menuDTO + ", quantities=" + quantities + "]";
 	}
 }

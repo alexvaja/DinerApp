@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +96,7 @@ public class MyOrdersController {
 				removeOrder(Integer.parseInt(orderId));
 				model.addAttribute("orderRemoved", true);
 				model.addAttribute("isDatePicked", false);
-				model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
+				model.addAttribute("allOrderedDates", getAllOrderedDatesForUser(user.get()));
 				return "views/myOrdersView";
 			}
 			case "Salveaza modificarile": {
@@ -105,13 +104,14 @@ public class MyOrdersController {
 					//gets selected order
 					Order selectedOrder = this.getOrderByUserAndDate(user.get(), date);
 					// removes seleted order
-					this.removeOrder(selectedOrder.getId());
+					removeOrder(selectedOrder.getId());
 					Order editedOrder = this.saveEditedOrder(selectedOrder, user.get());
 					
 					List<String> quantity = new ArrayList<>(Arrays.asList(quantities.split(",")));
-					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));		
-					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);
-			
+					List<Food> foodsForOrder = this.convertFromFoodsDTOToFoods(this.getAllFoodsForMenu(this.getMenuByDate(date)));					
+					
+					Map<Food, Integer> foodQuantities = this.mergeTwoListsIntoMap(foodsForOrder, quantity);		
+					
 					for (Map.Entry<Food, Integer> entry : foodQuantities.entrySet()) {
 						orderQuantityRepository.save(new OrderQuantity(editedOrder, entry.getKey(), entry.getValue()));				
 					}
@@ -122,6 +122,7 @@ public class MyOrdersController {
 				else {
 					return "redirect:/orders";
 				}		
+				
 				return "views/myOrdersView";				
 			}
 			case "Reseteaza": {
@@ -164,13 +165,13 @@ public class MyOrdersController {
 	private void loadCurrentPage(Model model, Optional<UserDiner> user, MyOrdersViewModel myOrdersViewModel, String date) {
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", true);
+		myOrdersViewModel.setOrderDTO(getOrderDTOForDateAndUser(date, user.get()));
 		model.addAttribute("myOrdersViewModel", myOrdersViewModel);
-		myOrdersViewModel.setOrderDTO(this.getOrderDTOForDateAndUser(date, user.get()));
 	}
 
 	// creates a map from two lists
 	private Map<Food, Integer> mergeTwoListsIntoMap(List<Food> foods, List<String> quantities) {
-		Map<Food, Integer> foodQuantities = new HashMap<Food, Integer>();
+		Map<Food, Integer> foodQuantities = new LinkedHashMap<Food, Integer>();
 		// iterates through foodQuantities map
 		for (int i = 0; i < foods.size(); i++) {
 			if(Integer.parseInt(quantities.get(i)) != 0) {
@@ -191,22 +192,24 @@ public class MyOrdersController {
 
 	private OrderDTO getOrderDTOForDateAndUser(String date, UserDiner user) {
 		OrderDTO orderDTO = new OrderDTO();
-		Menu menu = this.getMenuByDate(date);
+		Menu menu = getMenuByDate(date);
 		MenuDTO menuDTO = this.convertFromMenuToMenuDTO(menu);
 		orderDTO.setMenuDTO(menuDTO);
 
-		Order orderByDate = this.getOrderByUserAndDate(user, date);
+		Order orderByDate = getOrderByUserAndDate(user, date);
+
 		if(isOrderInDatabase(orderByDate)) {
 			orderDTO.setOrderId(orderByDate.getId());
 			
-			Map<FoodDTO, Integer> quantitiesForOrder = this.getAllOrderedQuantitiesForOrder(this.getOrderByUserAndDate(user, date), menu);
-			Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
-					.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-					.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+			Map<FoodDTO, Integer> quantitiesForOrder = getAllOrderedQuantitiesForOrder(getOrderByUserAndDate(user, date), menu);
+//			Map<FoodDTO, Integer> sortedMap = quantitiesForOrder.entrySet().stream()
+//					.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+//					.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-			orderDTO.setQuantities(sortedMap);
+//			orderDTO.setQuantities(sortedMap);
+			orderDTO.setQuantities(quantitiesForOrder);
+
 		}
-		
 		return orderDTO;
 	}
 
@@ -314,41 +317,43 @@ public class MyOrdersController {
 		return foodsDTO;
 	}
 
-	private FoodDTO getFoodDTOFromFoodId(Integer foodId) {
-		FoodDTO foodDTO = new FoodDTO();
-
-		for (Food food : foodRepository.findAll()) {
-			if (food.getId() == foodId) {
-				foodDTO = this.convertFromFoodToFoodDTO(food);
-			}
-		}
-		return foodDTO;
-	}
-
 	private boolean testIfMapCointiansKey(Map<FoodDTO, Integer> map, FoodDTO key) {
 		for (Map.Entry<FoodDTO, Integer> entry : map.entrySet()) {
-			if (entry.getKey().getFood().getName().equals(key.getFood().getName())) {
+			if (entry.getKey().getFood().equals(key.getFood())) {
 				return true;
 			}
 		}
 		return false;		
 	}
 
+	// e scrisa naspa, dar am facut-o sa mearga; 
 	private Map<FoodDTO, Integer> getAllOrderedQuantitiesForOrder(Order order, Menu menu) {
-		Map<FoodDTO, Integer> quantitiesMap = new HashMap<FoodDTO, Integer>();
+		Map<FoodDTO, Integer> quantitiesMap = new LinkedHashMap<FoodDTO, Integer>();
 
 		for (OrderQuantity orderQuantity : orderQuantityRepository.findAll()) {
-			if (orderQuantity.getOrder().getId() == order.getId()) {
-				quantitiesMap.put(this.getFoodDTOFromFoodId(orderQuantity.getFoodd().getId()),
-					orderQuantity.getQuantity());
+			if (orderQuantity.getOrder().equals(order)) {
+				quantitiesMap.put(convertFromFoodToFoodDTO(orderQuantity.getFoodd()), orderQuantity.getQuantity());
 			}
 		}
+		Map<FoodDTO, Integer> quantitiesMap2 = new LinkedHashMap<FoodDTO, Integer>();
 
 		for (FoodDTO foodDTO : this.getAllFoodsForMenu(menu)) {
-			if (!this.testIfMapCointiansKey(quantitiesMap, foodDTO)) {
-				quantitiesMap.put(foodDTO, 0);
+			if (testIfMapCointiansKey(quantitiesMap, foodDTO)) {
+				quantitiesMap2.put(foodDTO, getValueByKey(quantitiesMap, foodDTO));
+			}
+			else {
+				quantitiesMap2.put(foodDTO, 0);
 			}
 		}
-		return quantitiesMap;
+		return quantitiesMap2;
+	}
+	// am facut asta pt ca nu mergea cu metoda de get default
+	private Integer getValueByKey(Map<FoodDTO, Integer> quantitiesMap, FoodDTO key) {
+		for (Map.Entry<FoodDTO, Integer> entry : quantitiesMap.entrySet()) {
+			if(entry.getKey().getFood().equals(key.getFood())) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 }
