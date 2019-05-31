@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +29,6 @@ import org.springframework.web.context.annotation.SessionScope;
 import dinerapp.constants.MenuStates;
 import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
-import dinerapp.exceptions.WrongDataFormatException;
 import dinerapp.exceptions.WrongMenuDateException;
 import dinerapp.model.MenuViewModel;
 import dinerapp.model.dto.CategoryDTO;
@@ -43,23 +43,28 @@ import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.DishRepository;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
+import dinerapp.validator.MenuValidator;
 
 @Controller
+@Component
 public class MenuController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	CategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	@Autowired
-	FoodRepository foodRepository;
+	private FoodRepository foodRepository;
 
 	@Autowired
-	MenuRepository menuRepository;
+	private MenuRepository menuRepository;
 
 	@Autowired
-	DishRepository dishRepository;
+	private DishRepository dishRepository;
+	
+	@Autowired
+	private MenuValidator validator;
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
@@ -73,7 +78,6 @@ public class MenuController {
 			throws NewSessionException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");
-		//LOGGER.info("CLASS NAME: " + MenuController.class.getName());
 		LOGGER.info("-- MenuController -> GET METHOD --");
 		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
 
@@ -81,11 +85,8 @@ public class MenuController {
 			throw new NewSessionException();
 		}
 
-		//session.removeAttribute("menuViewModel");
 		session.setAttribute("menuViewModel", new MenuViewModel());
-
 		model.addAttribute("addMenuIsAvailable", false);
-		//model.addAttribute("err", null);
 
 		return "views/menuView";
 	}
@@ -101,7 +102,6 @@ public class MenuController {
 			throws DuplicateCategoryException, ParseException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");
-		//LOGGER.info("CLASS NAME: " + MenuController.class.getName());
 		LOGGER.info("-- MenuController -> POST METHOD --");
 		LOGGER.info("Session ViewModel attribute: " + session.getAttribute("menuViewModel"));
 		LOGGER.info("Request param from the form: " + reqParam);
@@ -154,9 +154,6 @@ public class MenuController {
 			dishes.add(createDefaultDishesDTO());
 
 			menuViewModel.setMenuDTO(menuDTO);
-			menuViewModel.setDishesDTO(dishes);
-
-			//model.addAttribute("addMenuIsAvailable", true);
 
 			break;
 
@@ -194,33 +191,14 @@ public class MenuController {
 			if (selectedMenuFoods != null) {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
+			
+			String errorMessage = validator.dateValidator(menuViewModel);
+			LOGGER.info("MARE MARE MESSAGE: " + errorMessage);
 
-			if (menuDate.isEmpty()) {
-				session.setAttribute("menuViewModel", menuViewModel);
-				//model.addAttribute("addMenuIsAvailable", true);
-				model.addAttribute("dateError", "Data trebuie completata!");
-				return "views/menuView";
-			}
-
-			if (!isDateInRightFormat(menuDate)) {
-				session.setAttribute("menuViewModel", menuViewModel);
-				//model.addAttribute("addMenuIsAvailable", true);
-				model.addAttribute("dateError", "Data nu este in formatul potrivit!");
-				return "views/menuView";
-			}
-
-			if (!isDateGreaterThanToday(menuDate)) {
-				session.setAttribute("menuViewModel", menuViewModel);
-				//model.addAttribute("addMenuIsAvailable", true);
-				model.addAttribute("dateError", "Nu se poate adauga meniu pe ziua curenta!");
-				return "views/menuView";
-			}
-
-			if (dateIsOK(menuViewModel)) {
-
+			if (errorMessage == null) {
+				
 				if (!areNotDuplicateCategories(dishes)) {
 					session.setAttribute("menuViewModel", menuViewModel);
-					//model.addAttribute("addMenuIsAvailable", true);
 					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
 					return "views/menuView";
 				}
@@ -230,7 +208,6 @@ public class MenuController {
 
 				if (!x) {///////////////////////////// TODO eroare aici
 					session.setAttribute("menuViewModel", menuViewModel);
-					//model.addAttribute("addMenuIsAvailable", true);
 					model.addAttribute("dateError", "Eroare de server!!!");
 					return "views/menuView";
 				}
@@ -273,10 +250,92 @@ public class MenuController {
 				session.removeAttribute("menuViewModel");
 			} else {
 				session.setAttribute("menuViewModel", menuViewModel);
-				//model.addAttribute("addMenuIsAvailable", true);
-				model.addAttribute("dateError", "Exista un meniu deja pe acesta data!");
+				model.addAttribute("dateError", errorMessage);
 				return "views/menuView";
 			}
+			
+//			if (menuDate.isEmpty()) {
+//				session.setAttribute("menuViewModel", menuViewModel);
+//				//model.addAttribute("addMenuIsAvailable", true);
+//				model.addAttribute("dateError", "Data trebuie completata!");
+//				return "views/menuView";
+//			}
+//
+//			if (!isDateInRightFormat(menuDate)) {
+//				session.setAttribute("menuViewModel", menuViewModel);
+//				//model.addAttribute("addMenuIsAvailable", true);
+//				model.addAttribute("dateError", "Data nu este in formatul potrivit!");
+//				return "views/menuView";
+//			}
+//
+//			if (!isDateGreaterThanToday(menuDate)) {
+//				session.setAttribute("menuViewModel", menuViewModel);
+//				//model.addAttribute("addMenuIsAvailable", true);
+//				model.addAttribute("dateError", "Nu se poate adauga meniu pe ziua curenta!");
+//				return "views/menuView";
+//			}
+//
+//			if (dateIsOK(menuViewModel)) {
+//
+//				if (!areNotDuplicateCategories(dishes)) {
+//					session.setAttribute("menuViewModel", menuViewModel);
+//					//model.addAttribute("addMenuIsAvailable", true);
+//					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
+//					return "views/menuView";
+//				}
+//
+//				boolean x = fffff(dishes);
+//				System.err.println("FUNCTIE: " + x);
+//
+//				if (!x) {///////////////////////////// TODO eroare aici
+//					session.setAttribute("menuViewModel", menuViewModel);
+//					//model.addAttribute("addMenuIsAvailable", true);
+//					model.addAttribute("dateError", "Eroare de server!!!");
+//					return "views/menuView";
+//				}
+//
+//				List<Dish> selectedDishList = new ArrayList<>();
+//
+//				Menu menu = new Menu();
+//				menu.setId(menuViewModel.getMenuDTO().getId());
+//				menu.setDate(menuViewModel.getMenuDTO().getDate());
+//				menu.setTitle(menuViewModel.getMenuDTO().getTitle());
+//				menu.setState(MenuStates.SAVED.toString());
+//
+//				menuRepository.save(menu);
+//
+//				for (DishDTO dishDTO : dishes) {
+//					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
+//
+//					if (!selectedFoods.isEmpty()) {
+//						if (dishDTO.getId() == null) {
+//							Dish dish = new Dish();
+//							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+//							dish.setFoods(selectedFoods);
+//							dish.setMenu(menu);
+//							dishRepository.save(dish);
+//							selectedDishList.add(dish);
+//						} else {
+//							Optional<Dish> d = dishRepository.findById(dishDTO.getId());
+//							Dish dish = d.get();
+//							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+//							dish.setFoods(selectedFoods);
+//							dish.setMenu(menu);
+//							dishRepository.save(dish);
+//							selectedDishList.add(dish);
+//						}
+//					} else if (dishDTO.getId() != null) {
+//						dishRepository.deleteById(dishDTO.getId());
+//					}
+//				}
+//
+//				session.removeAttribute("menuViewModel");
+//			} else {
+//				session.setAttribute("menuViewModel", menuViewModel);
+//				//model.addAttribute("addMenuIsAvailable", true);
+//				model.addAttribute("dateError", "Exista un meniu deja pe acesta data!");
+//				return "views/menuView";
+//			}
 
 			return "redirect:/viewMenuView";
 		}
