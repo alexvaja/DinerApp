@@ -3,7 +3,9 @@ package dinerapp.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -28,6 +30,7 @@ import dinerapp.model.entity.Menu;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.security.utils.FoodComparer;
+import dinerapp.security.utils.NormalizeText;
 
 @Controller
 public class FoodControler {
@@ -107,10 +110,12 @@ public class FoodControler {
 				throw new WrongInputDataException();
 			} else {
 				try {
-					food.setName(newFoodDTO.getName());
-					food.setIngredients(newFoodDTO.getIngredients());				
+
+					food.setName(NormalizeText.normalizeString((newFoodDTO.getName())));					
+					food.setIngredients(NormalizeText.normalizeString((newFoodDTO.getIngredients())));				
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
+					
 				} catch (NumberFormatException e) {
 					throw new WrongInputDataException();
 				}
@@ -169,15 +174,8 @@ public class FoodControler {
 		final List<Food> searchedList = new ArrayList<>();
 		for (final Food food : list) 
 		{		
-			String lowerFoodName = (food.getName().toLowerCase());
-			String foodName = lowerFoodName.substring(0,1).toUpperCase() + lowerFoodName.substring(1);
-			
-			String lowerFoodIngr = (food.getIngredients().toLowerCase());
-			String foodIngr = lowerFoodIngr.substring(0,1).toUpperCase() + lowerFoodIngr.substring(1);
-			
-			food.setName(foodName);
-			food.setIngredients(foodIngr);
-			
+			food.setName(NormalizeText.normalizeString(food.getName()));
+			food.setIngredients(NormalizeText.normalizeString(food.getIngredients()));			
 			searchedList.add(food);
 		}
 		sortFoodsByName(searchedList);

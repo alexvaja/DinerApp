@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -43,6 +44,8 @@ import dinerapp.repository.CategoryRepository;
 import dinerapp.repository.DishRepository;
 import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
+import dinerapp.security.utils.CategoryComparer;
+import dinerapp.security.utils.FoodComparer;
 
 @Controller
 public class MenuController {
@@ -447,7 +450,7 @@ public class MenuController {
 			category.setName(categoryName);
 			searchedList.add(category);
 		}
-
+		sortCategoriesByName(searchedList);
 		return searchedList;
 	}
 
@@ -481,7 +484,7 @@ public class MenuController {
 			
 			searchedList.add(food);
 		}
-
+		sortFoodsByName(searchedList);
 		return searchedList;
 	}
 
@@ -560,5 +563,14 @@ public class MenuController {
 		}
 
 		return false;
+	}
+	
+	private void sortCategoriesByName(List<Category> categories)
+	{
+		Collections.sort(categories, new CategoryComparer());
+	}
+	private void sortFoodsByName(List<Food> foods)
+	{
+		Collections.sort(foods, new FoodComparer());
 	}
 }
