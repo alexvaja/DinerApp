@@ -15,7 +15,12 @@ import org.springframework.stereotype.Component;
 
 import dinerapp.constants.MenuStates;
 import dinerapp.model.MenuViewModel;
+import dinerapp.model.dto.CategoryDTO;
+import dinerapp.model.dto.DishDTO;
+import dinerapp.model.dto.FoodDTO;
 import dinerapp.model.dto.MenuDTO;
+import dinerapp.model.entity.Category;
+import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Menu;
 import dinerapp.repository.MenuRepository;
 
@@ -42,6 +47,7 @@ public class MenuValidator { //TODO LOGGER
 	}
 	
 	public String dateValidator(MenuViewModel menuViewModel) {
+		
 		setErrorMessage(null);
 		LOGGER.info("-----------------------------------------------");
 		LOGGER.info("-- MenuValidator -> dateValidator --");
@@ -65,7 +71,7 @@ public class MenuValidator { //TODO LOGGER
 			return getErrorMessage();
 		}
 		
-		if (dateIsNotInDB(menuViewModel)) {
+		if (!dateIsOK(menuViewModel)) {
 			setErrorMessage("Exista un meniu deja pe acesta data!");
 			LOGGER.error(getErrorMessage());
 			return getErrorMessage();
@@ -74,6 +80,7 @@ public class MenuValidator { //TODO LOGGER
 		return getErrorMessage();
 	}
 	
+
 	private boolean isDateInRightFormat(String date) {
 
 		String datePattern = "20\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$";
@@ -89,7 +96,147 @@ public class MenuValidator { //TODO LOGGER
 		LOGGER.info("Date is not in right format:  " + date);
 		return false;
 	}
+
+
+	private Boolean dateIsOK(MenuViewModel menuViewModel) {
+		
+		MenuDTO menuDTO = menuViewModel.getMenuDTO();
+		
+		if (menuDTO.getState().equals(MenuStates.NEW.toString())) {
+			System.out.println("Stare => NEW");
+			if (isDateExist(menuDTO.getDate())) {
+				return false;
+			}
+		}
+		
+		if (menuDTO.getState().equals(MenuStates.SAVED.toString())) {
+			System.out.println("Stare => SAVED");
+			Optional<Menu> menu = menuRepository.findById(menuDTO.getId());
+			System.out.println("Meniul din DB: " + menu.get());
+			if (!menuDTO.getDate().equals(menu.get().getDate())) {
+				if (isDateExist(menuDTO.getDate())) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 	
+
+	private Category getSelectedCategory(List<CategoryDTO> savedCategory) {
+
+		for (CategoryDTO categoryDTO : savedCategory) {
+			if (categoryDTO.getSelected()) {
+				return categoryDTO.getCategory();
+			}
+		}
+		return null;
+	}
+
+	private List<Food> getSelectedFoodsForCategory(List<FoodDTO> savedFoods) {
+
+		List<Food> selectedFoods = new ArrayList<>();
+
+		for (FoodDTO foodDTO : savedFoods) {
+			if (foodDTO.getSelected()) {
+				selectedFoods.add(foodDTO.getFood());
+			}
+		}
+		return selectedFoods;
+	}
+
+	private Boolean isDateExist(String menuDate) {
+
+		List<Menu> menuList = getAllMenusFromTable();
+
+		for (Menu menu : menuList) {
+			if (menu.getDate().equals(menuDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
+
+		List<CategoryDTO> listOfCategoriesDTO = new ArrayList<>();
+
+		for (Category category : listOfCategories) {
+			listOfCategoriesDTO.add(new CategoryDTO(category, false));
+		}
+
+		return listOfCategoriesDTO;
+	}
+
+	private List<FoodDTO> createAllFoodsDTO(List<Food> listOfFoods) {
+
+		List<FoodDTO> listOfFoodsDTO = new ArrayList<>();
+
+		for (Food food : listOfFoods) {
+			listOfFoodsDTO.add(new FoodDTO(food, false));
+		}
+
+		return listOfFoodsDTO;
+	}
+
+
+
+	private List<Menu> getAllMenusFromTable() {
+
+		Iterable<Menu> list = menuRepository.findAll();
+		List<Menu> searchedList = new ArrayList<>();
+
+		for (Menu menu : list) {
+			searchedList.add(menu);
+		}
+
+		return searchedList;
+	}
+
+
+	private void updateListSelectedCategory(String selectedMenuCategories, List<DishDTO> dishes) {
+
+		int index = 0;
+		String[] indexCategory = selectedMenuCategories.split(",");
+
+		for (DishDTO dishDTO : dishes) {
+			List<CategoryDTO> listCategory = dishDTO.getCategories();
+
+			for (CategoryDTO categoryDTO : listCategory) {
+				categoryDTO.setSelected(false);
+			}
+
+			listCategory.get(Integer.parseInt(indexCategory[index])).setSelected(true);
+			index++;
+
+			dishDTO.setCategories(listCategory);
+		}
+	}
+
+	private void updateListSelectedFoods(String selectedMenuFoods, List<DishDTO> dishes) {
+
+		int index = 0;
+		String[] indexFood = selectedMenuFoods.split(",");
+
+		for (DishDTO dishDTO : dishes) {
+			List<FoodDTO> listFood = dishDTO.getFoods();
+
+			for (FoodDTO foodDTO : listFood) {
+				foodDTO.setSelected(false);
+			}
+
+			while (Integer.valueOf(indexFood[index]) != -1) {
+				listFood.get(Integer.valueOf(indexFood[index])).setSelected(true);
+				index++;
+			}
+
+			index++;
+			dishDTO.setFoods(listFood);
+		}
+	}
+
 	private static boolean isDateGreaterThanToday(String menuDate) {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -102,72 +249,5 @@ public class MenuValidator { //TODO LOGGER
 		}
 
 		return false;
-	}
-	
-	private Boolean dateIsNotInDB(MenuViewModel menuViewModel) {
-		
-		LOGGER.info("-----------------------------------------------");
-		LOGGER.info("-- METHOD -> dateIsNotInDB --");
-		MenuDTO menuDTO = menuViewModel.getMenuDTO();
-		
-		if (menuDTO.getState().equals(MenuStates.NEW.toString())) {
-			LOGGER.info("Stare => NEW");
-			if (alredyExistThisDateInDB(menuDTO.getDate())) {
-				return false;
-			}
-		}
-		
-		if (menuDTO.getState().equals(MenuStates.SAVED.toString())) {
-			Optional<Menu> menu = menuRepository.findById(menuDTO.getId());
-			
-			LOGGER.info("Stare => SAVED");
-			LOGGER.info("MENU ID: " + menuDTO.getId());
-			LOGGER.info("DB menu: " + menu.get());
-			LOGGER.info("THIS menu: " + menuDTO.getDate() + " ID: " + menuDTO.getId());
-			LOGGER.info("IF STATEMENT: " + menuDTO.getDate().equals(menu.get().getDate()));
-			
-			if (!menuDTO.getDate().equals(menu.get().getDate())) {
-				if (alredyExistThisDateInDB(menuDTO.getDate())) {
-					LOGGER.info("A INTRAT IN IF-UL ALA--------");
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	private Boolean alredyExistThisDateInDB(String menuDate) {
-		
-		LOGGER.info("-----------------------------------------------");
-		LOGGER.info("-- METHOD -> alredyExistThisDateInDB --");
-		
-		List<Menu> menuList = getAllMenusFromTable();
-		LOGGER.info("Menu list for search: " + menuList);
-
-		for (Menu menu : menuList) {
-			LOGGER.info("=============");
-			LOGGER.info("menuDate: " + menuDate);
-			LOGGER.info("data din DB: " + menu.getDate());
-			LOGGER.info("ce returneaza if: " + menu.getDate().equals(menuDate));
-			if (menu.getDate().equals(menuDate)) {
-				LOGGER.info("Return true with the menu: " + menu);
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	private List<Menu> getAllMenusFromTable() {
-
-		Iterable<Menu> list = menuRepository.findAll();
-		List<Menu> searchedList = new ArrayList<>();
-
-		for (Menu menu : list) {
-			searchedList.add(menu);
-		}
-
-		return searchedList;
 	}
 }
