@@ -15,9 +15,8 @@ public class DishDTO {
 		this.foods = new ArrayList<>();
 	}
 
-	public DishDTO(Integer id, List<CategoryDTO> categories, List<FoodDTO> foods) {
+	public DishDTO( List<CategoryDTO> categories, List<FoodDTO> foods) {
 		super();
-		this.id = id;
 		this.categories = categories;
 		this.foods = foods;
 	}
