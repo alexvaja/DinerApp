@@ -45,6 +45,13 @@ public class Dish
 		this.foods = new ArrayList<>();
 	}
 	
+	public Dish(Integer id, Category category, Menu menu) {
+		super();
+		this.id = id;
+		this.category = category;
+		this.menu = menu;
+	}
+
 	public Integer getId() {
 		return id;
 	}
