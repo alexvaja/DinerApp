@@ -12,6 +12,7 @@ public class Application {
 
   public static void main(final String[] args) {
     //LOGGER.info("STARTING DINER APP");
+
     SpringApplication.run(Application.class, args);
   }
 

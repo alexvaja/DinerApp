@@ -47,7 +47,7 @@ public class ViewMenuController {
 	MenuRepository menuRepository;
 	@Autowired
 	DishRepository dishRepository;
-	
+
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
 		LOGGER.error("incercare de acces nepermis");
@@ -56,62 +56,68 @@ public class ViewMenuController {
 
 	@GetMapping("/viewMenuView")
 	public String getAllMenus(Model model, HttpSession session) throws NewSessionException {
+
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
+		LOGGER.info("-- GET METHOD --");
 		
 		if (session.isNew()) {
-			throw new NewSessionException();			
+			throw new NewSessionException();
 		}
-		
-		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
-		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
-		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
-			System.out.println("am intrat in fff");
-			for (Menu menu : listOfMenusFromTable) {
-				if (menu.getState().equals(MenuStates.SAVED.toString())) {
-					listOfUnpublishedMenus.add(menu);
-				}
-			}
-		editMenuViewModel.setMenus(listOfUnpublishedMenus);
-		
-		model.addAttribute("editMenuViewModel", editMenuViewModel);
-		model.addAttribute("isEmptyMenu", false);
-		
-		return "views/viewMenuView";
-	}
 
-	@PostMapping("/viewMenuView")
-	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
-		model.addAttribute("isEmptyMenu", false);
 		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
 		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
 		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
-		
+
 		for (Menu menu : listOfMenusFromTable) {
 			if (menu.getState().equals(MenuStates.SAVED.toString())) {
 				listOfUnpublishedMenus.add(menu);
 			}
 		}
+		editMenuViewModel.setMenus(listOfUnpublishedMenus);
+
+		model.addAttribute("editMenuViewModel", editMenuViewModel);
+		model.addAttribute("isEmptyMenu", false);
+
+		return "views/viewMenuView";
+	}
+
+	@PostMapping("/viewMenuView")
+	public String setAllMenus(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
 		
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("-- CLASS NAME: " + MenuController.class.getName() + " --");
+		LOGGER.info("-- POST METHOD --");
+		
+		
+		model.addAttribute("isEmptyMenu", false);
+		EditMenuViewModel editMenuViewModel = new EditMenuViewModel();
+		List<Menu> listOfMenusFromTable = getAllMenusFromTable();
+		List<Menu> listOfUnpublishedMenus = new ArrayList<>();
+
+		for (Menu menu : listOfMenusFromTable) {
+			if (menu.getState().equals(MenuStates.SAVED.toString())) {
+				listOfUnpublishedMenus.add(menu);
+			}
+		}
+
 		editMenuViewModel.setMenus(listOfUnpublishedMenus);
 		String idMenu = null;
-		
-		for(String key : params.keySet()) {
+
+		for (String key : params.keySet()) {
 			idMenu = key;
 		}
-		
+
 		String reqParam = params.getFirst(idMenu);
 
 		switch (reqParam) {
 		case "Editeaza": {
 			LOGGER.info("ViewMenuController - Edit case");
-			
-			List<DishDTO> dishes = new ArrayList<>();
-			//List<Menu> listOfMenus = getAllMenusFromTable();
 
-			// de inlocuit
-			//Menu menu = listOfMenus.get(Integer.parseInt(idMenu));
-			//Menu menu = listOfUnpublishedMenus.get(Integer.parseInt(idMenu));
+			List<DishDTO> dishes = new ArrayList<>();
+
 			Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
-			
+
 			for (Dish dish : menu.getDishes()) {
 				DishDTO dishDTO = new DishDTO();
 				List<CategoryDTO> categoriesDTO = new ArrayList<>();
@@ -142,7 +148,7 @@ public class ViewMenuController {
 				dishDTO.setFoods(foodsDTO);
 				dishes.add(dishDTO);
 			}
-			
+
 			MenuViewModel menuViewModel = new MenuViewModel();
 
 			MenuDTO menuDTO = new MenuDTO();
@@ -150,36 +156,29 @@ public class ViewMenuController {
 			menuDTO.setDate(menu.getDate());
 			menuDTO.setState(menu.getState());
 
-			LOGGER.info("Menu State in db: " + menuDTO.getState());
+
 			menuDTO.setTitle(menu.getTitle());
 			menuViewModel.setMenuDTO(menuDTO);
-			
-			
-			//menuViewModel.setDate(menu.getData());
-			//menuViewModel.setTitle(menu.getTitle());
+
 			menuViewModel.setDishesDTO(dishes);
-			//menuViewModel.setState(menu.getState());
 
 			session.setAttribute("menuViewModel", menuViewModel);
 			model.addAttribute("addMenuIsAvailable", true);
 			return "views/menuView";
 		}
 		case "Publica":
-			//List<Menu> listOfMenus = getAllMenusFromTable();
-			//Menu menuu = listOfMenus.get(Integer.parseInt(idMenu));
 
 			Menu menu = editMenuViewModel.getMenus().get(Integer.parseInt(idMenu));
-			
+
 			if (!editMenuViewModel.getMenus().isEmpty() && isEmptyCategoryMenu(menu)) {
-				
+
 				editMenuViewModel.getMenus().remove(menu);
 				menu.setState(MenuStates.PUBLISHED.toString());
-				menuRepository.save(menu);	
-			}
-			else {
+				menuRepository.save(menu);
+			} else {
 				model.addAttribute("isEmptyMenu", true);
 			}
-			
+
 			break;
 		}
 
@@ -205,8 +204,8 @@ public class ViewMenuController {
 		return searchedList;
 	}
 
-	public List<Menu> getAllMenusFromTable() {
-		
+	private List<Menu> getAllMenusFromTable() {
+
 		Iterable<Menu> list = menuRepository.findAll();
 		List<Menu> searchedList = new ArrayList<>();
 		for (Menu menu : list) {
@@ -225,9 +224,8 @@ public class ViewMenuController {
 		}
 		return searchedList;
 	}
-	
-	private void sortMenusByDate(List<Menu> menus)
-	{
+
+	private void sortMenusByDate(List<Menu> menus) {
 		Collections.sort(menus, new DateComparer());
 	}
 }
