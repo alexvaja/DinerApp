@@ -23,14 +23,15 @@ public class Menu
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(name="menu_title")
+	private String title;
+
 	@Column(name="menu_data")
 	private String date;
 	
 	@Column(name="menu_state")
 	private String state;
 	
-	@Column(name="menu_title")
-	private String title;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
 	private List<Dish> dishes;
@@ -39,6 +40,14 @@ public class Menu
 		super();
 		this.dishes = new ArrayList<>();
 		this.state = MenuStates.NEW.toString();
+	}
+
+	public Menu(Integer id, String title, String date, String state) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.date = date;
+		this.state = state;
 	}
 
 	public Integer getId() {
