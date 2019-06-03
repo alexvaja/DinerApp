@@ -187,12 +187,30 @@ public class MenuController {
 
 			String errorMessage = validator.dateValidator(menuViewModel);
 			LOGGER.info("MARE MARE MESSAGE: " + errorMessage);
+			
+			String err = validator.titleValidator(menuViewModel);
+			
+			if (err != null) {
+				System.out.println("titlul!!");
+				session.setAttribute("menuViewModel", menuViewModel);
+				model.addAttribute("titleError", err);
+				return "views/menuView";
+			}
 
 			if (errorMessage == null) {
 
-				if (!areNotDuplicateCategories(dishes)) {
+//				if (!areNotDuplicateCategories(dishes)) {
+//					session.setAttribute("menuViewModel", menuViewModel);
+//					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
+//					return "views/menuView";
+//				}
+				
+				errorMessage = validator.categoryValidator(menuViewModel);
+				
+				if (errorMessage != null) {
+					System.out.println("Categoriile nu sunt bune");
 					session.setAttribute("menuViewModel", menuViewModel);
-					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
+					model.addAttribute("categoryError", errorMessage);
 					return "views/menuView";
 				}
 
