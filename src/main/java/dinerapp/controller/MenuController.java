@@ -132,11 +132,8 @@ public class MenuController {
 
 			LOGGER.info("-- 'Adauga Categorie Noua' CASE --");
 
-			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setId(menuViewModel.getMenuDTO().getId());
-			menuDTO.setTitle(menuTitle);
-			menuDTO.setDate(menuDate);
-			menuDTO.setState(menuViewModel.getMenuDTO().getState());
+			MenuDTO menuDTO = new MenuDTO(menuViewModel.getMenuDTO().getId(), menuTitle, menuDate,
+					menuViewModel.getMenuDTO().getState());
 
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
@@ -149,11 +146,9 @@ public class MenuController {
 			}
 
 			dishes.add(createDefaultDishesDTO());
-
 			menuViewModel.setMenuDTO(menuDTO);
 
 			break;
-
 		}
 		case "Anuleaza": {
 
@@ -168,12 +163,10 @@ public class MenuController {
 
 			LOGGER.info("-- 'Salvare' CASE --");
 
-			MenuDTO menuDTO = new MenuDTO();
-			menuDTO.setId(menuViewModel.getMenuDTO().getId());
-			menuDTO.setTitle(menuTitle);
-			menuDTO.setDate(menuDate);
-			menuDTO.setState(menuViewModel.getMenuDTO().getState());
-			menuViewModel.setMenuDTO(menuDTO);
+			String errorMessage = null;
+
+			menuViewModel.setMenuDTO(new MenuDTO(menuViewModel.getMenuDTO().getId(), menuTitle, menuDate,
+					menuViewModel.getMenuDTO().getState()));
 
 			List<DishDTO> dishes = menuViewModel.getDishesDTO();
 
@@ -185,85 +178,62 @@ public class MenuController {
 				updateListSelectedFoods(selectedMenuFoods, dishes);
 			}
 
-			String errorMessage = validator.dateValidator(menuViewModel);
-			LOGGER.info("MARE MARE MESSAGE: " + errorMessage);
-			
-			String err = validator.titleValidator(menuViewModel);
-			
-			if (err != null) {
-				System.out.println("titlul!!");
-				session.setAttribute("menuViewModel", menuViewModel);
-				model.addAttribute("titleError", err);
+			session.setAttribute("menuViewModel", menuViewModel);
+
+			errorMessage = validator.titleValidator(menuViewModel); // titlu
+			if (errorMessage != null) {
+				model.addAttribute("titleError", errorMessage);
 				return "views/menuView";
 			}
 
-			if (errorMessage == null) {
-
-//				if (!areNotDuplicateCategories(dishes)) {
-//					session.setAttribute("menuViewModel", menuViewModel);
-//					model.addAttribute("categoryError", "Categoriile trebuie sa fie diferite!");
-//					return "views/menuView";
-//				}
-				
-				errorMessage = validator.categoryValidator(menuViewModel);
-				
-				if (errorMessage != null) {
-					System.out.println("Categoriile nu sunt bune");
-					session.setAttribute("menuViewModel", menuViewModel);
-					model.addAttribute("categoryError", errorMessage);
-					return "views/menuView";
-				}
-
-				boolean x = fffff(dishes);
-				System.err.println("FUNCTIE: " + x);
-
-				if (!x) {
-					session.setAttribute("menuViewModel", menuViewModel);
-					model.addAttribute("dateError", "Eroare de server!!!");
-					return "views/menuView";
-				}
-
-				List<Dish> selectedDishList = new ArrayList<>();
-
-				Menu menu = new Menu();
-				menu.setId(menuViewModel.getMenuDTO().getId());
-				menu.setDate(menuViewModel.getMenuDTO().getDate());
-				menu.setTitle(menuViewModel.getMenuDTO().getTitle());
-				menu.setState(MenuStates.SAVED.toString());
-
-				menuRepository.save(menu);
-
-				for (DishDTO dishDTO : dishes) {
-					List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
-
-					if (!selectedFoods.isEmpty()) {
-						if (dishDTO.getId() == null) {
-							Dish dish = new Dish();
-							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-							dish.setFoods(selectedFoods);
-							dish.setMenu(menu);
-							dishRepository.save(dish);
-							selectedDishList.add(dish);
-						} else {
-							Optional<Dish> d = dishRepository.findById(dishDTO.getId());
-							Dish dish = d.get();
-							dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
-							dish.setFoods(selectedFoods);
-							dish.setMenu(menu);
-							dishRepository.save(dish);
-							selectedDishList.add(dish);
-						}
-					} else if (dishDTO.getId() != null) {
-						dishRepository.deleteById(dishDTO.getId());
-					}
-				}
-
-				session.removeAttribute("menuViewModel");
-			} else {
-				session.setAttribute("menuViewModel", menuViewModel);
+			errorMessage = validator.dateValidator(menuViewModel); // data
+			if (errorMessage != null) {
 				model.addAttribute("dateError", errorMessage);
 				return "views/menuView";
 			}
+
+			errorMessage = validator.categoryValidator(menuViewModel); // categorii
+			if (errorMessage != null) {
+				model.addAttribute("categoryError", errorMessage);
+				return "views/menuView";
+			}
+
+			if (!concurentialValidation(dishes)) { // TODO
+				model.addAttribute("dateError", "Eroare de server!!!");
+				return "views/menuView";
+			}
+
+			Menu menu = new Menu(menuViewModel.getMenuDTO().getId(), menuViewModel.getMenuDTO().getTitle(),
+					menuViewModel.getMenuDTO().getDate(), MenuStates.SAVED.toString());
+
+			menuRepository.save(menu);
+
+			List<Dish> selectedDishList = new ArrayList<>();
+			for (DishDTO dishDTO : dishes) {
+				List<Food> selectedFoods = getSelectedFoodsForCategory(dishDTO.getFoods());
+
+				if (!selectedFoods.isEmpty()) {
+					if (dishDTO.getId() == null) {
+						Dish dish = new Dish();
+						dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+						dish.setFoods(selectedFoods);
+						dish.setMenu(menu);
+						dishRepository.save(dish);
+						selectedDishList.add(dish);
+					} else {
+						Optional<Dish> d = dishRepository.findById(dishDTO.getId());
+						Dish dish = d.get();
+						dish.setCategory(getSelectedCategory(dishDTO.getCategories()));
+						dish.setFoods(selectedFoods);
+						dish.setMenu(menu);
+						dishRepository.save(dish);
+						selectedDishList.add(dish);
+					}
+				} else if (dishDTO.getId() != null) {
+					dishRepository.deleteById(dishDTO.getId());
+				}
+			}
+			session.removeAttribute("menuViewModel");
 
 			return "redirect:/viewMenuView";
 		}
@@ -272,7 +242,7 @@ public class MenuController {
 		return "views/menuView";
 	}
 
-	private boolean fffff(List<DishDTO> dishes) {
+	private boolean concurentialValidation(List<DishDTO> dishes) {
 
 		List<Category> categories = getAllCategoriesFromTable();
 		List<Food> foods = getAllFoodsFromTable();
@@ -324,6 +294,7 @@ public class MenuController {
 				return categoryDTO.getCategory();
 			}
 		}
+
 		return null;
 	}
 
@@ -336,22 +307,16 @@ public class MenuController {
 				selectedFoods.add(foodDTO.getFood());
 			}
 		}
+
 		return selectedFoods;
 	}
 
 	private DishDTO createDefaultDishesDTO() {
 
-		List<Category> listOfCategories = getAllCategoriesFromTable();
-		List<Food> listOfFoods = getAllFoodsFromTable();
+		List<CategoryDTO> listOfCategoriesDTO = createAllCategoriesDTO(getAllCategoriesFromTable());
+		List<FoodDTO> listOfFoodsDTO = createAllFoodsDTO(getAllFoodsFromTable());
 
-		List<CategoryDTO> listOfCategoriesDTO = createAllCategoriesDTO(listOfCategories);
-		List<FoodDTO> listOfFoodsDTO = createAllFoodsDTO(listOfFoods);
-
-		DishDTO dishDTO = new DishDTO();
-		dishDTO.setCategories(listOfCategoriesDTO);
-		dishDTO.setFoods(listOfFoodsDTO);
-
-		return dishDTO;
+		return new DishDTO(listOfCategoriesDTO, listOfFoodsDTO);
 	}
 
 	private List<CategoryDTO> createAllCategoriesDTO(List<Category> listOfCategories) {
@@ -452,28 +417,6 @@ public class MenuController {
 			index++;
 			dishDTO.setFoods(listFood);
 		}
-	}
-
-	private boolean areNotDuplicateCategories(List<DishDTO> dishes) {
-
-		List<Category> categories = getAllCategoriesFromMenu(dishes);
-		List<Food> foodsForFirstCategory = new ArrayList<>();
-		List<Food> foodsForSecondCategory = new ArrayList<>();
-
-		for (int i = 0; i < categories.size() - 1; i++) {
-			for (int j = i + 1; j < categories.size(); j++) {
-
-				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
-				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
-				if (categories.get(i).getName().equals(categories.get(j).getName())) {
-					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
-						continue;
-					}
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 	private void sortCategoriesByName(List<Category> categories) {
