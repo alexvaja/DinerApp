@@ -15,8 +15,16 @@ import org.springframework.stereotype.Component;
 
 import dinerapp.constants.MenuStates;
 import dinerapp.model.MenuViewModel;
+import dinerapp.model.dto.CategoryDTO;
+import dinerapp.model.dto.DishDTO;
+import dinerapp.model.dto.FoodDTO;
 import dinerapp.model.dto.MenuDTO;
+import dinerapp.model.entity.Category;
+import dinerapp.model.entity.Food;
 import dinerapp.model.entity.Menu;
+import dinerapp.repository.CategoryRepository;
+import dinerapp.repository.DishRepository;
+import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
 
 @Component("validator")
@@ -25,7 +33,16 @@ public class MenuValidator { //TODO LOGGER
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private FoodRepository foodRepository;
+
+	@Autowired
 	private MenuRepository menuRepository;
+
+	@Autowired
+	private DishRepository dishRepository;
 
 	private String errorMessage;
 	
@@ -41,11 +58,28 @@ public class MenuValidator { //TODO LOGGER
 		this.errorMessage = errorMessage;
 	}
 	
-	public String dateValidator(MenuViewModel menuViewModel) {
+	public String titleValidator(MenuViewModel menuViewModel) {
+		
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("-- MenuValidator -> titleValidator --");
 		
 		setErrorMessage(null);
+
+		if (menuViewModel.getMenuDTO().getTitle().isEmpty()) {
+			setErrorMessage("Titlul nu poate sa fie gol!");
+			LOGGER.error(getErrorMessage());
+			return getErrorMessage();
+		}
+
+		return getErrorMessage();
+	}
+	
+	public String dateValidator(MenuViewModel menuViewModel) {
+		
 		LOGGER.info("-----------------------------------------------");
 		LOGGER.info("-- MenuValidator -> dateValidator --");
+
+		setErrorMessage(null);
 		String menuDate = menuViewModel.getMenuDTO().getDate();
 		
 		if (menuDate.isEmpty()) {
@@ -68,6 +102,22 @@ public class MenuValidator { //TODO LOGGER
 		
 		if (!dateIsOK(menuViewModel)) {
 			setErrorMessage("Exista un meniu deja pe acesta data!");
+			LOGGER.error(getErrorMessage());
+			return getErrorMessage();
+		}
+		
+		return getErrorMessage();
+	}
+	
+	public String categoryValidator(MenuViewModel menuViewModel) {
+		
+		LOGGER.info("-----------------------------------------------");
+		LOGGER.info("-- MenuValidator -> categoryValidator --");
+		
+		setErrorMessage(null);
+		
+		if (!areNotDuplicateCategories(menuViewModel.getDishesDTO())) {
+			setErrorMessage("Categoriile trebuie sa fie diferite!");
 			LOGGER.error(getErrorMessage());
 			return getErrorMessage();
 		}
@@ -149,5 +199,54 @@ public class MenuValidator { //TODO LOGGER
 		}
 
 		return false;
+	}
+	
+	private boolean areNotDuplicateCategories(List<DishDTO> dishes) {
+
+		List<Category> categories = getAllCategoriesFromMenu(dishes);
+		List<Food> foodsForFirstCategory = new ArrayList<>();
+		List<Food> foodsForSecondCategory = new ArrayList<>();
+
+		for (int i = 0; i < categories.size() - 1; i++) {
+			for (int j = i + 1; j < categories.size(); j++) {
+
+				foodsForFirstCategory = getSelectedFoodsForCategory(dishes.get(i).getFoods());
+				foodsForSecondCategory = getSelectedFoodsForCategory(dishes.get(j).getFoods());
+				if (categories.get(i).getName().equals(categories.get(j).getName())) {
+					if (foodsForFirstCategory.isEmpty() || foodsForSecondCategory.isEmpty()) {
+						continue;
+					}
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private List<Category> getAllCategoriesFromMenu(List<DishDTO> dishesDTO) {
+
+		List<Category> categoriesFromMenu = new ArrayList<>();
+
+		for (DishDTO dishDTO : dishesDTO) {
+			for (CategoryDTO categoryDTO : dishDTO.getCategories()) {
+				if (categoryDTO.getSelected()) {
+					categoriesFromMenu.add(categoryDTO.getCategory());
+				}
+			}
+		}
+
+		return categoriesFromMenu;
+	}
+	
+	private List<Food> getSelectedFoodsForCategory(List<FoodDTO> savedFoods) {
+
+		List<Food> selectedFoods = new ArrayList<>();
+
+		for (FoodDTO foodDTO : savedFoods) {
+			if (foodDTO.getSelected()) {
+				selectedFoods.add(foodDTO.getFood());
+			}
+		}
+		return selectedFoods;
 	}
 }
