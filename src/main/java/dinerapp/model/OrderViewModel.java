@@ -24,8 +24,8 @@ public class OrderViewModel
 	private List<OrderQuantity> orderQuantityAfter4PM;
 	private List<OrderQuantity> orderQuantityBefore4PM;
 		
-	private List<Integer>after4PMQuantities;
-	private List<Integer>before4PMQuantities;
+	private List<Integer> after4PMQuantities;
+	private List<Integer> before4PMQuantities;
 	
 	private String date;
 

@@ -53,12 +53,17 @@ public class ExportToPDF
 			
 			/*==========================================================================*/
 			/*Tabelul cu mnancarea comandata inainte de ora 16*/
+			Paragraph paragraph = new Paragraph();
+			paragraph.add("Raportul pentru data de " + reportDate);
+			paragraph.setAlignment(Element.ALIGN_LEFT);
 			
-			pdfDoc.add(new Paragraph("Raportul pentru data de " + reportDate));
+			//pdfDoc.add(new Paragraph("Raportul pentru data de " + reportDate));
+			pdfDoc.add(paragraph);
 			pdfDoc.add(new Paragraph("Total mancare comandata inainte de ora 16:00"));
+			
 			PdfPTable tableBefore4PM = new PdfPTable(2);
 			tableBefore4PM.setWidths(new int[] { 10, 10});
-			tableBefore4PM.setWidthPercentage(100);
+			tableBefore4PM.setWidthPercentage(90);
 			
 			tableBefore4PM.addCell(setCell(cellFontBold, column1));
 			tableBefore4PM.addCell(setCell(cellFontBold, column2));
@@ -73,17 +78,19 @@ public class ExportToPDF
 					tableBefore4PM.addCell(setCell(cellFont, quantitiesBefore4PM.get(index).toString()));
 				}	
 			}
+			pdfDoc.add(tableBefore4PM);			
 			tableBefore4PM.setHeaderRows(1);
 			/*============================================================================================*/
 			
-			pdfDoc.add(tableBefore4PM);			
-			
+			pdfDoc.newPage();
 			
 			/*===========================================================================================*/
 			pdfDoc.add(new Paragraph("Total mancare comandata dupa ora 16:00"));
+			pdfDoc.add(new Paragraph(" "));
 			PdfPTable tableAfter4PM = new PdfPTable(2);
 			tableAfter4PM.setWidths(new int[] {10,10});
-			tableAfter4PM.setWidthPercentage(100);
+			tableAfter4PM.setWidthPercentage(90);
+			tableAfter4PM.setHeaderRows(1);
 			tableAfter4PM.addCell(setCell(cellFontBold, column1));
 			tableAfter4PM.addCell(setCell(cellFontBold, column2));
 			tableBefore4PM.setSpacingBefore(30f);
@@ -93,10 +100,12 @@ public class ExportToPDF
 			{
 				if(quantitiesAfter4PM.get(index) != 0)
 				{
-					tableBefore4PM.addCell(setCell(cellFont, foods.get(index).getName()));
-					tableBefore4PM.addCell(setCell(cellFont, quantitiesAfter4PM.get(index).toString()));
+					tableAfter4PM.addCell(setCell(cellFont, foods.get(index).getName()));
+					tableAfter4PM.addCell(setCell(cellFont, quantitiesAfter4PM.get(index).toString()));
 				}	
-			}			
+			}
+			pdfDoc.add(tableAfter4PM);
+			/*=============================================================================================*/
 		} catch (FileNotFoundException | DocumentException e) {
 			e.printStackTrace();
 		} finally {
