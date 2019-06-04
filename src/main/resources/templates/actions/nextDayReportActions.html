@@ -30,11 +30,28 @@
 				</thead>
 				<tbody>
 	 					<tr th:each="food, iter : *{foods}">
-						<th:block th:if = "${orderViewModel.quantities[iter.index] != 0}"> 			
+						<th:block th:if = "${orderViewModel.before4PMQuantities[iter.index] != 0}"> 			
 							<td class="span2 text-center" th:text="${food.name}">...</td>
-							<td class="span2 text-center" th:text="${orderViewModel.quantities[iter.index]}">...</td>
+							<td class="span2 text-center" th:text="${orderViewModel.before4PMQuantities[iter.index]}">...</td>
 						</th:block>					
 					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class = "form-group">
+			<table class = "table tcolor table-bordered">
+				<thead class = "thead thead-dark">
+					<tr>
+						<th class="span2 text-center" scope="col">Food Name</th>
+						<th class="span2 text-center" scope="col">Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="food, iter: *{foods}">
+					<th:block th:if = "${orderViewModel.after4PMQuantities[iter.index] != 0}">
+						<td class = "span2 text-center" th:text="${food.name}">...</td>
+						<td class = "span2 text-center" th:text="${orderViewModel.after4PMQuantities[iter.index]}">...</td>
 				</tbody>
 			</table>
 		</div>

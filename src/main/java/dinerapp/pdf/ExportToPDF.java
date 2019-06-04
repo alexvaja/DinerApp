@@ -31,12 +31,13 @@ import dinerapp.model.entity.Food;
 public class ExportToPDF 
 {
 
-	
-	public static void exportToPDF(String fileName, List<Food> foods, List<Integer> quantities, String reportDate) throws
+	public static void exportToPDF(String fileName, List<Food> foods, List<Integer> quantitiesBefore4PM, 
+			List<Integer>quantitiesAfter4PM, String reportDate) throws
 	FileNotFoundException, DocumentException {
 		
 		Document pdfDoc = new Document(PageSize.A4, 13, 13, 100, 90);
-
+		String column1 = "DENUMIRE MANCARE";
+		String column2 = "CANTITATE";
 		Font cellFontBold = FontFactory.getFont("Times Roman", 8, BaseColor.BLACK);
 		cellFontBold.setStyle(Font.BOLD);
 
@@ -44,33 +45,58 @@ public class ExportToPDF
 		Font textFont = FontFactory.getFont("Times Roman", 14, BaseColor.BLACK);
 		textFont.setStyle(Font.BOLD);
 
-		try {
+		try
+		{
 			HeaderFooterPageEvent event = new HeaderFooterPageEvent();
 			PdfWriter.getInstance(pdfDoc, new FileOutputStream(fileName)).setPageEvent(event);
-			pdfDoc.open();
-
+			pdfDoc.open();			
+			
+			/*==========================================================================*/
+			/*Tabelul cu mnancarea comandata inainte de ora 16*/
+			
 			pdfDoc.add(new Paragraph("Raportul pentru data de " + reportDate));
-			//pdfDoc.newPage();
-			//pdfDoc.add(new Paragraph("Adding a footer to PDF Document using iText."));
+			pdfDoc.add(new Paragraph("Total mancare comandata inainte de ora 16:00"));
+			PdfPTable tableBefore4PM = new PdfPTable(2);
+			tableBefore4PM.setWidths(new int[] { 10, 10});
+			tableBefore4PM.setWidthPercentage(100);
 			
-			PdfPTable table = new PdfPTable(2);
-			table.setWidths(new int[] { 10, 10});
-			table.setWidthPercentage(100);
+			tableBefore4PM.addCell(setCell(cellFontBold, column1));
+			tableBefore4PM.addCell(setCell(cellFontBold, column2));
+			tableBefore4PM.setSpacingBefore(30f); // Space before table
+			tableBefore4PM.setSpacingAfter(30f); // Space after table
 			
-			table.addCell(setCell(cellFontBold, "DENUMIRE MANCARE"));
-			table.addCell(setCell(cellFontBold, "CANTITATE"));
-			table.setSpacingBefore(30f); // Space before table
-			table.setSpacingAfter(30f); // Space after table
-			
-			for (int index = 0; index < foods.size(); index++) {
-				if(quantities.get(index) != 0) {
-					table.addCell(setCell(cellFont, foods.get(index).getName()));
-					table.addCell(setCell(cellFont, quantities.get(index).toString()));
+			for (int index = 0; index < foods.size(); index++)
+			{
+				if(quantitiesBefore4PM.get(index) != 0) 
+				{
+					tableBefore4PM.addCell(setCell(cellFont, foods.get(index).getName()));
+					tableBefore4PM.addCell(setCell(cellFont, quantitiesBefore4PM.get(index).toString()));
 				}	
 			}
+			tableBefore4PM.setHeaderRows(1);
+			/*============================================================================================*/
 			
-			table.setHeaderRows(1);
-			pdfDoc.add(table);
+			pdfDoc.add(tableBefore4PM);			
+			
+			
+			/*===========================================================================================*/
+			pdfDoc.add(new Paragraph("Total mancare comandata dupa ora 16:00"));
+			PdfPTable tableAfter4PM = new PdfPTable(2);
+			tableAfter4PM.setWidths(new int[] {10,10});
+			tableAfter4PM.setWidthPercentage(100);
+			tableAfter4PM.addCell(setCell(cellFontBold, column1));
+			tableAfter4PM.addCell(setCell(cellFontBold, column2));
+			tableBefore4PM.setSpacingBefore(30f);
+			tableBefore4PM.setSpacingAfter(30f);
+			
+			for (int index = 0; index < foods.size(); index++) 
+			{
+				if(quantitiesAfter4PM.get(index) != 0)
+				{
+					tableBefore4PM.addCell(setCell(cellFont, foods.get(index).getName()));
+					tableBefore4PM.addCell(setCell(cellFont, quantitiesAfter4PM.get(index).toString()));
+				}	
+			}			
 		} catch (FileNotFoundException | DocumentException e) {
 			e.printStackTrace();
 		} finally {
