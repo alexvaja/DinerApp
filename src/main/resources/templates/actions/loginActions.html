@@ -1,57 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" th:href="@{/css/override.css}"
-	href="../../static/css//override.css" />
-<head>
-<title>Login</title>
-</head>
-<body>
+<html lang="en">
 
-	<!-- /login?error=true -->
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>SB Admin - Login</title>
+
+<!-- Custom fonts for this template-->
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
+	type="text/css">
+
+<!-- Custom styles for this template-->
+<link href="css/sb-admin.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/sb-admin.css}" href="../../static/css//sb-admin.css" />
+</head>
+
+<body class="bg-dark">
 	<div class="container">
-		<h1>Login</h1>
-		<div th:if="${#request.getParameter('error') == 'true'}"
-			style="color: red; margin: 10px 0px;">
-			Autentificare esuata:<br /> 
-			 <span
-				th:if="${#session!= null and 
-						#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null and
- 						#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message == 'Bad credentials'}">
- 				Username sau utilizator gresit
-			</span>
-		</div>
-		<div id="login-row"
-			class="row justify-content-center align-items-center">
-			<div id="login-column" class="col-md-6">
-				<div class="box">
-					<div class="shape1"></div>
-					<div class="shape2"></div>
-					<div class="shape3"></div>
-					<div class="shape4"></div>
-					<div class="shape5"></div>
-					<div class="shape6"></div>
-					<div class="shape7"></div>
-					<div class="float">
-						<form class="form" name='f'
-							th:action="@{/j_spring_security_check}" method='POST'>
-							<div class="form-group">
-								<label for="username" class="text-white">Nume utilizator:</label> <br>
-								<input type='text' name='username' value='' class="form-control">
-							</div>
-							<div class="form-group">
-								<label for="password" class="text-white">Parola:</label> <br>
-								<input type='password' name='password' class="form-control" />
-							</div>
-							<div class="form-group">
-								<input class="btn btn-info btn-md" name="submit" type="submit"
-									value="Login" />
-							</div>
-						</form>
+		<div class="card card-login mx-auto mt-15">
+			<div class="card-header" align = "center">Login</div>
+			<div class="card-body">
+				<div th:if="${#request.getParameter('error') == 'true'}" style="color: red; margin: 10px 0px;">
+					<h6 align = "center" >Autentificare esuata:</h6>
+					 <span th:if="${#session!= null and 
+								#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null and
+		 						#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message == 'Bad credentials'}">
+						<h6 align = "center" >Username sau parola incorecte</h6> 
+					</span>
+				</div>			
+				<form class="form" name='f' th:action="@{/j_spring_security_check}" method='POST'> 
+					<div class="form-group">
+						<div class="form-label-group">
+							<input type="text" name='username' id="inputEmail" class="form-control"placeholder="Email address" 
+							required="required" autofocus="autofocus"> 
+							<label for="inputEmail">Email address</label>
+						</div>
 					</div>
-				</div>
+					<div class="form-group">
+						<div class="form-label-group">
+							<input type="password" name='password' id="inputPassword" class="form-control" placeholder="Password" required="required"> 
+							<label for="inputPassword">Password</label>
+						</div>
+					</div>					
+					<input class="btn btn-primary btn-block" name="submit" type = "submit" value = "Login"/>
+				</form>				
 			</div>
 		</div>
 	</div>
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
 </body>
-<th:block th:include="layout/bootstrapIncludes.html"></th:block>
+
 </html>

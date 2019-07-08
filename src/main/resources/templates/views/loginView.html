@@ -1,23 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" th:href="@{/css/cssLogin.css}"
-	href="../../static/css/cssLogin.css" />
-<body>
-	<div class="col-1">
-		<th:block th:include="layout/loggedoutNavBarTemplate.html"></th:block>
-	</div>
-	<div class="col-2">
-		<div>
-			<th:block th:include="layout/headerTemplate.html"></th:block>
-		</div>
-		<main class="content">
-		<article>
-			<th:block th:include="actions/loginActions.html"></th:block>
-		</article>
-		</main>
-	</div>
+<body>	
+	<th:block th:include="actions/loginActions.html"></th:block>
 </body>
-
-</body>
-
 </html>
