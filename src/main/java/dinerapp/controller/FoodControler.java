@@ -56,8 +56,8 @@ public class FoodControler {
 	}
 
 	@GetMapping("/foodView")
-	public String getAllFoods(Model model, HttpSession session) throws NewSessionException {
-
+	public String getAllFoods(Model model, HttpSession session) throws NewSessionException 
+	{
 		if (session.isNew()) {
 			throw new NewSessionException();
 		}
@@ -86,7 +86,8 @@ public class FoodControler {
 		model.addAttribute("newFoodDTO", new NewFoodDTO());
 		LOGGER.info(newFoodDTO.toString());
 
-		switch (reqParam) {
+		switch (reqParam) 
+		{
 		case "Adauga":
 			addFoodIsAvailable = true;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
@@ -97,18 +98,24 @@ public class FoodControler {
 			LOGGER.info(addFoodIsAvailable.toString());
 			Food food = new Food();
 			
-			try {
+			try 
+			{
 				Double price = Double.parseDouble(newFoodDTO.getPrice());
 				Integer weight = Integer.parseInt(newFoodDTO.getWeight());
 				
-			} catch (NumberFormatException e) {
+			} 
+			catch (NumberFormatException e)
+			{
 				throw new WrongInputDataException();
 			}
 			if (newFoodDTO.getName().isEmpty() || newFoodDTO.getIngredients().isEmpty()
 					|| newFoodDTO.getPrice().isEmpty() || Double.parseDouble(newFoodDTO.getPrice()) < 0 
-					|| newFoodDTO.getWeight().isEmpty() || Integer.parseInt(newFoodDTO.getWeight()) < 0) {
+					|| newFoodDTO.getWeight().isEmpty() || Integer.parseInt(newFoodDTO.getWeight()) < 0) 
+			{
 				throw new WrongInputDataException();
-			} else {
+			} 
+			else
+			{
 				try {
 
 					food.setName(NormalizeText.normalizeString((newFoodDTO.getName())));					
@@ -116,7 +123,9 @@ public class FoodControler {
 					food.setPrice(Double.parseDouble(newFoodDTO.getPrice()));
 					food.setWeight(Integer.parseInt(newFoodDTO.getWeight()));
 					
-				} catch (NumberFormatException e) {
+				} 
+				catch (NumberFormatException e) 
+				{
 					throw new WrongInputDataException();
 				}
 			}
