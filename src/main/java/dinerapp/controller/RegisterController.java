@@ -42,8 +42,6 @@ public class RegisterController {
 			String q = "Select * From user";
 			String query = "Select * From user where user_name = '" + userDTO.getUsername() + "'";
 
-			//System.out.println("MUIE PSD" + userDTO.getUsername() + " " + userDTO.getPassword() + " " + userDTO.getRepeatPassword());
-			
 			ResultSet result = executeQuery(q);
 
 			if (userDTO.getPassword() != userDTO.getRepeatPassword()) {
@@ -88,3 +86,11 @@ public class RegisterController {
 		return result;
 	}
 }
+/*1. Aplicatia crapa in momentul in care vreau sa salvez date foarte mari.
+2. Aplicatia crapa in momentul in care apas butonul de "Adauga meniu" de prea multe ori
+3. Poti sa accesezi anumite pagini si sa alterezi baza de date chiar daca nu esti autentificat.
+4. Afisare metadate in inspect
+
+*WORK IN PROGRESS*
+
+5. SQL INJECTION pe register*/
