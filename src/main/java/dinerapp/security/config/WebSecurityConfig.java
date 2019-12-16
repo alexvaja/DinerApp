@@ -36,12 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.csrf().disable();
-
-		// The pages does not require login
+		
 		http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
-		http.authorizeRequests().antMatchers("/categoryView").authenticated();
-		http.authorizeRequests().antMatchers("/foodView").authenticated();
-		http.authorizeRequests().antMatchers("/insertView").authenticated();
+		http.authorizeRequests().antMatchers("/categoryView").permitAll();
+		http.authorizeRequests().antMatchers("/foodView").permitAll();
+		http.authorizeRequests().antMatchers("/insertView").permitAll();
 		http.authorizeRequests().antMatchers("/loginView").authenticated();
 		http.authorizeRequests().antMatchers("/menuView").authenticated();
 		http.authorizeRequests().antMatchers("/nextDayReportView").authenticated();
