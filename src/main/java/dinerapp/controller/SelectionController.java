@@ -61,7 +61,15 @@ public class SelectionController {
 		model.addAttribute("isMenuDatePicked", false);
 		// tests if the 'name' parameter is set in URL and if there is an user with that name
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
+		//
+		nameFromURL = "diana";
 		
+		for(UserDiner u : userRepository.findAll()) {
+			System.out.println("USER: " + u);
+			
+		}
+		System.out.println(nameFromURL + "   " + this.getUserIdByName(nameFromURL));
+		//
 		if (nameFromURL != null) {
 			// finds the user with the name from URL
 			Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
@@ -379,7 +387,7 @@ public class SelectionController {
 		model.addAttribute("allAvailableMenuDates", allAvailableDates);
 	}
 
-	// creates a map from two lists
+	// creates a map from two lists 
 	private Map<String, String> mergeTwoListsIntoMap(List<String> foods, List<String> quantities) {
 		Map<String, String> foodQuantities = new HashMap<String, String>();
 		// iterates through foodQuantities map
