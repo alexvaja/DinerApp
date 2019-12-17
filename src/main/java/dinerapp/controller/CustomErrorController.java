@@ -9,12 +9,15 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeGenerator;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dinerapp.Application;
 import dinerapp.model.entity.UserDiner;
 import dinerapp.repository.UserCantinaRepository;
 
@@ -35,6 +38,7 @@ public class CustomErrorController implements ErrorController
 	public String renderErrorPage(Model model, HttpServletRequest httpRequest, Principal principal,
 			HttpSession session) 
 	{		
+		
 		UserDiner employeeUser = null;
 
 		if (session.getAttribute("nameFromURL") != null) {
@@ -54,7 +58,9 @@ public class CustomErrorController implements ErrorController
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/admin/A404Error";
 				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
-					return "error/admin/A500Error";
+				{	
+					System.exit(0);
+				}
 			}
 			else if(principal == null && employeeUser != null)
 			{
@@ -62,7 +68,7 @@ public class CustomErrorController implements ErrorController
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/employee/E404Error";
 				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
-					return "error/employee/E500Error";
+					System.exit(0);
 			}
 			else if(principal != null && employeeUser != null)
 			{				
@@ -72,7 +78,7 @@ public class CustomErrorController implements ErrorController
 				if(statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/general404Error";
 				if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
-					return "error/general500Error";					
+					System.exit(0);
 			}
 		}
 		return "error/adminError";
