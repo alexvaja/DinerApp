@@ -62,13 +62,14 @@ public class SelectionController {
 		// tests if the 'name' parameter is set in URL and if there is an user with that name
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
 		//
-		nameFromURL = "diana";
+		nameFromURL = "diana";//
 		
-		for(UserDiner u : userRepository.findAll()) {
-			System.out.println("USER: " + u);
-			
+		for(UserDiner u : userRepository.findAll()) 
+		{
+			System.out.println("USER: " + u);	
 		}
 		System.out.println(nameFromURL + "   " + this.getUserIdByName(nameFromURL));
+		
 		//
 		if (nameFromURL != null) {
 			// finds the user with the name from URL
@@ -91,6 +92,8 @@ public class SelectionController {
 			// hidden input on employeeOrderActions
 			@RequestParam(value = "date", required = false) String dateOfOrder) throws ParseException {
 
+		System.out.println("userNameFromPortal: " + userNameFromPortal);//
+		userNameFromPortal = "diana";//
 		loadDataOnViewModel(menuViewModel, pickedDate);
 		Optional<UserDiner> user = findCurrentUser(session, userNameFromPortal);
 
@@ -302,6 +305,7 @@ public class SelectionController {
 	private Integer getUserIdByName(String name) {
 		for (UserDiner user : userRepository.findAll()) {
 			// tests if there is an user with the given name
+			System.out.println("USER: " + user.getName());//
 			if (user.getName().toUpperCase().trim().equals(name.toUpperCase().trim())) {
 				return user.getId();
 			}

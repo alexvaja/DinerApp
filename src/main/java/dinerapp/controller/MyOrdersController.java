@@ -61,7 +61,11 @@ public class MyOrdersController {
 	@GetMapping("/orders")
 	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
 		// gets user form session
-		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		
+		String nameFromURL = (String) session.getAttribute("nameFromURL");
+		//
+		nameFromURL = "diana";//
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
 		return "views/myOrdersView";
@@ -78,7 +82,10 @@ public class MyOrdersController {
 			@RequestParam(value = "quantities", required = false) String quantities) {
 
 		// gets user from session
-		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		//Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		String nameFromURL = "diana";//
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));//
+		
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 		String date = findCorrectDate(pickedDate, dateOfOrder);
 		
