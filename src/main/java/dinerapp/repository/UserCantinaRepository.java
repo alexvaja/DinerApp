@@ -6,4 +6,5 @@ import dinerapp.model.entity.UserDiner;
 
 public interface UserCantinaRepository extends CrudRepository<UserDiner, Integer> {
 
+	public UserDiner findByName(String name);
 }

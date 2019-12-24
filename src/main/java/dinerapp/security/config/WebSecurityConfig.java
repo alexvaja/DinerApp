@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		
 		http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
-		http.authorizeRequests().antMatchers("/categoryView").permitAll();
+		http.authorizeRequests().antMatchers("/categoryView").authenticated();
 		http.authorizeRequests().antMatchers("/foodView").permitAll();
 		http.authorizeRequests().antMatchers("/insertView").permitAll();
 		http.authorizeRequests().antMatchers("/loginView").authenticated();
@@ -51,6 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/reportView").authenticated();
 		http.authorizeRequests().antMatchers("/index").authenticated();
 		http.authorizeRequests().antMatchers("/statisticsView").authenticated();
+		
+		http.authorizeRequests().antMatchers("/employeeOrderView").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/myOrdersView").access("hasRole('ROLE_USER')");
+		
 		
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
