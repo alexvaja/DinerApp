@@ -31,7 +31,7 @@ import dinerapp.security.utils.DateComparer;
 public class IndexController {
 	@Autowired
 	private MenuRepository menuRepository;
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	//private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private UserCantinaRepository userRepository;
@@ -68,7 +68,7 @@ public class IndexController {
 		}
 
 		String reqParam = params.getFirst(idMenu);
-		LOGGER.info(reqParam);
+		//LOGGER.info(reqParam);
 		System.out.println(reqParam);
 
 		switch (reqParam) {
@@ -80,7 +80,7 @@ public class IndexController {
 		}
 		case "Vezi": {
 
-			LOGGER.info(idMenu);
+			//LOGGER.info(idMenu);
 			Menu searchedMenu = null;
 
 			List<Menu> menuList = getMenuFromTable();

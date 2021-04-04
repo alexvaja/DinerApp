@@ -64,7 +64,6 @@ public class LogEntryExitAspect
 				values.put(params[i], args[i]);
 			message.add("with args:").add(values.toString());
 		}
-
 		return message.toString();
 	}
 

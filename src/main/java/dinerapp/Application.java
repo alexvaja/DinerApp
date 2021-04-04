@@ -24,7 +24,7 @@ public class Application implements CommandLineRunner
 	public void run(String... args) throws Exception 
 	{
 		greetingService.greet("Muie");
-		greetingService.greet("PSD");
+		greetingService.resolveName("PSD");
 	}
 
 }

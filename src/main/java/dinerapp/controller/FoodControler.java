@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +34,10 @@ import dinerapp.security.utils.FoodComparer;
 import dinerapp.security.utils.NormalizeText;
 
 @Controller
+@Service
 public class FoodControler {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	//private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private FoodRepository foodRepo;
@@ -45,13 +47,13 @@ public class FoodControler {
 
 	@ExceptionHandler({ NewSessionException.class })
 	public String sessionError() {
-		LOGGER.error("incercare de acces nepermis");
+		//LOGGER.error("incercare de acces nepermis");
 		return "views/loginView";
 	}
 
 	@ExceptionHandler({ WrongInputDataException.class })
 	public String inputDataError() {
-		LOGGER.error("date de intrare gresite");
+		//LOGGER.error("date de intrare gresite");
 		return "redirect:foodView";
 	}
 
@@ -62,7 +64,7 @@ public class FoodControler {
 			throw new NewSessionException();
 		}
 
-		LOGGER.info("getAllFoods");
+		//LOGGER.info("getAllFoods");
 		FoodViewModel foodViewModel = new FoodViewModel();
 		foodViewModel.setFoodItems(getListOfFood());
 		model.addAttribute("foodViewModel", foodViewModel);
@@ -77,25 +79,25 @@ public class FoodControler {
 			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
 			@RequestParam("submit") String reqParam) throws WrongInputDataException {
 		
-		LOGGER.info(foodsIdForDelete + " ");
-		LOGGER.info(reqParam);
+		//LOGGER.info(foodsIdForDelete + " ");
+		//LOGGER.info(reqParam);
 		
 		Boolean addFoodIsAvailable = false;
 		model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
 		model.addAttribute("foodViewModel", new FoodViewModel(getListOfFood()));
 		model.addAttribute("newFoodDTO", new NewFoodDTO());
-		LOGGER.info(newFoodDTO.toString());
+		//LOGGER.info(newFoodDTO.toString());
 
 		switch (reqParam) 
 		{
 		case "Adauga":
 			addFoodIsAvailable = true;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-			LOGGER.info(addFoodIsAvailable.toString());
+			//LOGGER.info(addFoodIsAvailable.toString());
 			break;
 
 		case "Salveaza":
-			LOGGER.info(addFoodIsAvailable.toString());
+			//LOGGER.info(addFoodIsAvailable.toString());
 			Food food = new Food();
 			
 			try 
@@ -139,7 +141,7 @@ public class FoodControler {
 		case "Anuleaza":
 			addFoodIsAvailable = false;
 			model.addAttribute("addFoodIsAvailable", addFoodIsAvailable);
-			LOGGER.info(addFoodIsAvailable.toString());
+			//LOGGER.info(addFoodIsAvailable.toString());
 			break;
 
 		case "Sterge":
