@@ -1,21 +1,30 @@
 package dinerapp;
 
-//import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import dinerapp.controller.CustomErrorController;
+import dinerapp.service.GreetingService;
 
 @SpringBootApplication
-public class Application {
+public class Application implements CommandLineRunner 
+{
+	private final GreetingService greetingService;
+	
+	public Application(GreetingService greetingService) {
+	    this.greetingService = greetingService;
+	  }
+	
+	public static void main(final String[] args) 
+	{
+		SpringApplication.run(Application.class, args);
+	}
 
- // static Logger LOGGER = Logger.getLogger(Application.class);
-
-  public static void main(final String[] args) {
-    //LOGGER.info("STARTING DINER APP");
-
-    SpringApplication.run(Application.class, args);
-  }
+	@Override
+	public void run(String... args) throws Exception 
+	{
+		greetingService.greet("Muie");
+		greetingService.greet("PSD");
+	}
 
 }
