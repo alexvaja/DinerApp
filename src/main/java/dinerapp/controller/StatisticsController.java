@@ -111,8 +111,8 @@ public class StatisticsController {
 			x.add(placedOrders.get(index) + "/" + pickedUpOrders.get(index));
 		}
 
-		System.out.println("PlacedOrders2 :" + placedOrders);
-		System.out.println("PickedUpOrder2" + pickedUpOrders);
+		//System.out.println("PlacedOrders2 :" + placedOrders);
+		//System.out.println("PickedUpOrder2" + pickedUpOrders);
 
 		List<StatisticDTO> statistics = new ArrayList<>();
 		

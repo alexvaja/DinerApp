@@ -6,17 +6,12 @@ import org.springframework.stereotype.Service;
 import dinerapp.annotation.LogEntryExit;
 
 @Service
-public class GreetingService 
+public class LoggingService 
 {
-	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS)
-	public String greet(String name) 
+	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
+	public String appStart(String name) 
 	{
-		return "Hello, " + resolveName(name) + "!";
-	}
-
-	public String resolveName(String name) 
-	{
-		return !name.isEmpty() ? name : "world";
+		return "Hello, " +name + "!";
 	}
 
 }

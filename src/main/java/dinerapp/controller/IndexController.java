@@ -69,7 +69,7 @@ public class IndexController {
 
 		String reqParam = params.getFirst(idMenu);
 		//LOGGER.info(reqParam);
-		System.out.println(reqParam);
+		//System.out.println(reqParam);
 
 		switch (reqParam) {
 		case "Inapoi": {
@@ -119,7 +119,7 @@ public class IndexController {
 				publishedMenu.add(menu);
 			}
 		}
-		System.out.println("Lista Meniu" + publishedMenu);
+		//System.out.println("Lista Meniu" + publishedMenu);
 		sortMenus(publishedMenu);
 		return publishedMenu;
 	}

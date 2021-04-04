@@ -4,14 +4,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import dinerapp.service.GreetingService;
+import dinerapp.service.LoggingService;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner 
 {
-	private final GreetingService greetingService;
+	private final LoggingService greetingService;
 	
-	public Application(GreetingService greetingService) {
+	public Application(LoggingService greetingService) {
 	    this.greetingService = greetingService;
 	  }
 	
@@ -23,8 +23,7 @@ public class Application implements CommandLineRunner
 	@Override
 	public void run(String... args) throws Exception 
 	{
-		greetingService.greet("Muie");
-		greetingService.resolveName("PSD");
+		greetingService.appStart("Dinerapp");
 	}
 
 }

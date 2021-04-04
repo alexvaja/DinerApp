@@ -54,7 +54,6 @@ public class CustomErrorController implements ErrorController
 		{
 			if(principal != null && employeeUser == null)
 			{				
-				System.out.println("Am intrat in admin");
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/admin/A404Error";
 				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -64,7 +63,7 @@ public class CustomErrorController implements ErrorController
 			}
 			else if(principal == null && employeeUser != null)
 			{
-				System.out.println("Am intrat in employee");
+				//System.out.println("Am intrat in employee");
 				if (statusCode == HttpStatus.NOT_FOUND.value())
 					return "error/employee/E404Error";
 				if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())

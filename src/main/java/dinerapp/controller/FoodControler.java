@@ -1,5 +1,6 @@
 package dinerapp.controller;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dinerapp.annotation.LogEntryExit;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.FoodViewModel;
@@ -32,13 +35,25 @@ import dinerapp.repository.FoodRepository;
 import dinerapp.repository.MenuRepository;
 import dinerapp.security.utils.FoodComparer;
 import dinerapp.security.utils.NormalizeText;
+import dinerapp.service.LoggingService;
 
 @Controller
-@Service
-public class FoodControler {
-
-	//private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-
+public class FoodControler implements CommandLineRunner 
+{
+	private final LoggingService logService;
+	
+	public FoodControler(LoggingService greetingService)
+	{
+		this.logService = greetingService;
+	}
+	
+	@Override
+	public void run(String... args) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	@Autowired
 	private FoodRepository foodRepo;
 
@@ -57,6 +72,7 @@ public class FoodControler {
 		return "redirect:foodView";
 	}
 
+	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@GetMapping("/foodView")
 	public String getAllFoods(Model model, HttpSession session) throws NewSessionException 
 	{
@@ -74,6 +90,7 @@ public class FoodControler {
 		return "views/foodView";
 	}
 
+	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@PostMapping("/foodView")
 	public String openFoodView(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
 			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
@@ -197,4 +214,7 @@ public class FoodControler {
 	{
 		Collections.sort(foods, new FoodComparer());
 	}
+
+
+
 }

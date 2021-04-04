@@ -1,6 +1,7 @@
 package dinerapp.controller;
 
 import java.text.ParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dinerapp.annotation.LogEntryExit;
 import dinerapp.exceptions.DuplicateCategoryException;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
@@ -64,13 +66,12 @@ public class CategoryController {
 	@ExceptionHandler({ DuplicateCategoryException.class })
 	public String duplicateError() {
 		
-		String mesaj ="categorii duplicate";
-		System.out.println(mesaj);
-		
+		String mesaj ="categorii duplicate";	
 		return "redirect:categoryView";
 	}
 
 	@GetMapping("/categoryView")
+	@LogEntryExit(showArgs = false, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	public String getAllCateogires(Model model, HttpSession session) throws NewSessionException {
 
 		LOGGER.info("getAllCategories");

@@ -82,7 +82,7 @@ public class UserReportController {
 		Collections.sort(ordersDTO, new Comparator<OrderDTO>(){
 			   @Override
 			   public int compare(OrderDTO leftOrder, OrderDTO rightOrder) {
-				   System.out.println(leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName()));
+				   //System.out.println(leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName()));
 				   return leftOrder.getOrder().getUserDiner().getName().compareTo(rightOrder.getOrder().getUserDiner().getName());				   
 			   }
 			 });

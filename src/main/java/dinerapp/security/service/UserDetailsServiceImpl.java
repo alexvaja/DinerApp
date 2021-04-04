@@ -32,8 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	{
 		//UserDiner userDiner = getUserByName(userName);
 		UserDiner userDiner = userCantinaRepository.findByName(userName);
-		System.out.println("USEEEEEEEEEEEEER: " + userDiner);
-		System.out.println("11111");
 
 		if (userDiner == null) {
 			System.out.println("22222");
@@ -68,9 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	private UserDiner getUserByName(String userName) {
-		System.out.println("33333");
 		Iterable<UserDiner> userList = userCantinaRepository.findAll();
-		System.out.println("44444");
 		for (UserDiner userDiner : userList) {
 			System.out.println(userDiner.getName() + " " + userName);
 			if (userDiner.getName().equals(userName)) {
