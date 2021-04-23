@@ -22,7 +22,7 @@ public class DinerAppController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin`", method = RequestMethod.GET)
 	public String adminPage(Model model, Principal principal) {
 		LOGGER.info("am intrat mai ceva ca Hitler in Polonia cu panzerul");
 		User loginedUser = (User) ((Authentication) principal).getPrincipal();
@@ -33,17 +33,17 @@ public class DinerAppController {
 
 	@SessionScope
 	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
-	public String loginPage(Model model, Principal principal) {
+	public String loginPage(HttpSession session, Model model, Principal principal) {
 		return "views/loginView";
 	}
 
 	@RequestMapping(value = { "/expired" }, method = RequestMethod.GET)
-	public String sessionExpiredPage(Model model, Principal principal) {
+	public String sessionExpiredPage(HttpSession session, Model model, Principal principal) {
 		return "views/sessionTimeoutView";
 	}
 
 	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
-	public String logoutSuccessfulPage(Model model, HttpSession session) {
+	public String logoutSuccessfulPage(HttpSession session, Model model, Principal principal) {
 		session.invalidate();
 		return "views/loginView";
 	}

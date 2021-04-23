@@ -60,7 +60,8 @@ public class HeaderFooterPageEvent extends PdfPageEventHelper {
 			// Image logo = Image.getInstance("..\\DinerApp -
 			// new\\src\\main\\resources\\static\\images\\AtosLogo.png");
 			try {
-                Image logo = Image.getInstance(new URL("https://i.imgur.com/xfChJpW.png"));
+                Image logo = Image.getInstance(new URL("https://i.imgur.com/alMbYuq.jpg"));
+                // WAS Atos logo:  https://i.imgur.com/xfChJpW.png
                 logo.setAbsolutePosition(100f, 550f);
                 logo.scaleAbsolute(200, 200);
                 header.addCell(logo);
