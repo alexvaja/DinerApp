@@ -2,7 +2,6 @@ package dinerapp.aspect;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.annotation.After;
@@ -26,6 +25,5 @@ public class IndexManagement {
 	@After("execution (* dinerapp.controller.DinerAppController..*(..)) &&" + "args(session, model, principal)")
 	public void afterDinerAppController(HttpSession session, Model model, Principal principal) {
 		System.out.println("2");
-		
 	}
 }

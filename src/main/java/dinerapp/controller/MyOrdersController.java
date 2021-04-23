@@ -59,7 +59,7 @@ public class MyOrdersController {
 		
 	@SessionScope
 	@GetMapping("/orders")
-	public String getController(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
+	public String getController(HttpSession session, Model model, MyOrdersViewModel myOrdersViewModel) {
 		// gets user form session
 		
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
@@ -74,7 +74,7 @@ public class MyOrdersController {
 	@SessionScope
 	@Transactional
 	@PostMapping("/orders")
-	public String postController(Model model, HttpSession session,
+	public String postController(HttpSession session, Model model,
 			@RequestParam(name = "orderId", required = false) String orderId,
 			@RequestParam(name = "submit", required = false) String actionType,
 			@RequestParam(name = "pickedDate", required = false) String pickedDate,

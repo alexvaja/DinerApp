@@ -35,8 +35,6 @@ public class LogInSessionManagement {
 		
 		if (session != null) {
 			sessionExist = true;
-			//session.invalidate();
-			//System.out.println("Session was invalidate!");
 		}	
 	}
 	

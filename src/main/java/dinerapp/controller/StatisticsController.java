@@ -61,7 +61,7 @@ public class StatisticsController {
 
 	@SessionScope
 	@GetMapping("/statisticsView")
-	public String getController(Model model, HttpSession session) throws NewSessionException 
+	public String getController(HttpSession session, Model model) throws NewSessionException 
 	{
 		LOGGER.info("Am intrat in getStatistics");
 		if (session.isNew())

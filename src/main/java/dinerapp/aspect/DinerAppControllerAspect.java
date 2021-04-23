@@ -6,9 +6,11 @@ import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 @Aspect
+@Component
 public class DinerAppControllerAspect {
 	
 	@Pointcut("execution (* dinerapp.controller.DinerAppController.adminPage(javax.servlet.http.HttpSession, "

@@ -73,7 +73,7 @@ public class MenuController {
 
 	@SessionScope
 	@GetMapping("/menuView")
-	public String getController(Model model, Principal principal, HttpSession session)
+	public String getController(HttpSession session, Model model, Principal principal)
 			throws NewSessionException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");

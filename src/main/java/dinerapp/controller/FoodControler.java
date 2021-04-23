@@ -67,7 +67,7 @@ public class FoodControler implements CommandLineRunner
 
 	//@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@GetMapping("/foodView")
-	public String getController(Model model, HttpSession session) throws NewSessionException 
+	public String getController(HttpSession session, Model model) throws NewSessionException 
 	{
 		if (session.isNew()) {
 			throw new NewSessionException();
@@ -85,7 +85,7 @@ public class FoodControler implements CommandLineRunner
 
 	//@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@PostMapping("/foodView")
-	public String postController(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
+	public String postController(HttpSession session, Model model, @ModelAttribute NewFoodDTO newFoodDTO,
 			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
 			@RequestParam("submit") String reqParam) throws WrongInputDataException {
 		

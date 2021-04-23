@@ -76,7 +76,7 @@ public class SelectionController {
 
 	@SessionScope
 	@PostMapping("/employeeOrderView")
-	public String postController(Model model, HttpSession session,
+	public String postController(HttpSession session, Model model,
 			@SessionAttribute(required = false) MenuViewModel menuViewModel,
 			@RequestParam(value = "pickedDate", required = false) String pickedDate,
 			@RequestParam(value = "submit", required = false) String actionType,

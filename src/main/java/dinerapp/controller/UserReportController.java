@@ -64,7 +64,7 @@ public class UserReportController {
 
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String getController(Model model, HttpSession session, 
+	public String getController(HttpSession session, Model model, 
 													  HttpServletRequest httpRequest) throws ParseException, NewSessionException, InternalServerException {
 
 		if (session.isNew()) {

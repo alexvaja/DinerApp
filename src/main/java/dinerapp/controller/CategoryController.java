@@ -72,7 +72,7 @@ public class CategoryController {
 
 	//@LogEntryExit(showArgs = false, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@GetMapping("/categoryView")
-	public String getController(Model model, HttpSession session) throws NewSessionException {
+	public String getController(HttpSession session, Model model) throws NewSessionException {
 
 		LOGGER.info("getAllCategories");
 
@@ -91,7 +91,7 @@ public class CategoryController {
 	}
 	
 	@PostMapping("/categoryView")
-	public String setController(Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
+	public String setController(HttpSession session, Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
 												@RequestParam("submit") String reqParam,
 			@RequestParam(value = "delete", required = false) String delCategory) throws WrongInputDataException, DuplicateCategoryException, ParseException  {
 		LOGGER.info("postAllCategories");

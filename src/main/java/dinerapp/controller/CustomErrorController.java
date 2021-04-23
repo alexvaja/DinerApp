@@ -35,8 +35,7 @@ public class CustomErrorController implements ErrorController
 	}
 
 	@RequestMapping("/error")
-	public String renderErrorPage(Model model, HttpServletRequest httpRequest, Principal principal,
-			HttpSession session) 
+	public String renderErrorPage(HttpSession session, Model model, HttpServletRequest httpRequest, Principal principal) 
 	{		
 		
 		UserDiner employeeUser = null;

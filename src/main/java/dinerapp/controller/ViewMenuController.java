@@ -55,7 +55,7 @@ public class ViewMenuController {
 	}
 
 	@GetMapping("/viewMenuView")
-	public String getController(Model model, HttpSession session) throws NewSessionException {
+	public String getController(HttpSession session, Model model) throws NewSessionException {
 
 		LOGGER.info("-----------------------------------------------");
 		LOGGER.info("CLASS NAME: " + MenuController.class.getName());
