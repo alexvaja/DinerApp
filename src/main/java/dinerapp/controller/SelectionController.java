@@ -53,20 +53,17 @@ public class SelectionController {
 	@Autowired
 	private FoodRepository foodRepository;
 
-	@SessionScope
+	//@SessionScope
 	@GetMapping("/employeeOrderView")
-	public String getAllData(HttpSession session, Model model) throws ParseException {
+	public String getController(HttpSession session, Model model) throws ParseException {
 		session.setAttribute("menuViewModel", new MenuViewModel());
 		// adds an attribute to the model that tells if a menu date has been picked or not
 		model.addAttribute("isMenuDatePicked", false);
 		// tests if the 'name' parameter is set in URL and if there is an user with that name
+		//UserDiner userFromURL = (UserDiner) session.getAttribute("nameFromURL");
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
 		//
-		nameFromURL = "diana";//
-		
-
-		//System.out.println(nameFromURL + "   " + this.getUserIdByName(nameFromURL));
-		
+		System.out.println(nameFromURL + "   " + this.getUserIdByName(nameFromURL));
 		//
 		if (nameFromURL != null) {
 			// finds the user with the name from URL
@@ -79,7 +76,7 @@ public class SelectionController {
 
 	@SessionScope
 	@PostMapping("/employeeOrderView")
-	public String getAllData(Model model, HttpSession session,
+	public String postController(Model model, HttpSession session,
 			@SessionAttribute(required = false) MenuViewModel menuViewModel,
 			@RequestParam(value = "pickedDate", required = false) String pickedDate,
 			@RequestParam(value = "submit", required = false) String actionType,
@@ -384,6 +381,10 @@ public class SelectionController {
 	private void updateAvailableMenuDatesForUser(UserDiner user, Model model) {
 		// gets all available menu dates for current user
 		List<String> allAvailableDates = this.getAllAvailableMenuDatesForUser(user);
+		
+		for (String s : allAvailableDates) {
+			System.out.println(s);
+		}
 		// adds all available menu dates on model
 		model.addAttribute("allAvailableMenuDates", allAvailableDates);
 	}

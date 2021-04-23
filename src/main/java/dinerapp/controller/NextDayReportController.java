@@ -98,7 +98,7 @@ public class NextDayReportController {
 	
 	@SessionScope
 	@GetMapping("/reportView")
-	public String getMap(Model model, HttpSession session) throws NewSessionException
+	public String getController(Model model, HttpSession session) throws NewSessionException
 	{
 		if (session.isNew()) {
 			throw new NewSessionException();			
@@ -111,7 +111,7 @@ public class NextDayReportController {
 	}
 
 	@PostMapping("/reportView")
-	public String postMap(Model model, @SessionAttribute("orderViewModel") OrderViewModel orderViewModel, HttpSession session, HttpServletResponse response,
+	public String postController(Model model, @SessionAttribute("orderViewModel") OrderViewModel orderViewModel, HttpSession session, HttpServletResponse response,
 									   @RequestParam(value = "submit") String reqParam,
 									   @RequestParam(value = "report_date", required = true) String reportDate) {
 		

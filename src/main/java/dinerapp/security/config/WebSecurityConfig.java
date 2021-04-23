@@ -52,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/index").authenticated();
 		http.authorizeRequests().antMatchers("/statisticsView").authenticated();
 		
-		http.authorizeRequests().antMatchers("/employeeOrderView").access("hasRole('ROLE_USER')");
-		http.authorizeRequests().antMatchers("/myOrdersView").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/employeeOrderView").authenticated();//.access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/myOrdersView").authenticated();//.access("hasRole('ROLE_USER')");
 		
 		
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
@@ -81,6 +81,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Config for Logout Page
 				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful")
 				.deleteCookies("JSESSIONID", "JWT").clearAuthentication(true).invalidateHttpSession(true);
-				/*.deleteCookies("auth_code", "JSESSIONID").clearAuthentication(true).invalidateHttpSession(true);*/
+				/*.deleteCookies("auth_code", "JSESSIONID").clearAuthentication(true).invalidateHttpSession(true);*/	
 	}
 }

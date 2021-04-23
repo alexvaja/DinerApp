@@ -20,14 +20,14 @@ import dinerapp.security.config.DBConnection;
 public class RegisterController {
 
 	@GetMapping("/registerView")
-	public String getRegisterView(Model model) throws SQLException {
+	public String getController(Model model) throws SQLException {
 		
 		model.addAttribute("userDTO", new UserDTO());
 		return "views/RegisterView";
 	}
 
 	@PostMapping("/registerView")
-	public String postRegisterView(Model model, Principal principal, @ModelAttribute UserDTO userDTO,
+	public String postController(Model model, Principal principal, @ModelAttribute UserDTO userDTO,
 			@RequestParam("submit") String reqParam) throws SQLException {
 		
 		model.addAttribute("userDTO", userDTO);

@@ -70,9 +70,9 @@ public class CategoryController {
 		return "redirect:categoryView";
 	}
 
+	//@LogEntryExit(showArgs = false, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@GetMapping("/categoryView")
-	@LogEntryExit(showArgs = false, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
-	public String getAllCateogires(Model model, HttpSession session) throws NewSessionException {
+	public String getController(Model model, HttpSession session) throws NewSessionException {
 
 		LOGGER.info("getAllCategories");
 
@@ -91,7 +91,7 @@ public class CategoryController {
 	}
 	
 	@PostMapping("/categoryView")
-	public String setAllCategories(Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
+	public String setController(Model model, @ModelAttribute NewCategoryDTO newCategoryDTO,
 												@RequestParam("submit") String reqParam,
 			@RequestParam(value = "delete", required = false) String delCategory) throws WrongInputDataException, DuplicateCategoryException, ParseException  {
 		LOGGER.info("postAllCategories");
@@ -186,6 +186,7 @@ public class CategoryController {
 		return "views/categoryView";
 	}
 
+	//@LogEntryExit(showArgs = false, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	private List<Category> getListOfCategory() 
 	{
 
@@ -200,10 +201,12 @@ public class CategoryController {
 		
 		return searchedList;
 	}
+	
 	private void sortCategoriesByName(List<Category> categories)
 	{
 		Collections.sort(categories, new CategoryComparer());
 	}
+	
 	private boolean isValid(List<Category> values, String name) {
 		for (Category category : values) {
 			if (category.getName().equals(name)) {
@@ -212,5 +215,4 @@ public class CategoryController {
 		}
 		return true;
 	}
-	
 }

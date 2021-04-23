@@ -82,6 +82,7 @@ public class CustomErrorController implements ErrorController
 		}
 		return "error/adminError";
 	}
+	
 	private UserDiner getUserByName(String name) {
 		Iterable<UserDiner> users = userRepo.findAll();
 		for (UserDiner user : users) {

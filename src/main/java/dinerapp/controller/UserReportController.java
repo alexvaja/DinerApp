@@ -64,7 +64,7 @@ public class UserReportController {
 
 	@SessionScope
 	@GetMapping("/userReportView")
-	public String openNextWeekReportView(Model model, HttpSession session, 
+	public String getController(Model model, HttpSession session, 
 													  HttpServletRequest httpRequest) throws ParseException, NewSessionException, InternalServerException {
 
 		if (session.isNew()) {
@@ -95,7 +95,7 @@ public class UserReportController {
 	}
 
 	@PostMapping("/userReportView")
-	public String openNextWeekReportyyView(Model model, HttpStatus status, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
+	public String postController(Model model, HttpStatus status, @SessionAttribute("userReportViewModel") UserReportViewModel userReportViewModel,
 														@RequestParam(value = "submit", required = false) String reqParam,
 														@RequestParam(value = "checkbox_list", required = false) String selectedUsers) throws ParseException, InternalServerException {
 		LOGGER.info("Am intrat pe POST");

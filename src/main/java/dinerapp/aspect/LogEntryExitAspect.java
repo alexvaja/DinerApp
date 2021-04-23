@@ -27,7 +27,7 @@ public class LogEntryExitAspect
 	@Around("@annotation(dinerapp.annotation.LogEntryExit)")
 	public Object log(ProceedingJoinPoint point) throws Throwable 
 	{
-		var codeSignature = (CodeSignature) point.getSignature();
+		/*var codeSignature = (CodeSignature) point.getSignature();
 		var methodSignature = (MethodSignature) point.getSignature();
 		Method method = methodSignature.getMethod();
 
@@ -51,7 +51,8 @@ public class LogEntryExitAspect
 
 		log(logger, level, exit(methodName, duration, response, showResult, showExecutionTime));
 
-		return response;
+		return response;*/
+		return null;
 	}
 
 	static String entry(String methodName, boolean showArgs, String[] params, Object[] args) 

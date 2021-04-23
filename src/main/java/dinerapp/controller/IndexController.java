@@ -37,14 +37,17 @@ public class IndexController {
 	private UserCantinaRepository userRepository;
 
 	@GetMapping("index")
-	public String getIndex(Model model, HttpSession session, Principal principal) {
+	public String getController(Model model, HttpSession session, Principal principal) {
 		//
 		if (principal != null) {
 			UserDiner user = userRepository.findByName(principal.getName());
 			Role userRole = user.getRoles().get(0);
 			
-			if (userRole.getName().equals("ROLE_USER")) {
-				return "views/employeeOrderView";
+			System.out.println("Role: " + userRole.getName());
+			
+			if (!userRole.getName().isBlank() && userRole.getName().equalsIgnoreCase("USER")) {
+				session.setAttribute("nameFromURL", user.getName());
+				return "redirect:employeeOrderView";
 			}
 		}
 		//
@@ -56,7 +59,7 @@ public class IndexController {
 	}
 
 	@PostMapping("index")
-	public String sertIndex(Model model, HttpSession session, @RequestParam MultiValueMap<String, String> params) {
+	public String sertController(Model model, HttpSession session, @RequestParam MultiValueMap<String, String> params) {
 		Boolean viewMenu = false;
 		model.addAttribute("viewMenu", viewMenu);
 		model.addAttribute("menusList", getOnlyPublishedMenu(getMenuFromTable()));

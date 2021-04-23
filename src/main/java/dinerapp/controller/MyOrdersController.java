@@ -59,12 +59,12 @@ public class MyOrdersController {
 		
 	@SessionScope
 	@GetMapping("/orders")
-	public String getMyOrders(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
+	public String getController(Model model, HttpSession session, MyOrdersViewModel myOrdersViewModel) {
 		// gets user form session
 		
 		String nameFromURL = (String) session.getAttribute("nameFromURL");
 		//
-		nameFromURL = "diana";//
+		//nameFromURL = "diana";//
 		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));
 		model.addAttribute("allOrderedDates", this.getAllOrderedDatesForUser(user.get()));
 		model.addAttribute("isDatePicked", false);
@@ -74,7 +74,7 @@ public class MyOrdersController {
 	@SessionScope
 	@Transactional
 	@PostMapping("/orders")
-	public String myOrdersActions(Model model, HttpSession session,
+	public String postController(Model model, HttpSession session,
 			@RequestParam(name = "orderId", required = false) String orderId,
 			@RequestParam(name = "submit", required = false) String actionType,
 			@RequestParam(name = "pickedDate", required = false) String pickedDate,
@@ -82,9 +82,9 @@ public class MyOrdersController {
 			@RequestParam(value = "quantities", required = false) String quantities) {
 
 		// gets user from session
-		//Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
-		String nameFromURL = "diana";//
-		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));//
+		Optional<UserDiner> user = userRepository.findById(this.getUserIdByName((String) session.getAttribute("nameFromURL")));
+		//String nameFromURL = "diana";//
+		//Optional<UserDiner> user = userRepository.findById(this.getUserIdByName(nameFromURL));//
 		
 		MyOrdersViewModel myOrdersViewModel = new MyOrdersViewModel();
 		String date = findCorrectDate(pickedDate, dateOfOrder);

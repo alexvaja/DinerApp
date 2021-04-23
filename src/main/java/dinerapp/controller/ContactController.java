@@ -22,7 +22,7 @@ public class ContactController {
 	}
 	
 	@GetMapping("/contactView")
-	public String getForm(Model model, HttpSession session) throws NewSessionException {
+	public String getController(Model model, HttpSession session) throws NewSessionException {
 		
 		if (session.isNew()) {
 			throw new NewSessionException();			

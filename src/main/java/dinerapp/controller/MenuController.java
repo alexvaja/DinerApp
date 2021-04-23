@@ -73,7 +73,7 @@ public class MenuController {
 
 	@SessionScope
 	@GetMapping("/menuView")
-	public String getMethod(Model model, Principal principal, HttpSession session)
+	public String getController(Model model, Principal principal, HttpSession session)
 			throws NewSessionException, WrongMenuDateException {
 
 		LOGGER.info("-----------------------------------------------");
@@ -92,7 +92,7 @@ public class MenuController {
 
 	@Transactional
 	@PostMapping("/menuView")
-	public String postMethod(Model model, HttpSession session, @SessionAttribute MenuViewModel menuViewModel,
+	public String postController(Model model, HttpSession session, @SessionAttribute MenuViewModel menuViewModel,
 			@RequestParam(value = "submit") String reqParam,
 			@RequestParam(value = "menu_title", required = false) String menuTitle,
 			@RequestParam(value = "menu_date", required = false) String menuDate,

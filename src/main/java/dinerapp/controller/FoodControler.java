@@ -1,21 +1,15 @@
 package dinerapp.controller;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dinerapp.annotation.LogEntryExit;
 import dinerapp.exceptions.NewSessionException;
 import dinerapp.exceptions.WrongInputDataException;
 import dinerapp.model.FoodViewModel;
@@ -72,9 +65,9 @@ public class FoodControler implements CommandLineRunner
 		return "redirect:foodView";
 	}
 
-	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
+	//@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@GetMapping("/foodView")
-	public String getAllFoods(Model model, HttpSession session) throws NewSessionException 
+	public String getController(Model model, HttpSession session) throws NewSessionException 
 	{
 		if (session.isNew()) {
 			throw new NewSessionException();
@@ -90,9 +83,9 @@ public class FoodControler implements CommandLineRunner
 		return "views/foodView";
 	}
 
-	@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
+	//@LogEntryExit(showArgs = true, showResult = true, unit = ChronoUnit.MILLIS, showExecutionTime = true)
 	@PostMapping("/foodView")
-	public String openFoodView(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
+	public String postController(Model model, @ModelAttribute NewFoodDTO newFoodDTO,
 			@RequestParam(value = "forDelete", required = false) String foodsIdForDelete,
 			@RequestParam("submit") String reqParam) throws WrongInputDataException {
 		
