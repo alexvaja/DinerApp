@@ -37,7 +37,7 @@ public class IndexController {
 	private UserCantinaRepository userRepository;
 
 	@GetMapping("index")
-	public String getController(Model model, HttpSession session, Principal principal) {
+	public String getController(HttpSession session, Model model, Principal principal) {
 		//
 		if (principal != null) {
 			UserDiner user = userRepository.findByName(principal.getName());
@@ -59,7 +59,7 @@ public class IndexController {
 	}
 
 	@PostMapping("index")
-	public String sertController(Model model, HttpSession session, @RequestParam MultiValueMap<String, String> params) {
+	public String setController(HttpSession session, Model model, @RequestParam MultiValueMap<String, String> params) {
 		Boolean viewMenu = false;
 		model.addAttribute("viewMenu", viewMenu);
 		model.addAttribute("menusList", getOnlyPublishedMenu(getMenuFromTable()));

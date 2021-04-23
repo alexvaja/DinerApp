@@ -53,7 +53,7 @@ public class SelectionController {
 	@Autowired
 	private FoodRepository foodRepository;
 
-	//@SessionScope
+	@SessionScope
 	@GetMapping("/employeeOrderView")
 	public String getController(HttpSession session, Model model) throws ParseException {
 		session.setAttribute("menuViewModel", new MenuViewModel());
