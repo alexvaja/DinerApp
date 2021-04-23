@@ -15,22 +15,17 @@ import org.springframework.ui.Model;
 @Component
 public class IndexManagement {
 	
-	private HttpServletRequest request;
-	
 	@Before("execution (* dinerapp.controller.DinerAppController..*(..)) &&" + "args(session, model, principal)")
-	public void beforeIndexController(HttpSession session, Model model, Principal principal) {
-		System.out.println("1");
+	public void beforeDinerAppController(HttpSession session, Model model, Principal principal) {
 		
 		if (session != null) {
 			session.invalidate();
 		}
-		
 	}
 	
 	@After("execution (* dinerapp.controller.DinerAppController..*(..)) &&" + "args(session, model, principal)")
-	public void afterIndexController(HttpSession session, Model model, Principal principal) {
+	public void afterDinerAppController(HttpSession session, Model model, Principal principal) {
 		System.out.println("2");
 		
-		//session = request.getSession(true);
 	}
 }
