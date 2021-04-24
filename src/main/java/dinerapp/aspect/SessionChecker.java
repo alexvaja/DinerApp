@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+import dinerapp.exceptions.NewSessionException;
+
 @Aspect
 @Component
 public class SessionChecker {
@@ -14,31 +16,27 @@ public class SessionChecker {
 	String SECURE_TOKEN = null;
 
 	@Before("execution (* dinerapp.controller..*(..)) &&" + "args(session, ..)")
-	public void beforeDinerAppController(HttpSession session) {
+	public void beforeDinerAppController(HttpSession session) throws NewSessionException {
 		
 		
 		if (session != null) {
 			System.out.println("Session Checker");
 			
-			SECURE_TOKEN = (String) session.getAttribute("SECURE_TOKEN");
+			//SECURE_TOKEN = (String) session.getAttribute("SECURE_TOKEN");
 			
-			if (SECURE_TOKEN == null) {
-				session.invalidate();
-			}
+			//Check the SECURE_TOKEN and if it nit exist, destroy the session
 		}
 	}
 	
 	@After("execution (* dinerapp.controller..*(..)) &&" + "args(session, ..)")
-	public void afterDinerAppController(HttpSession session) {
+	public void afterDinerAppController(HttpSession session) throws NewSessionException {
 		
 		if (session != null) {
 			System.out.println("Session Checker");
 			
-			SECURE_TOKEN = (String) session.getAttribute("SECURE_TOKEN");
+			//SECURE_TOKEN = (String) session.getAttribute("SECURE_TOKEN");
 			
-			if (SECURE_TOKEN == null) {
-				session.invalidate();
-			}
+			//Check the SECURE_TOKEN and if it nit exist, destroy the session
 		}
 	}
 }
